@@ -373,7 +373,7 @@ const injectMarkerStyles = () => {
     .modern-custom-marker {
       animation: markerDrop 0.3s ease-out;
     }
-    
+
     @keyframes markerDrop {
       0% {
         transform: translateY(-30px) scale(0.8);
@@ -384,7 +384,7 @@ const injectMarkerStyles = () => {
         opacity: 1;
       }
     }
-    
+
     .modern-custom-marker:hover {
       z-index: 1000;
     }
