@@ -273,7 +273,8 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     setSearchValue(value);
     if (googleMapsLoaded && window.google && value.length > 2) {
       try {
-        const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
+        const { AutocompleteSuggestion, AutocompleteSessionToken } =
+          await window.google.maps.importLibrary("places");
         const sessionToken = new AutocompleteSessionToken();
 
         const request = {
@@ -282,7 +283,8 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
           includedRegionCodes: ["in", "us", "ca", "gb", "au"],
         };
 
-        const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+        const response =
+          await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
         const predictions = response.suggestions;
 
         if (predictions && predictions.length > 0) {
@@ -292,17 +294,22 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
               description: placePrediction.text,
               place_id: placePrediction.placeId,
               structured_formatting: {
-                main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
-                secondary_text: placePrediction.structuredFormat?.secondaryText || "",
+                main_text:
+                  placePrediction.structuredFormat?.mainText ||
+                  placePrediction.text,
+                secondary_text:
+                  placePrediction.structuredFormat?.secondaryText || "",
               },
             };
           });
           setSuggestions(formattedPredictions);
         } else {
           setSuggestions([]);
-          }
-        },
-      );
+        }
+      } catch (error) {
+        console.error("Error fetching autocomplete suggestions:", error);
+        setSuggestions([]);
+      }
     } else {
       setSuggestions([]);
     }
