@@ -21,6 +21,8 @@ declare global {
         places: {
           Autocomplete: any;
           AutocompleteService: any;
+          AutocompleteSuggestion: any;
+          AutocompleteSessionToken: any;
           PlacesService: any;
           PlacesServiceStatus: {
             OK: string;
