@@ -96,12 +96,18 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
     const initializeServices = async () => {
       if (window.google?.maps?.places) {
         try {
-          const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
-          autocompleteService.current = { AutocompleteSuggestion, AutocompleteSessionToken };
+          const { AutocompleteSuggestion, AutocompleteSessionToken } =
+            await window.google.maps.importLibrary("places");
+          autocompleteService.current = {
+            AutocompleteSuggestion,
+            AutocompleteSessionToken,
+          };
           const map = new window.google.maps.Map(document.createElement("div"));
-          placesService.current = new window.google.maps.places.PlacesService(map);
+          placesService.current = new window.google.maps.places.PlacesService(
+            map,
+          );
         } catch (error) {
-          console.error('Failed to initialize Google Maps services:', error);
+          console.error("Failed to initialize Google Maps services:", error);
         }
       }
     };
@@ -133,7 +139,8 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
     if (!autocompleteService.current) return;
 
     try {
-      const { AutocompleteSuggestion, AutocompleteSessionToken } = autocompleteService.current;
+      const { AutocompleteSuggestion, AutocompleteSessionToken } =
+        autocompleteService.current;
       const sessionToken = new AutocompleteSessionToken();
 
       const request = {
@@ -142,7 +149,8 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
         includedRegionCodes: ["in"],
       };
 
-      const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+      const response =
+        await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
       const predictions = response.suggestions;
 
       if (predictions && predictions.length > 0) {
@@ -152,8 +160,11 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
             description: placePrediction.text,
             place_id: placePrediction.placeId,
             structured_formatting: {
-              main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
-              secondary_text: placePrediction.structuredFormat?.secondaryText || "",
+              main_text:
+                placePrediction.structuredFormat?.mainText ||
+                placePrediction.text,
+              secondary_text:
+                placePrediction.structuredFormat?.secondaryText || "",
             },
           };
         });
@@ -165,15 +176,6 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
       console.error("Error searching addresses:", error);
       setSuggestions([]);
     }
-  };
-        ) {
-          setSuggestions(predictions);
-        } else {
-          // Fallback to Nominatim for better India coverage
-          searchWithNominatim(query);
-        }
-      },
-    );
   };
 
   // Fallback search using Nominatim (OpenStreetMap)
