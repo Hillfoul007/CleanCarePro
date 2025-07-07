@@ -269,24 +269,37 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     detectCurrentLocation();
   }, [googleMapsLoaded]);
 
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = async (value: string) => {
     setSearchValue(value);
     if (googleMapsLoaded && window.google && value.length > 2) {
-      const service = new window.google.maps.places.AutocompleteService();
-      service.getPlacePredictions(
-        {
+      try {
+        const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
+        const sessionToken = new AutocompleteSessionToken();
+
+        const request = {
           input: value,
-          types: ["geocode"],
-          componentRestrictions: { country: ["in", "us", "ca", "gb", "au"] },
-        },
-        (predictions, status) => {
-          if (
-            status === window.google.maps.places.PlacesServiceStatus.OK &&
-            predictions
-          ) {
-            setSuggestions(predictions);
-          } else {
-            setSuggestions([]);
+          sessionToken: sessionToken,
+          includedRegionCodes: ["in", "us", "ca", "gb", "au"],
+        };
+
+        const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+        const predictions = response.suggestions;
+
+        if (predictions && predictions.length > 0) {
+          const formattedPredictions = predictions.map((suggestion: any) => {
+            const placePrediction = suggestion.placePrediction;
+            return {
+              description: placePrediction.text,
+              place_id: placePrediction.placeId,
+              structured_formatting: {
+                main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
+                secondary_text: placePrediction.structuredFormat?.secondaryText || "",
+              },
+            };
+          });
+          setSuggestions(formattedPredictions);
+        } else {
+          setSuggestions([]);
           }
         },
       );
