@@ -674,7 +674,8 @@ const EnhancedAddressForm: React.FC<EnhancedAddressFormProps> = ({
         // Try Google Places API first
         if (window.google && window.google.maps && window.google.maps.places) {
           try {
-            const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
+            const { AutocompleteSuggestion, AutocompleteSessionToken } =
+              await window.google.maps.importLibrary("places");
             const sessionToken = new AutocompleteSessionToken();
 
             const request = {
@@ -683,40 +684,58 @@ const EnhancedAddressForm: React.FC<EnhancedAddressFormProps> = ({
               includedRegionCodes: ["in"],
             };
 
-            const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+            const response =
+              await AutocompleteSuggestion.fetchAutocompleteSuggestions(
+                request,
+              );
             const predictions = response.suggestions;
 
             if (searchComplete) return; // Prevent duplicate calls
 
             if (predictions && predictions.length > 0) {
-              const formattedPredictions = predictions.slice(0, 5).map((suggestion: any) => {
-                const placePrediction = suggestion.placePrediction;
-                return {
-                  description: placePrediction.text,
-                  place_id: placePrediction.placeId,
-                  structured_formatting: {
-                    main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
-                    secondary_text: placePrediction.structuredFormat?.secondaryText || "",
-                  },
-                };
-              });
+              const formattedPredictions = predictions
+                .slice(0, 5)
+                .map((suggestion: any) => {
+                  const placePrediction = suggestion.placePrediction;
+                  return {
+                    description: placePrediction.text,
+                    place_id: placePrediction.placeId,
+                    structured_formatting: {
+                      main_text:
+                        placePrediction.structuredFormat?.mainText ||
+                        placePrediction.text,
+                      secondary_text:
+                        placePrediction.structuredFormat?.secondaryText || "",
+                    },
+                  };
+                });
               setSuggestions(formattedPredictions);
               setShowSuggestions(true);
               setIsSearching(false);
+              searchComplete = true;
+            } else {
+              // Fallback to alternative search
+              try {
+                await searchAlternativePlaces(searchValue);
                 searchComplete = true;
-              } else {
-                // Fallback to alternative search
-                try {
-                  await searchAlternativePlaces(searchValue);
-                  searchComplete = true;
-                } catch (error) {
-                  console.error("Alternative search error:", error);
-                  setIsSearching(false);
-                  searchComplete = true;
-                }
+              } catch (error) {
+                console.error("Alternative search error:", error);
+                setIsSearching(false);
+                searchComplete = true;
               }
-            },
-          );
+            }
+          } catch (error) {
+            console.error("Google Places API error:", error);
+            // Fallback to alternative search
+            try {
+              await searchAlternativePlaces(searchValue);
+              searchComplete = true;
+            } catch (fallbackError) {
+              console.error("Alternative search error:", fallbackError);
+              setIsSearching(false);
+              searchComplete = true;
+            }
+          }
         } else {
           // Use alternative search method
           await searchAlternativePlaces(searchValue);
