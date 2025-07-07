@@ -747,19 +747,29 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     return null;
   };
 
-  // IP-based location fallback
-  const getIPBasedLocation = async () => {
+  // Browser geolocation fallback (replaces ipapi.co to fix CORS issues)
+  const getBrowserLocation = async () => {
     try {
-      const response = await fetch("https://ipapi.co/json/");
-      const data = await response.json();
+      return new Promise<void>((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation is not supported by this browser"));
+          return;
+        }
 
-      if (data.latitude && data.longitude) {
-        const coordinates = { lat: data.latitude, lng: data.longitude };
-        const address =
-          `${data.city || ""}, ${data.region || ""}, ${data.country_name || ""}`.replace(
-            /^,\s*|,\s*$/g,
-            "",
-          );
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const coordinates = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+
+              // Use Google Maps Geocoding to get address
+              if (mapInstance && placesService) {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ location: coordinates }, (results, status) => {
+                  if (status === "OK" && results && results[0]) {
+                    const address = results[0].formatted_address;
 
         console.log("🌐 IP-based location found:", { coordinates, address });
         return { coordinates, address };
