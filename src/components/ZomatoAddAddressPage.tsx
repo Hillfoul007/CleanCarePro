@@ -190,14 +190,11 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         ],
       });
 
-      const placesService = new google.maps.places.PlacesService(map);
-
       // Initialize the new AutocompleteSuggestion service
       const { AutocompleteSuggestion, AutocompleteSessionToken } =
         await google.maps.importLibrary("places");
 
       setMapInstance(map);
-      setPlacesService(placesService);
       setAutocompleteService({
         AutocompleteSuggestion,
         AutocompleteSessionToken,
