@@ -531,9 +531,9 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
 
       // Enhanced fallback - try to get approximate location from IP
       try {
-        console.log("🌐 Trying IP-based location fallback...");
-        const ipLocation = await getIPBasedLocation();
-        if (ipLocation) {
+        console.log("🌐 Trying browser location fallback...");
+        const browserLocation = await getBrowserLocation();
+        if (browserLocation) {
           setSelectedLocation(ipLocation);
           setSearchQuery(ipLocation.address);
           updateMapLocation(ipLocation.coordinates);
