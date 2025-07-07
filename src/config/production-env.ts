@@ -3,8 +3,18 @@
  * Handles proper API URL detection for production deployment
  */
 
-// Define the correct production API URL
-export const PRODUCTION_API_URL = "https://cleancarepro-95it.onrender.com/api";
+// Define the correct production API URL based on current frontend URL
+export const PRODUCTION_API_URL = (() => {
+  const hostname = window.location.hostname;
+
+  // If we're on cleancarepro-1-p2oc.onrender.com, use cleancarepro-95it.onrender.com for API
+  if (hostname.includes("cleancarepro-1-p2oc.onrender.com")) {
+    return "https://cleancarepro-95it.onrender.com/api";
+  }
+
+  // Default fallback
+  return "https://cleancarepro-95it.onrender.com/api";
+})();
 
 export const getProductionApiUrl = (): string => {
   // Check if we're in production based on hostname
