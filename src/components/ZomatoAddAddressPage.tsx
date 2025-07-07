@@ -191,11 +191,17 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       });
 
       const placesService = new google.maps.places.PlacesService(map);
-      const autocompleteService = new google.maps.places.AutocompleteService();
+
+      // Initialize the new AutocompleteSuggestion service
+      const { AutocompleteSuggestion, AutocompleteSessionToken } =
+        await google.maps.importLibrary("places");
 
       setMapInstance(map);
       setPlacesService(placesService);
-      setAutocompleteService(autocompleteService);
+      setAutocompleteService({
+        AutocompleteSuggestion,
+        AutocompleteSessionToken,
+      });
       setIsMapLoading(false);
 
       // Add click listener to map for pin placement
