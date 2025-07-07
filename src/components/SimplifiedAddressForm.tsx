@@ -326,16 +326,33 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
             <MapPin className="h-5 w-5 text-green-600" />
             Address Details
           </CardTitle>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={resetForm}
-            className="text-gray-500 hover:text-gray-700"
-            title="Clear all fields"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant={useSmartInput ? "default" : "outline"}
+              size="sm"
+              onClick={() => setUseSmartInput(!useSmartInput)}
+              className={useSmartInput ? "bg-green-600 hover:bg-green-700" : ""}
+              title={
+                useSmartInput
+                  ? "Switch to manual form"
+                  : "Use smart address input"
+              }
+            >
+              <Sparkles className="h-4 w-4 mr-1" />
+              {useSmartInput ? "Smart" : "Manual"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={resetForm}
+              className="text-gray-500 hover:text-gray-700"
+              title="Clear all fields"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardHeader>
 
