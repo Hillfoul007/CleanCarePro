@@ -98,15 +98,24 @@ const GoogleMapsNavigation: React.FC<GoogleMapsNavigationProps> = ({
     if (directionsService && directionsRenderer && origin) {
       calculateRoute();
     } else if (map && !origin) {
-      // Show just the destination marker if no origin
-      new window.google.maps.Marker({
-        position: destination,
-        map: map,
-        title: destination.address,
-        icon: {
-          url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
-        },
-      });
+      // Show just the destination marker if no origin using AdvancedMarkerElement
+      if (window.google.maps.marker?.AdvancedMarkerElement) {
+        new window.google.maps.marker.AdvancedMarkerElement({
+          position: destination,
+          map: map,
+          title: destination.address,
+        });
+      } else {
+        // Fallback to old marker for backwards compatibility
+        new window.google.maps.Marker({
+          position: destination,
+          map: map,
+          title: destination.address,
+          icon: {
+            url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+          },
+        });
+      }
     }
   }, [directionsService, directionsRenderer, origin, destination]);
 

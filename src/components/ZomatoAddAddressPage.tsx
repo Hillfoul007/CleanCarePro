@@ -17,6 +17,32 @@ import {
 import { locationService, Coordinates } from "@/services/locationService";
 import { Loader } from "@googlemaps/js-api-loader";
 
+// Add CSS for bounce animation
+const bounceAnimation = `
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+`;
+
+// Add style element to document head
+if (
+  typeof document !== "undefined" &&
+  !document.querySelector("#bounce-animation-styles")
+) {
+  const style = document.createElement("style");
+  style.id = "bounce-animation-styles";
+  style.textContent = bounceAnimation;
+  document.head.appendChild(style);
+}
+
 interface AddressData {
   flatNo: string;
   street: string;
@@ -100,7 +126,9 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     useState<google.maps.places.PlacesService | null>(null);
   const [autocompleteService, setAutocompleteService] =
     useState<google.maps.places.AutocompleteService | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [marker, setMarker] = useState<
+    google.maps.marker.AdvancedMarkerElement | google.maps.Marker | null
+  >(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -140,7 +168,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       const loader = new Loader({
         apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
         version: "weekly",
-        libraries: ["places", "geometry"],
+        libraries: ["places", "geometry", "marker"], // Include marker library for AdvancedMarkerElement
       });
 
       const google = await loader.load();
@@ -178,18 +206,36 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       });
 
-      // Add default center marker for India
-      const defaultMarker = new google.maps.Marker({
-        position: defaultCenter,
-        map: map,
-        title: "Click anywhere on the map to select location",
-        icon: {
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(24, 24),
-          anchor: new google.maps.Point(12, 24),
-        },
-        animation: google.maps.Animation.BOUNCE,
-      });
+      // Add default center marker for India using AdvancedMarkerElement
+      let defaultMarker;
+      if (google.maps.marker?.AdvancedMarkerElement) {
+        const markerContent = document.createElement("div");
+        markerContent.innerHTML = `
+          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
+            <circle cx='12' cy='10' r='3' fill='white'/>
+          </svg>
+        `;
+        defaultMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: defaultCenter,
+          map: map,
+          title: "Click anywhere on the map to select location",
+          content: markerContent,
+        });
+      } else {
+        // Fallback to old marker
+        defaultMarker = new google.maps.Marker({
+          position: defaultCenter,
+          map: map,
+          title: "Click anywhere on the map to select location",
+          icon: {
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(24, 24),
+            anchor: new google.maps.Point(12, 24),
+          },
+          animation: google.maps.Animation.BOUNCE,
+        });
+      }
 
       // Remove default marker after 3 seconds
       setTimeout(() => {
@@ -245,59 +291,116 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       mapInstance.setCenter(coordinates);
       mapInstance.setZoom(16);
 
-      // Remove existing marker
+      // Remove existing marker (works for both AdvancedMarkerElement and legacy Marker)
       if (marker) {
-        marker.setMap(null);
+        if (marker instanceof google.maps.marker.AdvancedMarkerElement) {
+          marker.map = null;
+        } else if (marker instanceof google.maps.Marker) {
+          marker.setMap(null);
+        }
       }
 
-      // Add new marker with enhanced visual feedback
-      const newMarker = new google.maps.Marker({
-        position: coordinates,
-        map: mapInstance,
-        draggable: true,
-        animation: google.maps.Animation.DROP,
-        title: "Drag to adjust location or click map to move pin",
-        icon: {
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(32, 32),
-          anchor: new google.maps.Point(16, 32),
-        },
-      });
+      // Add new marker with enhanced visual feedback using AdvancedMarkerElement
+      let newMarker;
+      if (google.maps.marker?.AdvancedMarkerElement) {
+        const markerContent = document.createElement("div");
+        markerContent.innerHTML = `
+          <svg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#16a34a' stroke='#ffffff' stroke-width='1'/>
+            <circle cx='12' cy='10' r='3' fill='white'/>
+          </svg>
+        `;
+        markerContent.style.cursor = "pointer";
 
-      // Add drag start listener for visual feedback
-      newMarker.addListener("dragstart", () => {
-        newMarker.setIcon({
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23059669' stroke='%23ffffff' stroke-width='2'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(36, 36),
-          anchor: new google.maps.Point(18, 36),
+        newMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: coordinates,
+          map: mapInstance,
+          title: "Drag to adjust location or click map to move pin",
+          content: markerContent,
+          gmpDraggable: true,
         });
-      });
+      } else {
+        // Fallback to old marker
+        newMarker = new google.maps.Marker({
+          position: coordinates,
+          map: mapInstance,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          title: "Drag to adjust location or click map to move pin",
+          icon: {
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 32),
+          },
+        });
+      }
 
-      // Add drag end listener with address update
-      newMarker.addListener(
-        "dragend",
-        async (event: google.maps.MapMouseEvent) => {
+      // Add event listeners that work with both marker types
+      if (newMarker instanceof google.maps.marker.AdvancedMarkerElement) {
+        // For AdvancedMarkerElement
+        newMarker.addListener("dragstart", () => {
+          // Visual feedback for advanced marker
+          if (newMarker.content instanceof HTMLElement) {
+            newMarker.content.style.transform = "scale(1.1)";
+            newMarker.content.style.filter = "brightness(1.2)";
+          }
+        });
+
+        newMarker.addListener("dragend", async (event: any) => {
           if (event.latLng) {
-            // Reset marker icon
-            newMarker.setIcon({
-              url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-              scaledSize: new google.maps.Size(32, 32),
-              anchor: new google.maps.Point(16, 32),
-            });
-
+            // Reset visual feedback
+            if (newMarker.content instanceof HTMLElement) {
+              newMarker.content.style.transform = "scale(1)";
+              newMarker.content.style.filter = "brightness(1)";
+            }
             // Update address
             await handleMapClick(event.latLng);
           }
-        },
-      );
+        });
 
-      // Add bounce animation on click
-      newMarker.addListener("click", () => {
-        newMarker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(() => {
-          newMarker.setAnimation(null);
-        }, 700);
-      });
+        newMarker.addListener("click", () => {
+          // Simple bounce effect for advanced marker
+          if (newMarker.content instanceof HTMLElement) {
+            newMarker.content.style.animation = "bounce 0.7s ease-in-out";
+            setTimeout(() => {
+              newMarker.content.style.animation = "";
+            }, 700);
+          }
+        });
+      } else if (newMarker instanceof google.maps.Marker) {
+        // For legacy Marker
+        newMarker.addListener("dragstart", () => {
+          newMarker.setIcon({
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23059669' stroke='%23ffffff' stroke-width='2'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(36, 36),
+            anchor: new google.maps.Point(18, 36),
+          });
+        });
+
+        newMarker.addListener(
+          "dragend",
+          async (event: google.maps.MapMouseEvent) => {
+            if (event.latLng) {
+              // Reset marker icon
+              newMarker.setIcon({
+                url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+                scaledSize: new google.maps.Size(32, 32),
+                anchor: new google.maps.Point(16, 32),
+              });
+
+              // Update address
+              await handleMapClick(event.latLng);
+            }
+          },
+        );
+
+        newMarker.addListener("click", () => {
+          newMarker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(() => {
+            newMarker.setAnimation(null);
+          }, 700);
+        });
+      }
 
       setMarker(newMarker);
     },
@@ -432,17 +535,17 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
 
       // Enhanced fallback - try to get approximate location from IP
       try {
-        console.log("🌐 Trying IP-based location fallback...");
-        const ipLocation = await getIPBasedLocation();
-        if (ipLocation) {
-          setSelectedLocation(ipLocation);
-          setSearchQuery(ipLocation.address);
-          updateMapLocation(ipLocation.coordinates);
-          autoFillAddressFields(ipLocation.address);
+        console.log("🌐 Trying browser location fallback...");
+        const browserLocation = await getBrowserLocation();
+        if (browserLocation) {
+          setSelectedLocation(browserLocation);
+          setSearchQuery(browserLocation.address);
+          updateMapLocation(browserLocation.coordinates);
+          autoFillAddressFields(browserLocation.address);
           return;
         }
-      } catch (ipError) {
-        console.warn("IP location fallback failed:", ipError);
+      } catch (locationError) {
+        console.warn("Browser location fallback failed:", locationError);
       }
 
       // Ultimate fallback - major Indian cities based on common usage
@@ -674,27 +777,67 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     return null;
   };
 
-  // IP-based location fallback
-  const getIPBasedLocation = async () => {
+  // Browser geolocation fallback (replaces ipapi.co to fix CORS issues)
+  const getBrowserLocation = async () => {
     try {
-      const response = await fetch("https://ipapi.co/json/");
-      const data = await response.json();
+      return new Promise<{ coordinates: Coordinates; address: string } | null>(
+        (resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by this browser"));
+            return;
+          }
 
-      if (data.latitude && data.longitude) {
-        const coordinates = { lat: data.latitude, lng: data.longitude };
-        const address =
-          `${data.city || ""}, ${data.region || ""}, ${data.country_name || ""}`.replace(
-            /^,\s*|,\s*$/g,
-            "",
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                const coordinates = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+
+                // Use Google Maps Geocoding to get address
+                if (mapInstance) {
+                  const geocoder = new google.maps.Geocoder();
+                  geocoder.geocode(
+                    { location: coordinates },
+                    (results, status) => {
+                      if (status === "OK" && results && results[0]) {
+                        const address = results[0].formatted_address;
+                        console.log("🌐 Browser location found:", {
+                          coordinates,
+                          address,
+                        });
+                        resolve({ coordinates, address });
+                      } else {
+                        console.warn("Geocoding failed:", status);
+                        resolve({ coordinates, address: "Current Location" });
+                      }
+                    },
+                  );
+                } else {
+                  resolve({ coordinates, address: "Current Location" });
+                }
+              } catch (error) {
+                console.error("Error processing geolocation:", error);
+                reject(error);
+              }
+            },
+            (error) => {
+              console.warn("Geolocation failed:", error);
+              reject(error);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 300000, // 5 minutes
+            },
           );
-
-        console.log("🌐 IP-based location found:", { coordinates, address });
-        return { coordinates, address };
-      }
+        },
+      );
     } catch (error) {
-      console.warn("IP location service failed:", error);
+      console.warn("Browser location service failed:", error);
+      return null;
     }
-    return null;
   };
 
   // Enhanced auto-fill address fields from detailed address string

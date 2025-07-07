@@ -11,6 +11,13 @@ declare global {
         LatLng: any;
         Size: any;
         Point: any;
+        Animation: {
+          BOUNCE: any;
+          DROP: any;
+        };
+        marker: {
+          AdvancedMarkerElement: any;
+        };
         places: {
           Autocomplete: any;
           AutocompleteService: any;

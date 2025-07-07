@@ -19,6 +19,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
+import { apiClient } from "@/lib/apiClient";
 
 interface SavedAddress {
   id: string;
@@ -65,34 +66,27 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
 
     setLoading(true);
     try {
-      // Try to load from backend first
+      // Try to load from backend first using apiClient
       const userId = currentUser._id || currentUser.id || currentUser.phone;
-      const response = await fetch("/api/addresses", {
-        headers: {
-          "user-id": userId,
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.data) {
-          // Transform backend format to frontend format
-          const transformedAddresses = result.data.map((addr: any) => ({
-            id: addr._id,
-            type: addr.address_type || "other",
-            label: addr.title,
-            flatNo: addr.full_address.split(",")[0] || "",
-            fullAddress: addr.full_address,
-            landmark: addr.landmark || "",
-            phone: addr.contact_phone || currentUser.phone,
-            coordinates: addr.coordinates,
-            createdAt: addr.created_at,
-          }));
-          setSavedAddresses(transformedAddresses);
-          setLoading(false);
-          return;
-        }
+      const response = await apiClient.getAddresses(userId);
+
+      if (response.data) {
+        // Transform backend format to frontend format
+        const transformedAddresses = response.data.map((addr: any) => ({
+          id: addr._id,
+          type: addr.address_type || "other",
+          label: addr.title,
+          flatNo: addr.full_address.split(",")[0] || "",
+          fullAddress: addr.full_address,
+          landmark: addr.landmark || "",
+          phone: addr.contact_phone || currentUser.phone,
+          coordinates: addr.coordinates,
+          createdAt: addr.created_at,
+        }));
+        setSavedAddresses(transformedAddresses);
+        setLoading(false);
+        return;
       }
 
       // Fallback to localStorage if backend fails
@@ -121,15 +115,9 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
 
     try {
       const userId = currentUser._id || currentUser.id || currentUser.phone;
-      const response = await fetch(`/api/addresses/${addressId}`, {
-        method: "DELETE",
-        headers: {
-          "user-id": userId,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.deleteAddress(userId, addressId);
 
-      if (response.ok) {
+      if (response.data) {
         // Remove from state
         setSavedAddresses((prev) =>
           prev.filter((addr) => addr.id !== addressId),
