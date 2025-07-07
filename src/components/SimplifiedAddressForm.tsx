@@ -414,173 +414,179 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
               )}
             </div>
 
-        {/* Location Search */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">🔍 Search Location</Label>
-          <div className="relative">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search any location on Earth (e.g., Times Square New York, Connaught Place Delhi)"
-                value={searchValue}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                onFocus={() =>
-                  searchResults.length > 0 && setShowSearchResults(true)
-                }
-                className="pl-10"
-              />
-              {isSearching && (
-                <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-gray-400" />
+            {/* Location Search */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">🔍 Search Location</Label>
+              <div className="relative">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search any location on Earth (e.g., Times Square New York, Connaught Place Delhi)"
+                    value={searchValue}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    onFocus={() =>
+                      searchResults.length > 0 && setShowSearchResults(true)
+                    }
+                    className="pl-10"
+                  />
+                  {isSearching && (
+                    <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-gray-400" />
+                  )}
+                </div>
+
+                {/* Search Results */}
+                {showSearchResults && searchResults.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {searchResults.slice(0, 5).map((result, index) => (
+                      <div
+                        key={index}
+                        onClick={() => selectSearchResult(result)}
+                        className="px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                      >
+                        <div className="text-sm font-medium text-gray-900">
+                          {result.formattedAddress ||
+                            `${result.city}, ${result.principalSubdivision}`}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1">
+                          {result.locality && `${result.locality}, `}
+                          {result.country}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Address Form Fields */}
+            <div className="space-y-4">
+              {/* Flat/House Number */}
+              <div>
+                <Label htmlFor="flatNo" className="text-sm font-medium">
+                  🏠 Flat/House No. (Optional)
+                </Label>
+                <Input
+                  id="flatNo"
+                  placeholder="e.g., A-101, House No. 45 (optional)"
+                  value={address.flatNo}
+                  onChange={(e) => handleFieldChange("flatNo", e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+
+              {/* Street/Area */}
+              <div>
+                <Label htmlFor="street" className="text-sm font-medium">
+                  🛣️ Street/Area <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="street"
+                  placeholder="e.g., Sector 15, MG Road"
+                  value={address.street}
+                  onChange={(e) => handleFieldChange("street", e.target.value)}
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              {/* City */}
+              <div>
+                <Label htmlFor="city" className="text-sm font-medium">
+                  🏙️ City <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="city"
+                  placeholder="e.g., Delhi, Mumbai, New York"
+                  value={address.city}
+                  onChange={(e) => handleFieldChange("city", e.target.value)}
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              {/* State/Village */}
+              <div>
+                <Label htmlFor="village" className="text-sm font-medium">
+                  📍 State/Region
+                </Label>
+                <Input
+                  id="village"
+                  placeholder="e.g., Delhi, Maharashtra, New York"
+                  value={address.village}
+                  onChange={(e) => handleFieldChange("village", e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+
+              {/* Pincode */}
+              <div>
+                <Label htmlFor="pincode" className="text-sm font-medium">
+                  📮 Pincode/Zip <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="pincode"
+                  placeholder="e.g., 110001, 400001, 10001"
+                  value={address.pincode}
+                  onChange={(e) => handleFieldChange("pincode", e.target.value)}
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              {/* Landmark */}
+              <div>
+                <Label htmlFor="landmark" className="text-sm font-medium">
+                  🗺️ Landmark (Optional)
+                </Label>
+                <Input
+                  id="landmark"
+                  placeholder="e.g., Near Metro Station, Opposite Mall"
+                  value={address.landmark}
+                  onChange={(e) =>
+                    handleFieldChange("landmark", e.target.value)
+                  }
+                  className="mt-1"
+                />
+              </div>
+
+              {/* Address Type */}
+              <div>
+                <Label htmlFor="type" className="text-sm font-medium">
+                  🏠 Address Type <span className="text-red-500">*</span>
+                </Label>
+                <select
+                  id="type"
+                  value={address.type || "other"}
+                  onChange={(e) => handleFieldChange("type", e.target.value)}
+                  className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  required
+                >
+                  <option value="home">🏠 Home</option>
+                  <option value="office">🏢 Office</option>
+                  <option value="other">📍 Other</option>
+                </select>
+              </div>
+
+              {/* Address Label */}
+              {showLabel && (
+                <div>
+                  <Label htmlFor="label" className="text-sm font-medium">
+                    🏷️ Address Label (Optional)
+                  </Label>
+                  <Input
+                    id="label"
+                    placeholder="e.g., My Home, Office, Mom's Place"
+                    value={address.label}
+                    onChange={(e) => handleFieldChange("label", e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
               )}
             </div>
+          </>
+        )}
 
-            {/* Search Results */}
-            {showSearchResults && searchResults.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                {searchResults.slice(0, 5).map((result, index) => (
-                  <div
-                    key={index}
-                    onClick={() => selectSearchResult(result)}
-                    className="px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
-                  >
-                    <div className="text-sm font-medium text-gray-900">
-                      {result.formattedAddress ||
-                        `${result.city}, ${result.principalSubdivision}`}
-                    </div>
-                    <div className="text-xs text-gray-600 mt-1">
-                      {result.locality && `${result.locality}, `}
-                      {result.country}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Address Form Fields */}
-        <div className="space-y-4">
-          {/* Flat/House Number */}
-          <div>
-            <Label htmlFor="flatNo" className="text-sm font-medium">
-              🏠 Flat/House No. (Optional)
-            </Label>
-            <Input
-              id="flatNo"
-              placeholder="e.g., A-101, House No. 45 (optional)"
-              value={address.flatNo}
-              onChange={(e) => handleFieldChange("flatNo", e.target.value)}
-              className="mt-1"
-            />
-          </div>
-
-          {/* Street/Area */}
-          <div>
-            <Label htmlFor="street" className="text-sm font-medium">
-              🛣️ Street/Area <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="street"
-              placeholder="e.g., Sector 15, MG Road"
-              value={address.street}
-              onChange={(e) => handleFieldChange("street", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          {/* City */}
-          <div>
-            <Label htmlFor="city" className="text-sm font-medium">
-              🏙️ City <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="city"
-              placeholder="e.g., Delhi, Mumbai, New York"
-              value={address.city}
-              onChange={(e) => handleFieldChange("city", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          {/* State/Village */}
-          <div>
-            <Label htmlFor="village" className="text-sm font-medium">
-              📍 State/Region
-            </Label>
-            <Input
-              id="village"
-              placeholder="e.g., Delhi, Maharashtra, New York"
-              value={address.village}
-              onChange={(e) => handleFieldChange("village", e.target.value)}
-              className="mt-1"
-            />
-          </div>
-
-          {/* Pincode */}
-          <div>
-            <Label htmlFor="pincode" className="text-sm font-medium">
-              📮 Pincode/Zip <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="pincode"
-              placeholder="e.g., 110001, 400001, 10001"
-              value={address.pincode}
-              onChange={(e) => handleFieldChange("pincode", e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          {/* Landmark */}
-          <div>
-            <Label htmlFor="landmark" className="text-sm font-medium">
-              🗺️ Landmark (Optional)
-            </Label>
-            <Input
-              id="landmark"
-              placeholder="e.g., Near Metro Station, Opposite Mall"
-              value={address.landmark}
-              onChange={(e) => handleFieldChange("landmark", e.target.value)}
-              className="mt-1"
-            />
-          </div>
-
-          {/* Address Type */}
-          <div>
-            <Label htmlFor="type" className="text-sm font-medium">
-              🏠 Address Type <span className="text-red-500">*</span>
-            </Label>
-            <select
-              id="type"
-              value={address.type || "other"}
-              onChange={(e) => handleFieldChange("type", e.target.value)}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="home">🏠 Home</option>
-              <option value="office">🏢 Office</option>
-              <option value="other">📍 Other</option>
-            </select>
-          </div>
-
-          {/* Address Label */}
-          {showLabel && (
-            <div>
-              <Label htmlFor="label" className="text-sm font-medium">
-                🏷️ Address Label (Optional)
-              </Label>
-              <Input
-                id="label"
-                placeholder="e.g., My Home, Office, Mom's Place"
-                value={address.label}
-                onChange={(e) => handleFieldChange("label", e.target.value)}
-                className="mt-1"
-              />
-            </div>
-          )}
-        </div>
+        {/* Common Elements - shown for both smart and manual modes */}
 
         {/* Location Status */}
         {address.coordinates && (
