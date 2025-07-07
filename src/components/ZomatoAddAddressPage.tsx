@@ -305,40 +305,72 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         });
       }
 
-      // Add drag start listener for visual feedback
-      newMarker.addListener("dragstart", () => {
-        newMarker.setIcon({
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23059669' stroke='%23ffffff' stroke-width='2'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(36, 36),
-          anchor: new google.maps.Point(18, 36),
+      // Add event listeners that work with both marker types
+      if (newMarker instanceof google.maps.marker.AdvancedMarkerElement) {
+        // For AdvancedMarkerElement
+        newMarker.addListener("dragstart", () => {
+          // Visual feedback for advanced marker
+          if (newMarker.content instanceof HTMLElement) {
+            newMarker.content.style.transform = "scale(1.1)";
+            newMarker.content.style.filter = "brightness(1.2)";
+          }
         });
-      });
 
-      // Add drag end listener with address update
-      newMarker.addListener(
-        "dragend",
-        async (event: google.maps.MapMouseEvent) => {
+        newMarker.addListener("dragend", async (event: any) => {
           if (event.latLng) {
-            // Reset marker icon
-            newMarker.setIcon({
-              url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-              scaledSize: new google.maps.Size(32, 32),
-              anchor: new google.maps.Point(16, 32),
-            });
-
+            // Reset visual feedback
+            if (newMarker.content instanceof HTMLElement) {
+              newMarker.content.style.transform = "scale(1)";
+              newMarker.content.style.filter = "brightness(1)";
+            }
             // Update address
             await handleMapClick(event.latLng);
           }
-        },
-      );
+        });
 
-      // Add bounce animation on click
-      newMarker.addListener("click", () => {
-        newMarker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(() => {
-          newMarker.setAnimation(null);
-        }, 700);
-      });
+        newMarker.addListener("click", () => {
+          // Simple bounce effect for advanced marker
+          if (newMarker.content instanceof HTMLElement) {
+            newMarker.content.style.animation = "bounce 0.7s ease-in-out";
+            setTimeout(() => {
+              newMarker.content.style.animation = "";
+            }, 700);
+          }
+        });
+      } else if (newMarker instanceof google.maps.Marker) {
+        // For legacy Marker
+        newMarker.addListener("dragstart", () => {
+          newMarker.setIcon({
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23059669' stroke='%23ffffff' stroke-width='2'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(36, 36),
+            anchor: new google.maps.Point(18, 36),
+          });
+        });
+
+        newMarker.addListener(
+          "dragend",
+          async (event: google.maps.MapMouseEvent) => {
+            if (event.latLng) {
+              // Reset marker icon
+              newMarker.setIcon({
+                url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+                scaledSize: new google.maps.Size(32, 32),
+                anchor: new google.maps.Point(16, 32),
+              });
+
+              // Update address
+              await handleMapClick(event.latLng);
+            }
+          },
+        );
+
+        newMarker.addListener("click", () => {
+          newMarker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(() => {
+            newMarker.setAnimation(null);
+          }, 700);
+        });
+      }
 
       setMarker(newMarker);
     },
