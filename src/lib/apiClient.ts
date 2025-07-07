@@ -467,6 +467,69 @@ class EnhancedApiClient {
     });
   }
 
+  // Address endpoints
+  async getAddresses(userId: string): Promise<ApiResponse<any[]>> {
+    return this.request("/addresses", {
+      headers: {
+        "user-id": userId,
+      },
+    });
+  }
+
+  async createAddress(
+    userId: string,
+    addressData: any,
+  ): Promise<ApiResponse<any>> {
+    return this.request("/addresses", {
+      method: "POST",
+      headers: {
+        "user-id": userId,
+      },
+      body: addressData,
+    });
+  }
+
+  async updateAddress(
+    userId: string,
+    addressId: string,
+    addressData: any,
+  ): Promise<ApiResponse<any>> {
+    return this.request(`/addresses/${encodeURIComponent(addressId)}`, {
+      method: "PUT",
+      headers: {
+        "user-id": userId,
+      },
+      body: addressData,
+    });
+  }
+
+  async deleteAddress(
+    userId: string,
+    addressId: string,
+  ): Promise<ApiResponse<any>> {
+    return this.request(`/addresses/${encodeURIComponent(addressId)}`, {
+      method: "DELETE",
+      headers: {
+        "user-id": userId,
+      },
+    });
+  }
+
+  async setDefaultAddress(
+    userId: string,
+    addressId: string,
+  ): Promise<ApiResponse<any>> {
+    return this.request(
+      `/addresses/${encodeURIComponent(addressId)}/set-default`,
+      {
+        method: "PATCH",
+        headers: {
+          "user-id": userId,
+        },
+      },
+    );
+  }
+
   // Clear all pending requests (useful for component unmount)
   clearPendingRequests(): void {
     this.requestQueue.clear();
