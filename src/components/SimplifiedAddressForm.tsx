@@ -71,6 +71,40 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
     }
   }, [address, onAddressChange]);
 
+  // Convert ParsedAddress to AddressData format
+  const convertParsedToAddressData = (
+    parsedAddress: ParsedAddress,
+  ): AddressData => {
+    const parts = [
+      parsedAddress.flatNo,
+      parsedAddress.street,
+      parsedAddress.landmark && `Near ${parsedAddress.landmark}`,
+      parsedAddress.area,
+      parsedAddress.city,
+      parsedAddress.pincode,
+    ].filter(Boolean);
+
+    return {
+      flatNo: parsedAddress.flatNo || "",
+      flatHouseNo: parsedAddress.flatNo || "",
+      street: parsedAddress.street || "",
+      landmark: parsedAddress.landmark || "",
+      village: parsedAddress.area || parsedAddress.city || "",
+      city: parsedAddress.city || "",
+      pincode: parsedAddress.pincode || "",
+      fullAddress: parsedAddress.formattedAddress || parts.join(", "),
+      coordinates: parsedAddress.coordinates,
+      label: address.label,
+      type: address.type,
+    };
+  };
+
+  // Handle smart address input change
+  const handleSmartAddressChange = (parsedAddress: ParsedAddress) => {
+    const newAddress = convertParsedToAddressData(parsedAddress);
+    setAddress(newAddress);
+  };
+
   // Handle individual field changes
   const handleFieldChange = (field: keyof AddressData, value: string) => {
     setAddress((prev) => {
