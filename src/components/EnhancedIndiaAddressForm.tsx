@@ -93,12 +93,25 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
 
   // Initialize Google Maps services
   useEffect(() => {
-    if (window.google?.maps?.places) {
-      autocompleteService.current =
-        new window.google.maps.places.AutocompleteService();
-      const map = new window.google.maps.Map(document.createElement("div"));
-      placesService.current = new window.google.maps.places.PlacesService(map);
-    }
+    const initializeServices = async () => {
+      if (window.google?.maps?.places) {
+        try {
+          const { AutocompleteSuggestion, AutocompleteSessionToken } =
+            await window.google.maps.importLibrary("places");
+          autocompleteService.current = {
+            AutocompleteSuggestion,
+            AutocompleteSessionToken,
+          };
+          const map = new window.google.maps.Map(document.createElement("div"));
+          placesService.current = new window.google.maps.places.PlacesService(
+            map,
+          );
+        } catch (error) {
+          console.error("Failed to initialize Google Maps services:", error);
+        }
+      }
+    };
+    initializeServices();
   }, []);
 
   // Debounced search for addresses
