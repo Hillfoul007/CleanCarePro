@@ -17,6 +17,32 @@ import {
 import { locationService, Coordinates } from "@/services/locationService";
 import { Loader } from "@googlemaps/js-api-loader";
 
+// Add CSS for bounce animation
+const bounceAnimation = `
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+`;
+
+// Add style element to document head
+if (
+  typeof document !== "undefined" &&
+  !document.querySelector("#bounce-animation-styles")
+) {
+  const style = document.createElement("style");
+  style.id = "bounce-animation-styles";
+  style.textContent = bounceAnimation;
+  document.head.appendChild(style);
+}
+
 interface AddressData {
   flatNo: string;
   street: string;
