@@ -144,9 +144,75 @@ class AutocompleteSuggestionService {
   }
 
   /**
-   * Get place details using the PlacesService (this part hasn't changed)
+   * Get place details using the new Place API (replaces deprecated PlacesService)
    */
   async getPlaceDetails(placeId: string): Promise<any> {
+    if (!this.isInitialized) {
+      await this.initialize();
+    }
+
+    try {
+      if (!window.google?.maps?.places) {
+        throw new Error("Google Maps Places API not loaded");
+      }
+
+      // Use the new Place API
+      const { Place } = await window.google.maps.importLibrary("places");
+
+      const place = new Place({
+        id: placeId,
+        requestedLanguage: "en", // or use user's preferred language
+      });
+
+      // Fetch the fields we need
+      await place.fetchFields({
+        fields: [
+          "id",
+          "displayName",
+          "formattedAddress",
+          "location",
+          "addressComponents",
+          "types",
+        ],
+      });
+
+      // Convert to the format expected by existing code
+      const convertedPlace = {
+        place_id: place.id,
+        name: place.displayName,
+        formatted_address: place.formattedAddress,
+        geometry: {
+          location: place.location
+            ? {
+                lat: () => place.location.lat,
+                lng: () => place.location.lng,
+                lat: place.location.lat,
+                lng: place.location.lng,
+              }
+            : null,
+        },
+        address_components:
+          place.addressComponents?.map((component: any) => ({
+            long_name: component.longText,
+            short_name: component.shortText,
+            types: component.types,
+          })) || [],
+        types: place.types || [],
+      };
+
+      return convertedPlace;
+    } catch (error) {
+      console.error("Error fetching place details with new Places API:", error);
+
+      // Fallback to old API if new one fails
+      return this.getPlaceDetailsLegacy(placeId);
+    }
+  }
+
+  /**
+   * Legacy fallback for place details using PlacesService
+   */
+  private async getPlaceDetailsLegacy(placeId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!window.google?.maps?.places) {
         reject(new Error("Google Maps Places API not loaded"));
