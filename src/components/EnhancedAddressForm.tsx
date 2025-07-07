@@ -673,30 +673,36 @@ const EnhancedAddressForm: React.FC<EnhancedAddressFormProps> = ({
 
         // Try Google Places API first
         if (window.google && window.google.maps && window.google.maps.places) {
-          const service = new window.google.maps.places.AutocompleteService();
-          service.getPlacePredictions(
-            {
-              input: searchValue,
-              componentRestrictions: { country: "in" },
-              types: [
-                "address",
-                "establishment",
-                "geocode",
-                "locality",
-                "sublocality",
-              ],
-            },
-            async (predictions, status) => {
-              if (searchComplete) return; // Prevent duplicate calls
+          try {
+            const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
+            const sessionToken = new AutocompleteSessionToken();
 
-              if (
-                status === window.google.maps.places.PlacesServiceStatus.OK &&
-                predictions &&
-                predictions.length > 0
-              ) {
-                setSuggestions(predictions.slice(0, 5));
-                setShowSuggestions(true);
-                setIsSearching(false);
+            const request = {
+              input: searchValue,
+              sessionToken: sessionToken,
+              includedRegionCodes: ["in"],
+            };
+
+            const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+            const predictions = response.suggestions;
+
+            if (searchComplete) return; // Prevent duplicate calls
+
+            if (predictions && predictions.length > 0) {
+              const formattedPredictions = predictions.slice(0, 5).map((suggestion: any) => {
+                const placePrediction = suggestion.placePrediction;
+                return {
+                  description: placePrediction.text,
+                  place_id: placePrediction.placeId,
+                  structured_formatting: {
+                    main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
+                    secondary_text: placePrediction.structuredFormat?.secondaryText || "",
+                  },
+                };
+              });
+              setSuggestions(formattedPredictions);
+              setShowSuggestions(true);
+              setIsSearching(false);
                 searchComplete = true;
               } else {
                 // Fallback to alternative search
