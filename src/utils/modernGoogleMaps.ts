@@ -1,0 +1,399 @@
+import { Loader } from "@googlemaps/js-api-loader";
+
+export interface MapConfig {
+  center: { lat: number; lng: number };
+  zoom: number;
+  mapTypeId?: google.maps.MapTypeId;
+  disableDefaultUI?: boolean;
+  gestureHandling?: "auto" | "cooperative" | "greedy" | "none";
+}
+
+export interface MarkerConfig {
+  position: { lat: number; lng: number };
+  title?: string;
+  content?: HTMLElement | string;
+  gmpClickable?: boolean;
+}
+
+class ModernGoogleMapsService {
+  private loader: Loader;
+  private isLoaded = false;
+  private map: google.maps.Map | null = null;
+  private markers: google.maps.marker.AdvancedMarkerElement[] = [];
+
+  constructor() {
+    this.loader = new Loader({
+      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+      version: "weekly",
+      libraries: ["places", "marker"], // Include marker library for AdvancedMarkerElement
+    });
+  }
+
+  /**
+   * Initialize Google Maps API
+   */
+  async initialize(): Promise<void> {
+    if (this.isLoaded) return;
+
+    try {
+      await this.loader.load();
+      this.isLoaded = true;
+      console.log("✅ Google Maps API loaded successfully");
+    } catch (error) {
+      console.error("❌ Failed to load Google Maps API:", error);
+      throw new Error("Google Maps API failed to load");
+    }
+  }
+
+  /**
+   * Create a map instance with modern configuration
+   */
+  async createMap(
+    container: HTMLElement,
+    config: MapConfig,
+  ): Promise<google.maps.Map> {
+    await this.initialize();
+
+    const defaultConfig: MapConfig = {
+      center: { lat: 28.6139, lng: 77.209 }, // Delhi, India
+      zoom: 12,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: false,
+      gestureHandling: "auto",
+      ...config,
+    };
+
+    this.map = new google.maps.Map(container, {
+      ...defaultConfig,
+      // Modern map styling options
+      styles: [
+        {
+          featureType: "poi.business",
+          stylers: [{ visibility: "off" }],
+        },
+        {
+          featureType: "poi.park",
+          elementType: "labels.text",
+          stylers: [{ visibility: "off" }],
+        },
+      ],
+      // Enhanced user experience options
+      clickableIcons: false,
+      fullscreenControl: true,
+      streetViewControl: true,
+      mapTypeControl: true,
+    });
+
+    console.log("🗺️ Modern Google Map created successfully");
+    return this.map;
+  }
+
+  /**
+   * Add modern marker using AdvancedMarkerElement (replaces deprecated Marker)
+   */
+  async addAdvancedMarker(
+    config: MarkerConfig,
+  ): Promise<google.maps.marker.AdvancedMarkerElement> {
+    if (!this.map) {
+      throw new Error("Map must be created before adding markers");
+    }
+
+    await this.initialize();
+
+    // Create marker using modern AdvancedMarkerElement
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map: this.map,
+      position: config.position,
+      title: config.title,
+      gmpClickable: config.gmpClickable ?? true,
+    });
+
+    // If custom content is provided, use it
+    if (config.content) {
+      let contentElement: HTMLElement;
+
+      if (typeof config.content === "string") {
+        contentElement = document.createElement("div");
+        contentElement.innerHTML = config.content;
+        contentElement.className = "custom-marker-content";
+      } else {
+        contentElement = config.content;
+      }
+
+      marker.content = contentElement;
+    }
+
+    this.markers.push(marker);
+    console.log("📍 Advanced marker added successfully");
+    return marker;
+  }
+
+  /**
+   * Create custom marker with modern styling
+   */
+  createCustomMarkerContent(options: {
+    icon?: string;
+    color?: string;
+    size?: number;
+    text?: string;
+  }): HTMLElement {
+    const { icon = "📍", color = "#EA4335", size = 40, text } = options;
+
+    const markerElement = document.createElement("div");
+    markerElement.className = "modern-custom-marker";
+    markerElement.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      background-color: ${color};
+      border: 3px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: ${size * 0.5}px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      position: relative;
+    `;
+
+    const iconElement = document.createElement("span");
+    iconElement.textContent = icon;
+    iconElement.style.cssText = `
+      color: white;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    `;
+
+    markerElement.appendChild(iconElement);
+
+    if (text) {
+      const textElement = document.createElement("div");
+      textElement.textContent = text;
+      textElement.style.cssText = `
+        position: absolute;
+        top: ${size + 5}px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        white-space: nowrap;
+        z-index: 1000;
+      `;
+      markerElement.appendChild(textElement);
+    }
+
+    // Add hover effects
+    markerElement.addEventListener("mouseenter", () => {
+      markerElement.style.transform = "scale(1.1)";
+    });
+
+    markerElement.addEventListener("mouseleave", () => {
+      markerElement.style.transform = "scale(1)";
+    });
+
+    return markerElement;
+  }
+
+  /**
+   * Add multiple markers with clustering support
+   */
+  async addMultipleMarkers(
+    configs: MarkerConfig[],
+  ): Promise<google.maps.marker.AdvancedMarkerElement[]> {
+    const promises = configs.map((config) => this.addAdvancedMarker(config));
+    return Promise.all(promises);
+  }
+
+  /**
+   * Clear all markers
+   */
+  clearMarkers(): void {
+    this.markers.forEach((marker) => {
+      marker.map = null;
+    });
+    this.markers = [];
+    console.log("🧹 All markers cleared");
+  }
+
+  /**
+   * Fit map bounds to show all markers
+   */
+  fitMarkersInView(): void {
+    if (!this.map || this.markers.length === 0) return;
+
+    const bounds = new google.maps.LatLngBounds();
+
+    this.markers.forEach((marker) => {
+      if (marker.position) {
+        bounds.extend(marker.position);
+      }
+    });
+
+    this.map.fitBounds(bounds);
+
+    // Ensure minimum zoom level
+    google.maps.event.addListenerOnce(this.map, "bounds_changed", () => {
+      if (this.map && this.map.getZoom() && this.map.getZoom()! > 15) {
+        this.map.setZoom(15);
+      }
+    });
+  }
+
+  /**
+   * Get current map center
+   */
+  getCenter(): { lat: number; lng: number } | null {
+    if (!this.map) return null;
+
+    const center = this.map.getCenter();
+    if (!center) return null;
+
+    return {
+      lat: center.lat(),
+      lng: center.lng(),
+    };
+  }
+
+  /**
+   * Set map center with animation
+   */
+  setCenter(position: { lat: number; lng: number }, zoom?: number): void {
+    if (!this.map) return;
+
+    this.map.panTo(position);
+
+    if (zoom !== undefined) {
+      this.map.setZoom(zoom);
+    }
+  }
+
+  /**
+   * Add click listener to map
+   */
+  addClickListener(callback: (event: google.maps.MapMouseEvent) => void): void {
+    if (!this.map) return;
+
+    this.map.addListener("click", callback);
+  }
+
+  /**
+   * Add marker click listener
+   */
+  addMarkerClickListener(
+    marker: google.maps.marker.AdvancedMarkerElement,
+    callback: (event: google.maps.marker.AdvancedMarkerClickEvent) => void,
+  ): void {
+    marker.addListener("click", callback);
+  }
+
+  /**
+   * Create info window for modern markers
+   */
+  createInfoWindow(content: string | HTMLElement): google.maps.InfoWindow {
+    return new google.maps.InfoWindow({
+      content,
+      headerDisabled: false,
+      maxWidth: 300,
+    });
+  }
+
+  /**
+   * Show info window at marker position
+   */
+  showInfoWindow(
+    infoWindow: google.maps.InfoWindow,
+    marker: google.maps.marker.AdvancedMarkerElement,
+  ): void {
+    if (!this.map) return;
+
+    infoWindow.open({
+      map: this.map,
+      anchor: marker,
+    });
+  }
+
+  /**
+   * Get map instance
+   */
+  getMap(): google.maps.Map | null {
+    return this.map;
+  }
+
+  /**
+   * Destroy map and clean up resources
+   */
+  destroy(): void {
+    this.clearMarkers();
+    this.map = null;
+    console.log("🗑️ Map destroyed and resources cleaned up");
+  }
+
+  /**
+   * Check if Google Maps API is available
+   */
+  isApiAvailable(): boolean {
+    return this.isLoaded && typeof google !== "undefined" && google.maps;
+  }
+
+  /**
+   * Get API load status
+   */
+  getLoadStatus(): { loaded: boolean; error?: string } {
+    return {
+      loaded: this.isLoaded,
+      error: this.isLoaded ? undefined : "API not loaded yet",
+    };
+  }
+}
+
+// Export singleton instance
+export const modernGoogleMaps = new ModernGoogleMapsService();
+
+// Export utility functions
+export const createMarkerIcon = (options: {
+  icon?: string;
+  color?: string;
+  size?: number;
+  text?: string;
+}) => modernGoogleMaps.createCustomMarkerContent(options);
+
+export const loadGoogleMaps = () => modernGoogleMaps.initialize();
+
+// CSS for custom markers (inject into document head)
+const injectMarkerStyles = () => {
+  if (document.getElementById("modern-google-maps-styles")) return;
+
+  const style = document.createElement("style");
+  style.id = "modern-google-maps-styles";
+  style.textContent = `
+    .modern-custom-marker {
+      animation: markerDrop 0.3s ease-out;
+    }
+    
+    @keyframes markerDrop {
+      0% {
+        transform: translateY(-30px) scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modern-custom-marker:hover {
+      z-index: 1000;
+    }
+  `;
+
+  document.head.appendChild(style);
+};
+
+// Auto-inject styles when module loads
+if (typeof document !== "undefined") {
+  injectMarkerStyles();
+}
