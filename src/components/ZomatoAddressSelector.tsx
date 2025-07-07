@@ -77,22 +77,21 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
       });
 
       if (response.data) {
-          // Transform backend format to frontend format
-          const transformedAddresses = result.data.map((addr: any) => ({
-            id: addr._id,
-            type: addr.address_type || "other",
-            label: addr.title,
-            flatNo: addr.full_address.split(",")[0] || "",
-            fullAddress: addr.full_address,
-            landmark: addr.landmark || "",
-            phone: addr.contact_phone || currentUser.phone,
-            coordinates: addr.coordinates,
-            createdAt: addr.created_at,
-          }));
-          setSavedAddresses(transformedAddresses);
-          setLoading(false);
-          return;
-        }
+        // Transform backend format to frontend format
+        const transformedAddresses = response.data.map((addr: any) => ({
+          id: addr._id,
+          type: addr.address_type || "other",
+          label: addr.title,
+          flatNo: addr.full_address.split(",")[0] || "",
+          fullAddress: addr.full_address,
+          landmark: addr.landmark || "",
+          phone: addr.contact_phone || currentUser.phone,
+          coordinates: addr.coordinates,
+          createdAt: addr.created_at,
+        }));
+        setSavedAddresses(transformedAddresses);
+        setLoading(false);
+        return;
       }
 
       // Fallback to localStorage if backend fails
