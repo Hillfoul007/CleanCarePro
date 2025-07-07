@@ -291,9 +291,13 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       mapInstance.setCenter(coordinates);
       mapInstance.setZoom(16);
 
-      // Remove existing marker
+      // Remove existing marker (works for both AdvancedMarkerElement and legacy Marker)
       if (marker) {
-        marker.setMap(null);
+        if (marker instanceof google.maps.marker.AdvancedMarkerElement) {
+          marker.map = null;
+        } else if (marker instanceof google.maps.Marker) {
+          marker.setMap(null);
+        }
       }
 
       // Add new marker with enhanced visual feedback using AdvancedMarkerElement
