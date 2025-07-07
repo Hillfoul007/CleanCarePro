@@ -19,6 +19,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
+import { apiClient } from "@/lib/apiClient";
 
 interface SavedAddress {
   id: string;
