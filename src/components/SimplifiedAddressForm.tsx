@@ -62,6 +62,7 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [locationError, setLocationError] = useState("");
+  const [useSmartInput, setUseSmartInput] = useState(false);
 
   // Update parent when address changes
   useEffect(() => {
