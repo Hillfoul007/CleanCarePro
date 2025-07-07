@@ -66,18 +66,17 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
 
     setLoading(true);
     try {
-      // Try to load from backend first
+      // Try to load from backend first using apiClient
       const userId = currentUser._id || currentUser.id || currentUser.phone;
-      const response = await fetch("/api/addresses", {
+
+      // Set user ID header for apiClient
+      const response = await apiClient.request<any[]>("/addresses", {
         headers: {
           "user-id": userId,
-          "Content-Type": "application/json",
         },
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.data) {
+      if (response.data) {
           // Transform backend format to frontend format
           const transformedAddresses = result.data.map((addr: any) => ({
             id: addr._id,
