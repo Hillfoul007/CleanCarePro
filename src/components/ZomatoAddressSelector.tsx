@@ -115,12 +115,7 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
 
     try {
       const userId = currentUser._id || currentUser.id || currentUser.phone;
-      const response = await apiClient.request(`/addresses/${addressId}`, {
-        method: "DELETE",
-        headers: {
-          "user-id": userId,
-        },
-      });
+      const response = await apiClient.deleteAddress(userId, addressId);
 
       if (response.data) {
         // Remove from state
