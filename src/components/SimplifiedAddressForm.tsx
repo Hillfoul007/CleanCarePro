@@ -357,34 +357,62 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Location Detection */}
-        <div className="space-y-3">
-          <Button
-            type="button"
-            variant="default"
-            onClick={detectCurrentLocation}
-            disabled={isDetectingLocation}
-            className="w-full bg-green-600 hover:bg-green-700"
-          >
-            {isDetectingLocation ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Detecting Location...
-              </>
-            ) : (
-              <>
-                <Navigation className="h-4 w-4 mr-2" />
-                Detect My Location
-              </>
-            )}
-          </Button>
+        {useSmartInput ? (
+          /* Smart Address Input */
+          <SmartAddressInput
+            initialAddress={{
+              flatNo: address.flatNo,
+              street: address.street,
+              area: address.village,
+              landmark: address.landmark,
+              city: address.city,
+              pincode: address.pincode,
+              formattedAddress: address.fullAddress,
+              coordinates: address.coordinates,
+            }}
+            onAddressChange={handleSmartAddressChange}
+            options={{
+              preserveUserInput: true,
+              overrideEmpty: true,
+              enableValidation: true,
+              enableGeolocation: true,
+            }}
+            showValidation={true}
+            showCurrentLocation={true}
+            placeholder="🚀 Smart search: Just type any address and I'll autofill everything!"
+            className="space-y-4"
+          />
+        ) : (
+          /* Manual Address Form */
+          <>
+            {/* Location Detection */}
+            <div className="space-y-3">
+              <Button
+                type="button"
+                variant="default"
+                onClick={detectCurrentLocation}
+                disabled={isDetectingLocation}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                {isDetectingLocation ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Detecting Location...
+                  </>
+                ) : (
+                  <>
+                    <Navigation className="h-4 w-4 mr-2" />
+                    Detect My Location
+                  </>
+                )}
+              </Button>
 
-          {locationError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-800">{locationError}</p>
+              {locationError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-800">{locationError}</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
         {/* Location Search */}
         <div className="space-y-2">
