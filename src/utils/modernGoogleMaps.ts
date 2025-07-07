@@ -67,8 +67,8 @@ class ModernGoogleMapsService {
 
     this.map = new google.maps.Map(container, {
       ...defaultConfig,
-      // Add Map ID for Advanced Markers support
-      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID,
+      // Add Map ID for Advanced Markers support - use default if not provided
+      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || "DEMO_MAP_ID",
       // Modern map styling options
       styles: [
         {
