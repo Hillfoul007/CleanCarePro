@@ -534,14 +534,14 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         console.log("🌐 Trying browser location fallback...");
         const browserLocation = await getBrowserLocation();
         if (browserLocation) {
-          setSelectedLocation(ipLocation);
-          setSearchQuery(ipLocation.address);
-          updateMapLocation(ipLocation.coordinates);
-          autoFillAddressFields(ipLocation.address);
+          setSelectedLocation(browserLocation);
+          setSearchQuery(browserLocation.address);
+          updateMapLocation(browserLocation.coordinates);
+          autoFillAddressFields(browserLocation.address);
           return;
         }
-      } catch (ipError) {
-        console.warn("IP location fallback failed:", ipError);
+      } catch (locationError) {
+        console.warn("Browser location fallback failed:", locationError);
       }
 
       // Ultimate fallback - major Indian cities based on common usage
