@@ -12,6 +12,13 @@ export const getProductionApiUrl = (): string => {
   const isProduction =
     !hostname.includes("localhost") && !hostname.includes("127.0.0.1");
 
+  console.log("🔍 API URL Detection:", {
+    hostname,
+    isProduction,
+    currentUrl: window.location.href,
+    apiUrl: isProduction ? PRODUCTION_API_URL : "http://localhost:3001/api",
+  });
+
   if (isProduction) {
     console.log(
       "🚀 Production environment detected, using:",
