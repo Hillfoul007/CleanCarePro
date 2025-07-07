@@ -168,7 +168,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       const loader = new Loader({
         apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
         version: "weekly",
-        libraries: ["places", "geometry"],
+        libraries: ["places", "geometry", "marker"], // Include marker library for AdvancedMarkerElement
       });
 
       const google = await loader.load();
