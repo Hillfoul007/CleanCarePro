@@ -323,25 +323,33 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     setIsOpen(false);
 
     if (googleMapsLoaded && window.google) {
-      const service = new window.google.maps.places.PlacesService(
-        document.createElement("div"),
-      );
+      try {
+        // Use new Place API for getting place details
+        const getPlaceDetailsAsync = async () => {
+          const { getPlaceDetails } = await import(
+            "@/utils/autocompleteSuggestionService"
+          );
+          const place = await getPlaceDetails(suggestion.place_id);
 
-      service.getDetails(
-        { placeId: suggestion.place_id },
-        (place: any, status: string) => {
-          if (
-            status === window.google.maps.places.PlacesServiceStatus.OK &&
-            place.geometry
-          ) {
+          if (place?.geometry?.location) {
             const coordinates = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
+              lat:
+                typeof place.geometry.location.lat === "function"
+                  ? place.geometry.location.lat()
+                  : place.geometry.location.lat,
+              lng:
+                typeof place.geometry.location.lng === "function"
+                  ? place.geometry.location.lng()
+                  : place.geometry.location.lng,
             };
             onLocationChange(suggestion.description, coordinates);
           }
-        },
-      );
+        };
+
+        getPlaceDetailsAsync().catch(console.error);
+      } catch (error) {
+        console.error("Error getting place details:", error);
+      }
     }
   };
 
