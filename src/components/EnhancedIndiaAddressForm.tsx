@@ -96,18 +96,12 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
     const initializeServices = async () => {
       if (window.google?.maps?.places) {
         try {
-          const { AutocompleteSuggestion, AutocompleteSessionToken } =
-            await window.google.maps.importLibrary("places");
-          autocompleteService.current = {
-            AutocompleteSuggestion,
-            AutocompleteSessionToken,
-          };
+          const { AutocompleteSuggestion, AutocompleteSessionToken } = await window.google.maps.importLibrary('places');
+          autocompleteService.current = { AutocompleteSuggestion, AutocompleteSessionToken };
           const map = new window.google.maps.Map(document.createElement("div"));
-          placesService.current = new window.google.maps.places.PlacesService(
-            map,
-          );
+          placesService.current = new window.google.maps.places.PlacesService(map);
         } catch (error) {
-          console.error("Failed to initialize Google Maps services:", error);
+          console.error('Failed to initialize Google Maps services:', error);
         }
       }
     };
@@ -138,18 +132,40 @@ const EnhancedIndiaAddressForm: React.FC<EnhancedIndiaAddressFormProps> = ({
   const searchAddresses = async (query: string) => {
     if (!autocompleteService.current) return;
 
-    const request = {
-      input: query,
-      componentRestrictions: { country: "in" }, // Restrict to India
-      types: ["address", "establishment", "geocode"],
-    };
+    try {
+      const { AutocompleteSuggestion, AutocompleteSessionToken } = autocompleteService.current;
+      const sessionToken = new AutocompleteSessionToken();
 
-    autocompleteService.current.getPlacePredictions(
-      request,
-      (predictions: GooglePlacePrediction[], status: any) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          predictions
+      const request = {
+        input: query,
+        sessionToken: sessionToken,
+        includedRegionCodes: ["in"],
+      };
+
+      const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+      const predictions = response.suggestions;
+
+      if (predictions && predictions.length > 0) {
+        const formattedPredictions = predictions.map((suggestion: any) => {
+          const placePrediction = suggestion.placePrediction;
+          return {
+            description: placePrediction.text,
+            place_id: placePrediction.placeId,
+            structured_formatting: {
+              main_text: placePrediction.structuredFormat?.mainText || placePrediction.text,
+              secondary_text: placePrediction.structuredFormat?.secondaryText || "",
+            },
+          };
+        });
+        setSuggestions(formattedPredictions);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error("Error searching addresses:", error);
+      setSuggestions([]);
+    }
+  };
         ) {
           setSuggestions(predictions);
         } else {
