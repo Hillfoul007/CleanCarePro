@@ -26,7 +26,8 @@ class ModernGoogleMapsService {
       apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
       version: "weekly",
       libraries: ["places", "marker"], // Include marker library for AdvancedMarkerElement
-      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || undefined, // Add Map ID for Advanced Markers
+      // Use a default map ID if not provided to prevent Advanced Markers warnings
+      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || "DEMO_MAP_ID",
     });
   }
 
