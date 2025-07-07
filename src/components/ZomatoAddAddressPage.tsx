@@ -734,45 +734,86 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       }
 
-      // If no nearby points worked, try Places API for nearby streets
+      // If no nearby points worked, try new Places API for nearby streets
       if ((window as any).google?.maps?.places) {
         try {
-          const service = new (window as any).google.maps.places.PlacesService(
-            document.createElement("div"),
+          // Use modern Place API for nearby search
+          const { Place } = await (window as any).google.maps.importLibrary(
+            "places",
           );
+
+          // Create a search request using the new Places API
           const request = {
-            location: new (window as any).google.maps.LatLng(
-              coordinates.lat,
-              coordinates.lng,
-            ),
-            radius: 50, // 50 meter radius
-            type: "street_address",
+            textQuery: `street near ${coordinates.lat},${coordinates.lng}`,
+            fields: ["displayName", "formattedAddress", "location"],
+            locationBias: {
+              center: { lat: coordinates.lat, lng: coordinates.lng },
+              radius: 100, // 100 meter radius
+            },
+            maxResultCount: 1,
           };
 
-          return new Promise((resolve) => {
-            service.nearbySearch(request, (results: any, status: any) => {
-              if (
-                status ===
-                  (window as any).google.maps.places.PlacesServiceStatus.OK &&
-                results &&
-                results.length > 0
-              ) {
-                const nearbyStreet = results[0];
-                console.log(
-                  "✅ Found nearby street via Places API:",
-                  nearbyStreet.vicinity,
-                );
-                resolve({
-                  address: nearbyStreet.vicinity || nearbyStreet.name,
-                  components: null,
-                });
-              } else {
-                resolve(null);
-              }
-            });
-          });
+          // Use the new Places API text search
+          const { places } = await (
+            window as any
+          ).google.maps.places.Place.searchByText(request);
+
+          if (places && places.length > 0) {
+            const nearbyPlace = places[0];
+            console.log(
+              "✅ Found nearby place via new Places API:",
+              nearbyPlace.displayName || nearbyPlace.formattedAddress,
+            );
+            return {
+              address: nearbyPlace.displayName || nearbyPlace.formattedAddress,
+              components: null,
+            };
+          }
+
+          return null;
         } catch (error) {
-          console.warn("Places API street search failed:", error);
+          console.warn("New Places API search failed, using fallback:", error);
+
+          // Fallback to legacy PlacesService if new API fails
+          try {
+            const service = new (
+              window as any
+            ).google.maps.places.PlacesService(document.createElement("div"));
+            const request = {
+              location: new (window as any).google.maps.LatLng(
+                coordinates.lat,
+                coordinates.lng,
+              ),
+              radius: 50, // 50 meter radius
+              type: "street_address",
+            };
+
+            return new Promise((resolve) => {
+              service.nearbySearch(request, (results: any, status: any) => {
+                if (
+                  status ===
+                    (window as any).google.maps.places.PlacesServiceStatus.OK &&
+                  results &&
+                  results.length > 0
+                ) {
+                  const nearbyStreet = results[0];
+                  console.log(
+                    "✅ Found nearby street via legacy Places API:",
+                    nearbyStreet.vicinity,
+                  );
+                  resolve({
+                    address: nearbyStreet.vicinity || nearbyStreet.name,
+                    components: null,
+                  });
+                } else {
+                  resolve(null);
+                }
+              });
+            });
+          } catch (fallbackError) {
+            console.warn("Legacy Places API also failed:", fallbackError);
+            return null;
+          }
         }
       }
     } catch (error) {
