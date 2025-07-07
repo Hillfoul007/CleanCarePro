@@ -120,15 +120,14 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
 
     try {
       const userId = currentUser._id || currentUser.id || currentUser.phone;
-      const response = await fetch(`/api/addresses/${addressId}`, {
+      const response = await apiClient.request(`/addresses/${addressId}`, {
         method: "DELETE",
         headers: {
           "user-id": userId,
-          "Content-Type": "application/json",
         },
       });
 
-      if (response.ok) {
+      if (response.data) {
         // Remove from state
         setSavedAddresses((prev) =>
           prev.filter((addr) => addr.id !== addressId),
