@@ -1123,7 +1123,10 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     setSearchQuery(suggestion.description);
     setShowSuggestions(false);
 
-    if (!suggestion.place_id || suggestion.place_id.startsWith("mock_")) {
+    if (
+      !suggestion.place_id ||
+      suggestion.place_id.startsWith("mock_")
+    ) {
       // Handle mock suggestions or when places service is not available
       let coordinates = { lat: 28.6139, lng: 77.209 }; // Default Delhi coordinates
 
@@ -1155,24 +1158,20 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     }
 
     try {
-      const request: google.maps.places.PlaceDetailsRequest = {
-        placeId: suggestion.place_id,
-        fields: [
-          "geometry.location",
-          "formatted_address",
-          "address_components",
-        ],
-      };
+      // Use the new autocompleteSuggestionService which already implements the new Place API
+      const { getPlaceDetails } = await import("@/utils/autocompleteSuggestionService");
 
-      placesService.getDetails(request, (place, status) => {
-        if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          place?.geometry?.location
-        ) {
-          const coordinates = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          };
+      const place = await getPlaceDetails(suggestion.place_id);
+
+      if (place?.geometry?.location) {
+        const coordinates = {
+          lat: typeof place.geometry.location.lat === 'function'
+            ? place.geometry.location.lat()
+            : place.geometry.location.lat,
+          lng: typeof place.geometry.location.lng === 'function'
+            ? place.geometry.location.lng()
+            : place.geometry.location.lng,
+        };
 
           setSelectedLocation({
             address: place.formatted_address || suggestion.description,
