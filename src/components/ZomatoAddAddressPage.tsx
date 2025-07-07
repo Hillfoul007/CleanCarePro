@@ -1123,11 +1123,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     setSearchQuery(suggestion.description);
     setShowSuggestions(false);
 
-    if (
-      !placesService ||
-      !suggestion.place_id ||
-      suggestion.place_id.startsWith("mock_")
-    ) {
+    if (!suggestion.place_id || suggestion.place_id.startsWith("mock_")) {
       // Handle mock suggestions or when places service is not available
       let coordinates = { lat: 28.6139, lng: 77.209 }; // Default Delhi coordinates
 
