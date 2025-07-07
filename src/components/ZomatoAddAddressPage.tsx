@@ -124,8 +124,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [placesService, setPlacesService] =
     useState<google.maps.places.PlacesService | null>(null);
-  const [autocompleteService, setAutocompleteService] =
-    useState<google.maps.places.AutocompleteService | null>(null);
+  const [autocompleteService, setAutocompleteService] = useState<any>(null);
   const [marker, setMarker] = useState<
     google.maps.marker.AdvancedMarkerElement | google.maps.Marker | null
   >(null);
@@ -192,11 +191,17 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       });
 
       const placesService = new google.maps.places.PlacesService(map);
-      const autocompleteService = new google.maps.places.AutocompleteService();
+
+      // Initialize the new AutocompleteSuggestion service
+      const { AutocompleteSuggestion, AutocompleteSessionToken } =
+        await google.maps.importLibrary("places");
 
       setMapInstance(map);
       setPlacesService(placesService);
-      setAutocompleteService(autocompleteService);
+      setAutocompleteService({
+        AutocompleteSuggestion,
+        AutocompleteSessionToken,
+      });
       setIsMapLoading(false);
 
       // Add click listener to map for pin placement
@@ -952,52 +957,33 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       // Method 1: Google Places API (primary)
       if (autocompleteService) {
         try {
-          const request: google.maps.places.AutocompletionRequest = {
+          const { AutocompleteSuggestion, AutocompleteSessionToken } =
+            autocompleteService;
+          const sessionToken = new AutocompleteSessionToken();
+
+          const request = {
             input: query,
-            componentRestrictions: { country: "in" },
-            types: [
-              "address",
-              "establishment",
-              "geocode",
-              "locality",
-              "sublocality",
-            ],
-            fields: [
-              "place_id",
-              "description",
-              "structured_formatting",
-              "types",
-            ],
+            sessionToken: sessionToken,
+            includedRegionCodes: ["in"],
           };
 
-          const predictions = await new Promise<
-            google.maps.places.AutocompletePrediction[]
-          >((resolve, reject) => {
-            autocompleteService.getPlacePredictions(
-              request,
-              (predictions, status) => {
-                if (
-                  status === google.maps.places.PlacesServiceStatus.OK &&
-                  predictions
-                ) {
-                  resolve(predictions);
-                } else {
-                  reject(new Error(`Places API error: ${status}`));
-                }
-              },
-            );
-          });
+          const response =
+            await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+          const predictions = response.suggestions;
 
-          suggestions = predictions.map((prediction) => ({
-            description: prediction.description,
-            main_text:
-              prediction.structured_formatting?.main_text ||
-              prediction.description,
-            secondary_text:
-              prediction.structured_formatting?.secondary_text || "",
-            place_id: prediction.place_id,
-            source: "google_places",
-          }));
+          suggestions = predictions.map((suggestion: any) => {
+            const placePrediction = suggestion.placePrediction;
+            return {
+              description: placePrediction.text,
+              main_text:
+                placePrediction.structuredFormat?.mainText ||
+                placePrediction.text,
+              secondary_text:
+                placePrediction.structuredFormat?.secondaryText || "",
+              place_id: placePrediction.placeId,
+              source: "google_places",
+            };
+          });
         } catch (placesError) {
           console.warn(
             "Google Places API failed, trying alternatives:",
