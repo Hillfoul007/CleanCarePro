@@ -100,7 +100,9 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     useState<google.maps.places.PlacesService | null>(null);
   const [autocompleteService, setAutocompleteService] =
     useState<google.maps.places.AutocompleteService | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [marker, setMarker] = useState<
+    google.maps.marker.AdvancedMarkerElement | google.maps.Marker | null
+  >(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -178,18 +180,36 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       });
 
-      // Add default center marker for India
-      const defaultMarker = new google.maps.Marker({
-        position: defaultCenter,
-        map: map,
-        title: "Click anywhere on the map to select location",
-        icon: {
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(24, 24),
-          anchor: new google.maps.Point(12, 24),
-        },
-        animation: google.maps.Animation.BOUNCE,
-      });
+      // Add default center marker for India using AdvancedMarkerElement
+      let defaultMarker;
+      if (google.maps.marker?.AdvancedMarkerElement) {
+        const markerContent = document.createElement("div");
+        markerContent.innerHTML = `
+          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
+            <circle cx='12' cy='10' r='3' fill='white'/>
+          </svg>
+        `;
+        defaultMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: defaultCenter,
+          map: map,
+          title: "Click anywhere on the map to select location",
+          content: markerContent,
+        });
+      } else {
+        // Fallback to old marker
+        defaultMarker = new google.maps.Marker({
+          position: defaultCenter,
+          map: map,
+          title: "Click anywhere on the map to select location",
+          icon: {
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(24, 24),
+            anchor: new google.maps.Point(12, 24),
+          },
+          animation: google.maps.Animation.BOUNCE,
+        });
+      }
 
       // Remove default marker after 3 seconds
       setTimeout(() => {
@@ -250,19 +270,40 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         marker.setMap(null);
       }
 
-      // Add new marker with enhanced visual feedback
-      const newMarker = new google.maps.Marker({
-        position: coordinates,
-        map: mapInstance,
-        draggable: true,
-        animation: google.maps.Animation.DROP,
-        title: "Drag to adjust location or click map to move pin",
-        icon: {
-          url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-          scaledSize: new google.maps.Size(32, 32),
-          anchor: new google.maps.Point(16, 32),
-        },
-      });
+      // Add new marker with enhanced visual feedback using AdvancedMarkerElement
+      let newMarker;
+      if (google.maps.marker?.AdvancedMarkerElement) {
+        const markerContent = document.createElement("div");
+        markerContent.innerHTML = `
+          <svg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#16a34a' stroke='#ffffff' stroke-width='1'/>
+            <circle cx='12' cy='10' r='3' fill='white'/>
+          </svg>
+        `;
+        markerContent.style.cursor = "pointer";
+
+        newMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: coordinates,
+          map: mapInstance,
+          title: "Drag to adjust location or click map to move pin",
+          content: markerContent,
+          gmpDraggable: true,
+        });
+      } else {
+        // Fallback to old marker
+        newMarker = new google.maps.Marker({
+          position: coordinates,
+          map: mapInstance,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          title: "Drag to adjust location or click map to move pin",
+          icon: {
+            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 32),
+          },
+        });
+      }
 
       // Add drag start listener for visual feedback
       newMarker.addListener("dragstart", () => {
