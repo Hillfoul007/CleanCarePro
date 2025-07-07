@@ -750,34 +750,64 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   // Browser geolocation fallback (replaces ipapi.co to fix CORS issues)
   const getBrowserLocation = async () => {
     try {
-      return new Promise<void>((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error("Geolocation is not supported by this browser"));
-          return;
-        }
+      return new Promise<{ coordinates: Coordinates; address: string } | null>(
+        (resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by this browser"));
+            return;
+          }
 
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            try {
-              const coordinates = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-              };
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                const coordinates = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
 
-              // Use Google Maps Geocoding to get address
-              if (mapInstance && placesService) {
-                const geocoder = new google.maps.Geocoder();
-                geocoder.geocode({ location: coordinates }, (results, status) => {
-                  if (status === "OK" && results && results[0]) {
-                    const address = results[0].formatted_address;
-
-        console.log("🌐 IP-based location found:", { coordinates, address });
-        return { coordinates, address };
-      }
+                // Use Google Maps Geocoding to get address
+                if (mapInstance) {
+                  const geocoder = new google.maps.Geocoder();
+                  geocoder.geocode(
+                    { location: coordinates },
+                    (results, status) => {
+                      if (status === "OK" && results && results[0]) {
+                        const address = results[0].formatted_address;
+                        console.log("🌐 Browser location found:", {
+                          coordinates,
+                          address,
+                        });
+                        resolve({ coordinates, address });
+                      } else {
+                        console.warn("Geocoding failed:", status);
+                        resolve({ coordinates, address: "Current Location" });
+                      }
+                    },
+                  );
+                } else {
+                  resolve({ coordinates, address: "Current Location" });
+                }
+              } catch (error) {
+                console.error("Error processing geolocation:", error);
+                reject(error);
+              }
+            },
+            (error) => {
+              console.warn("Geolocation failed:", error);
+              reject(error);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 300000, // 5 minutes
+            },
+          );
+        },
+      );
     } catch (error) {
-      console.warn("IP location service failed:", error);
+      console.warn("Browser location service failed:", error);
+      return null;
     }
-    return null;
   };
 
   // Enhanced auto-fill address fields from detailed address string
