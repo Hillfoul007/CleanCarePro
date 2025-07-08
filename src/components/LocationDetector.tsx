@@ -38,49 +38,10 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Auto-detect location on component mount
   useEffect(() => {
-    const checkGoogleMaps = () => {
-      if (window.google && window.google.maps && window.google.maps.places) {
-        setGoogleMapsLoaded(true);
-      }
-    };
-    checkGoogleMaps();
-    const handleGoogleMapsLoaded = () => checkGoogleMaps();
-    window.addEventListener("google-maps-loaded", handleGoogleMapsLoaded);
-    return () =>
-      window.removeEventListener("google-maps-loaded", handleGoogleMapsLoaded);
+    detectCurrentLocation();
   }, []);
-
-  useEffect(() => {
-    if (
-      googleMapsLoaded &&
-      searchInputRef.current &&
-      !autocompleteRef.current
-    ) {
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(
-        searchInputRef.current,
-        {
-          types: ["geocode"],
-          componentRestrictions: { country: ["in", "us", "ca", "gb", "au"] },
-        },
-      );
-
-      autocompleteRef.current.addListener("place_changed", () => {
-        const place = autocompleteRef.current.getPlace();
-        if (place.geometry) {
-          const location = place.formatted_address || place.name;
-          const coordinates = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          };
-          setCurrentLocation(location);
-          setSearchValue(location);
-          onLocationChange(location, coordinates);
-          setIsOpen(false);
-        }
-      });
-    }
-  }, [googleMapsLoaded, onLocationChange]);
 
   const detectCurrentLocation = () => {
     if (!navigator.geolocation) {
