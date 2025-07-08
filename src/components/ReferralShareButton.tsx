@@ -145,6 +145,14 @@ export const ReferralShareButton = React.forwardRef<
             } touch-manipulation ${className}`}
             title="Share and earn rewards"
             onClick={variant === "menu-item" ? undefined : onClick}
+            onMouseDown={
+              variant === "menu-item"
+                ? (e) => {
+                    // For menu-item variant, ensure parent dropdown closes
+                    e.stopPropagation();
+                  }
+                : undefined
+            }
           >
             {variant === "menu-item" ? (
               <div className="flex items-center w-full">
