@@ -203,7 +203,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       }
     }
-  }, [isOpen, editingAddress, mapInstance, currentUser]);
+  }, [isOpen, editingAddress, currentUser]);
 
   const handleCurrentLocation = async () => {
     setIsDetectingLocation(true);
