@@ -601,7 +601,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
               onClick={() => setSelectedCategory("all")}
               className={`flex-shrink-0 rounded-xl text-xs px-3 py-2 ${
                 selectedCategory === "all"
-                  ? "bg-white text-green-600"
+                  ? "bg-white text-blue-600"
                   : "bg-white/10 text-white hover:bg-white/20"
               }`}
             >
@@ -622,7 +622,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex-shrink-0 rounded-xl text-xs px-3 py-2 ${
                     selectedCategory === category.id
-                      ? "bg-white text-green-600"
+                      ? "bg-white text-blue-600"
                       : "bg-white/10 text-white hover:bg-white/20"
                   }`}
                 >
