@@ -94,10 +94,10 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex items-center gap-2 h-auto p-2 hover:bg-green-50 touch-manipulation"
+            className="flex items-center gap-2 h-auto p-2 hover:bg-blue-50 touch-manipulation"
           >
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-green-600 text-white text-sm">
+              <AvatarFallback className="bg-blue-600 text-white text-sm">
                 {getInitials(currentUser.name || "User")}
               </AvatarFallback>
             </Avatar>
@@ -117,10 +117,10 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
 
         <DropdownMenuContent
           align="end"
-          className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/20 backdrop-blur-sm"
+          className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-blue-50/20 backdrop-blur-sm"
         >
           <DropdownMenuLabel className="p-0">
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-4 text-white">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12 ring-4 ring-white/30 shadow-lg">
                   <AvatarFallback className="bg-white/20 text-white text-lg font-bold backdrop-blur-sm">
@@ -133,12 +133,12 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                       {currentUser.name || "User"}
                     </p>
                   </div>
-                  <p className="text-sm text-green-100 truncate">
+                  <p className="text-sm text-blue-100 truncate">
                     {formatPhone(currentUser.phone)}
                   </p>
                   <div className="flex items-center mt-1">
-                    <div className="w-2 h-2 bg-green-300 rounded-full mr-2 animate-pulse"></div>
-                    <span className="text-xs text-green-100">Online</span>
+                    <div className="w-2 h-2 bg-blue-300 rounded-full mr-2 animate-pulse"></div>
+                    <span className="text-xs text-blue-100">Online</span>
                   </div>
                 </div>
               </div>
@@ -183,7 +183,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
               userId={currentUser.id}
               currentUser={currentUser}
               variant="menu-item"
-              className="w-full justify-start p-3 h-auto font-medium hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02] cursor-pointer mx-2"
+              className="w-full justify-start p-3 h-auto font-medium hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02] cursor-pointer mx-2"
             />
 
             <DropdownMenuItem
@@ -286,22 +286,22 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                   handleWhatsAppShare();
                 })
               }
-              className={`cursor-pointer rounded-xl p-3 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+              className={`cursor-pointer rounded-xl p-3 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group transform hover:scale-[1.02] ${
                 clickedItem === "share"
-                  ? "scale-110 bg-emerald-100 shadow-lg ring-2 ring-emerald-300 ring-opacity-50"
+                  ? "scale-110 bg-blue-100 shadow-lg ring-2 ring-blue-300 ring-opacity-50"
                   : ""
               }`}
             >
               <div className="flex items-center w-full">
                 <div
-                  className={`w-8 h-8 bg-emerald-100 group-hover:bg-emerald-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                  className={`w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
                     clickedItem === "share"
-                      ? "animate-pulse bg-emerald-200 scale-110"
+                      ? "animate-pulse bg-blue-200 scale-110"
                       : ""
                   }`}
                 >
                   <MessageCircle
-                    className={`h-4 w-4 text-emerald-600 transition-all duration-200 ${
+                    className={`h-4 w-4 text-blue-600 transition-all duration-200 ${
                       clickedItem === "share" ? "scale-125" : ""
                     }`}
                   />
