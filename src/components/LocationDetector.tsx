@@ -86,10 +86,6 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     }
   };
 
-  useEffect(() => {
-    detectCurrentLocation();
-  }, [googleMapsLoaded]);
-
   const handleSearchChange = async (value: string) => {
     setSearchValue(value);
     if (googleMapsLoaded && window.google && value.length > 2) {
