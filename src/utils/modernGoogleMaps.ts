@@ -269,8 +269,15 @@ class ModernGoogleMapsService {
     const bounds = new google.maps.LatLngBounds();
 
     this.markers.forEach((marker) => {
-      if (marker.position) {
-        bounds.extend(marker.position);
+      let position;
+      if (marker instanceof google.maps.Marker) {
+        position = marker.getPosition();
+      } else {
+        position = marker.position;
+      }
+
+      if (position) {
+        bounds.extend(position);
       }
     });
 
