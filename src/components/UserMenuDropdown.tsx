@@ -94,24 +94,31 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-64 touch-manipulation">
-          <DropdownMenuLabel>
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-green-600 text-white text-sm">
+        <DropdownMenuContent
+          align="end"
+          className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/20 backdrop-blur-sm"
+        >
+          <DropdownMenuLabel className="p-0">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-4 text-white">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-12 w-12 ring-4 ring-white/30 shadow-lg">
+                  <AvatarFallback className="bg-white/20 text-white text-lg font-bold backdrop-blur-sm">
                     {getInitials(currentUser.name || "User")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-base font-bold text-white truncate">
                       {currentUser.name || "User"}
                     </p>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-green-100 truncate">
                     {formatPhone(currentUser.phone)}
                   </p>
+                  <div className="flex items-center mt-1">
+                    <div className="w-2 h-2 bg-green-300 rounded-full mr-2 animate-pulse"></div>
+                    <span className="text-xs text-green-100">Online</span>
+                  </div>
                 </div>
               </div>
             </div>
