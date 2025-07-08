@@ -158,7 +158,7 @@ const AuthGuardedCheckout: React.FC<AuthGuardedCheckoutProps> = ({
                 <span className="text-lg font-semibold text-gray-900">
                   Total Amount
                 </span>
-                <Badge className="text-lg px-3 py-1 bg-green-100 text-green-800">
+                <Badge className="text-lg px-3 py-1 bg-blue-100 text-blue-800">
                   ₹{calculateTotal()}
                 </Badge>
               </div>
@@ -237,11 +237,11 @@ const AuthGuardedCheckout: React.FC<AuthGuardedCheckoutProps> = ({
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl space-y-6">
         {/* User Greeting */}
-        <Card className="border-2 border-green-200 shadow-lg">
+        <Card className="border-2 border-blue-200 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <User className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-blue-600" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">
@@ -251,7 +251,7 @@ const AuthGuardedCheckout: React.FC<AuthGuardedCheckoutProps> = ({
                 <p className="text-gray-600">{currentUser.phone}</p>
               </div>
             </div>
-            <Badge className="bg-green-100 text-green-800">✓ Signed In</Badge>
+            <Badge className="bg-blue-100 text-blue-800">✓ Signed In</Badge>
           </CardContent>
         </Card>
 
@@ -318,7 +318,7 @@ const AuthGuardedCheckout: React.FC<AuthGuardedCheckoutProps> = ({
               <span className="text-lg font-semibold text-gray-900">
                 Total Amount
               </span>
-              <Badge className="text-xl px-4 py-2 bg-green-100 text-green-800">
+              <Badge className="text-xl px-4 py-2 bg-blue-100 text-blue-800">
                 ₹{calculateTotal()}
               </Badge>
             </div>
@@ -334,7 +334,7 @@ const AuthGuardedCheckout: React.FC<AuthGuardedCheckoutProps> = ({
 
             <Button
               onClick={handleProceedClick}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg transition-all duration-200"
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg transition-all duration-200"
             >
               <CreditCard className="mr-2 h-5 w-5" />
               Proceed to Checkout
