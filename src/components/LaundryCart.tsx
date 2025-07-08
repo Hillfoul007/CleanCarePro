@@ -952,6 +952,14 @@ Confirm this booking?`;
                   placeholder="Coupon"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (couponCode.trim()) {
+                        applyCoupon();
+                      }
+                    }
+                  }}
                   className="flex-1 h-7 text-xs"
                 />
                 <Button
