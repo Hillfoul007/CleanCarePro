@@ -1,5 +1,6 @@
-// Simplified location service without Supabase dependencies
-// This is a stub implementation for demo purposes
+// DEPRECATED: This file contains Google Maps implementation
+// Use leafletLocationService.ts instead for free OpenStreetMap-based functionality
+// This is kept for backward compatibility during migration
 
 import { apiClient } from "@/lib/api";
 
