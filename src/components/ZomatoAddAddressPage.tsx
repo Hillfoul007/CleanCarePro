@@ -226,24 +226,50 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       });
 
-      // Add default center marker for India using AdvancedMarkerElement
+      // Add default center marker for India
       let defaultMarker;
-      if (google.maps.marker?.AdvancedMarkerElement) {
-        const markerContent = document.createElement("div");
-        markerContent.innerHTML = `
-          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
-            <circle cx='12' cy='10' r='3' fill='white'/>
-          </svg>
-        `;
-        defaultMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: defaultCenter,
-          map: map,
-          title: "Click anywhere on the map to select location",
-          content: markerContent,
-        });
+
+      // Only use Advanced Markers if Map ID is configured and available
+      if (
+        mapId &&
+        mapId.trim() !== "" &&
+        google.maps.marker?.AdvancedMarkerElement
+      ) {
+        try {
+          const markerContent = document.createElement("div");
+          markerContent.innerHTML = `
+            <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
+              <circle cx='12' cy='10' r='3' fill='white'/>
+            </svg>
+          `;
+          defaultMarker = new google.maps.marker.AdvancedMarkerElement({
+            position: defaultCenter,
+            map: map,
+            title: "Click anywhere on the map to select location",
+            content: markerContent,
+          });
+          console.log("📍 Using Advanced Marker for default position");
+        } catch (error) {
+          console.warn(
+            "Failed to create Advanced Marker, falling back to regular marker:",
+            error,
+          );
+          // Fallback to regular marker if Advanced Marker fails
+          defaultMarker = new google.maps.Marker({
+            position: defaultCenter,
+            map: map,
+            title: "Click anywhere on the map to select location",
+            icon: {
+              url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+              scaledSize: new google.maps.Size(24, 24),
+              anchor: new google.maps.Point(12, 24),
+            },
+            animation: google.maps.Animation.BOUNCE,
+          });
+        }
       } else {
-        // Fallback to old marker
+        // Use regular marker when Map ID is not configured
         defaultMarker = new google.maps.Marker({
           position: defaultCenter,
           map: map,
@@ -255,6 +281,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
           },
           animation: google.maps.Animation.BOUNCE,
         });
+        console.log("📍 Using regular Marker (no Map ID configured)");
       }
 
       // Remove default marker after 3 seconds
