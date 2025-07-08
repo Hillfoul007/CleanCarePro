@@ -30,7 +30,7 @@ const EnhancedBookingHistoryModal: React.FC<
             <Card key={booking.id || index}>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  Booking #{booking.id || index + 1}
+                  Booking #{booking.custom_order_id || "Generating..."}
                 </CardTitle>
               </CardHeader>
               <CardContent>
