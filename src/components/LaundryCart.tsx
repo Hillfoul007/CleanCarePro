@@ -703,7 +703,7 @@ Confirm this booking?`;
             Your cart is empty
           </h2>
           <p className="text-gray-600 mb-6">Add some items to get started</p>
-          <Button onClick={onBack} className="bg-green-600 hover:bg-green-700">
+          <Button onClick={onBack} className="bg-blue-600 hover:bg-blue-700">
             Continue Shopping
           </Button>
         </div>
@@ -762,7 +762,7 @@ Confirm this booking?`;
                   <h4 className="font-medium text-xs break-words leading-tight">
                     {service!.name}
                   </h4>
-                  <p className="text-xs text-green-600">₹{service!.price}</p>
+                  <p className="text-xs text-blue-600">₹{service!.price}</p>
                 </div>
 
                 <div className="flex items-center gap-1">
@@ -788,7 +788,7 @@ Confirm this booking?`;
                 </div>
 
                 <div className="flex items-center gap-1">
-                  <span className="font-semibold text-xs text-green-600">
+                  <span className="font-semibold text-xs text-blue-600">
                     ₹{service!.price * quantity}
                   </span>
                   <Button
@@ -827,7 +827,7 @@ Confirm this booking?`;
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-green-600"
+                className="text-blue-600"
                 onClick={() => setShowZomatoAddressSelector(true)}
               >
                 <ArrowLeft className="h-4 w-4 rotate-180" />
@@ -850,7 +850,7 @@ Confirm this booking?`;
                 <Button
                   onClick={() => setShowZomatoAddressSelector(true)}
                   variant="outline"
-                  className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
                 >
                   <MapPin className="h-4 w-4 mr-2" />
                   Select Address
@@ -923,7 +923,7 @@ Confirm this booking?`;
               <span>₹{getSubtotal()}</span>
             </div>
 
-            <div className="flex justify-between text-sm text-green-600">
+            <div className="flex justify-between text-sm text-blue-600">
               <span>Delivery Fee</span>
               <div className="flex items-center gap-2">
                 <span className="line-through text-gray-400 text-xs">₹30</span>
@@ -931,7 +931,7 @@ Confirm this booking?`;
               </div>
             </div>
 
-            <div className="flex justify-between text-sm text-green-600">
+            <div className="flex justify-between text-sm text-blue-600">
               <span>Handling Fee</span>
               <div className="flex items-center gap-2">
                 <span className="line-through text-gray-400 text-xs">₹9</span>
@@ -974,10 +974,10 @@ Confirm this booking?`;
             ) : (
               <div className="flex justify-between items-center text-sm">
                 <div className="flex items-center gap-1">
-                  <span className="text-green-700 font-medium text-xs">
+                  <span className="text-blue-700 font-medium text-xs">
                     ✓ {appliedCoupon.code}
                   </span>
-                  <span className="text-xs text-green-600">
+                  <span className="text-xs text-blue-600">
                     ({appliedCoupon.discount}%)
                   </span>
                 </div>
@@ -985,7 +985,7 @@ Confirm this booking?`;
                   onClick={removeCoupon}
                   variant="ghost"
                   size="sm"
-                  className="h-5 w-5 p-0 text-green-600 hover:bg-green-100"
+                  className="h-5 w-5 p-0 text-blue-600 hover:bg-blue-100"
                 >
                   ✕
                 </Button>
@@ -993,7 +993,7 @@ Confirm this booking?`;
             )}
 
             {appliedCoupon && (
-              <div className="flex justify-between text-green-600 text-sm">
+              <div className="flex justify-between text-blue-600 text-sm">
                 <span>Discount</span>
                 <span>-₹{getCouponDiscount()}</span>
               </div>
@@ -1003,7 +1003,7 @@ Confirm this booking?`;
 
             <div className="flex justify-between font-semibold">
               <span>Total</span>
-              <span className="text-green-600">₹{getTotal()}</span>
+              <span className="text-blue-600">₹{getTotal()}</span>
             </div>
           </CardContent>
         </Card>
@@ -1037,7 +1037,7 @@ Confirm this booking?`;
               }
             }}
             disabled={cartItems.length === 0 || isProcessingCheckout}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isProcessingCheckout ? (
               <>
