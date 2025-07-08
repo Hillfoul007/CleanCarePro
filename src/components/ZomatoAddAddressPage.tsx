@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { locationService, Coordinates } from "@/services/locationService";
 import { leafletLocationService } from "@/services/leafletLocationService";
+import LeafletLocationPicker from "@/components/LeafletLocationPicker";
 
 // Add CSS for bounce animation
 const bounceAnimation = `
