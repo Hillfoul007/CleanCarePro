@@ -145,10 +145,9 @@ export const ReferralShareButton = React.forwardRef<
             } touch-manipulation ${className}`}
             title="Share and earn rewards"
             onClick={(e) => {
-              if (onClick) {
+              if (e && onClick) {
                 onClick();
               }
-              // Don't prevent default dialog opening
             }}
           >
             {variant === "menu-item" ? (
