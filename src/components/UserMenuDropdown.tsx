@@ -177,21 +177,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              // Use iOS fixes for logout
-              import("../utils/iosAuthFix").then(({ clearIosAuthState }) => {
-                clearIosAuthState();
-              });
-              onLogout();
-            }}
-            className="cursor-pointer text-red-600 focus:text-red-600"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log Out</span>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
