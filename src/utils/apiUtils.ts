@@ -18,6 +18,14 @@ export const safeFetch = async <T = any>(
   timeoutMs: number = 10000,
 ): Promise<ApiResponse<T>> => {
   try {
+    // Check if backend is available first
+    if (!isBackendAvailable()) {
+      return {
+        error: "Backend service not available in this environment",
+        success: false,
+      };
+    }
+
     // Add timeout to all requests
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
