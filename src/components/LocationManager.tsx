@@ -75,6 +75,9 @@ const LocationManager: React.FC<LocationManagerProps> = ({
 
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&key=${apiKey}`,
+            {
+              method: "GET",
+            },
           );
           const data = await response.json();
 
