@@ -183,6 +183,29 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               </Button>
             </div>
           )}
+
+          {/* Logout Button */}
+          {onLogout && (
+            <div className="pt-4 border-t border-gray-200">
+              <Button
+                onClick={() => {
+                  // Use iOS fixes for logout
+                  import("../utils/iosAuthFix").then(
+                    ({ clearIosAuthState }) => {
+                      clearIosAuthState();
+                    },
+                  );
+                  onLogout();
+                  onClose();
+                }}
+                variant="outline"
+                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Log Out
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
