@@ -84,12 +84,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                 <span className="text-sm font-medium text-gray-900">
                   {currentUser.name || "User"}
                 </span>
-                <ReferralShareButton
-                  userId={currentUser.id}
-                  currentUser={currentUser}
-                  variant="small"
-                  className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                />
               </div>
               <span className="text-xs text-gray-500 -mt-1">
                 {formatPhone(currentUser.phone)}
@@ -113,12 +107,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                     <p className="text-sm font-medium text-gray-900">
                       {currentUser.name || "User"}
                     </p>
-                    <ReferralShareButton
-                      userId={currentUser.id}
-                      currentUser={currentUser}
-                      variant="small"
-                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                    />
                   </div>
                   <p className="text-xs text-gray-500">
                     {formatPhone(currentUser.phone)}
