@@ -86,7 +86,14 @@ class ModernGoogleMapsService {
       fullscreenControl: true,
       streetViewControl: true,
       mapTypeControl: true,
-    });
+    };
+
+    // Only add Map ID if it's available
+    if (mapId) {
+      mapConfig.mapId = mapId;
+    }
+
+    this.map = new google.maps.Map(container, mapConfig);
 
     console.log("🗺️ Modern Google Map created successfully");
     return this.map;
