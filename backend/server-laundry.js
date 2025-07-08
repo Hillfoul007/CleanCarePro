@@ -201,6 +201,15 @@ try {
   console.error("❌ Failed to load Dynamic Services routes:", error.message);
 }
 
+// Referral routes
+try {
+  const referralRoutes = require("./routes/referrals");
+  app.use("/api/referrals", referralRoutes);
+  console.log("🔗 Referral routes registered at /api/referrals");
+} catch (error) {
+  console.error("❌ Failed to load Referral routes:", error.message);
+}
+
 // Google Sheets integration removed
 
 // Push notification endpoints
