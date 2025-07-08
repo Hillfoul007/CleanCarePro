@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking");
 const User = require("../models/User");
+const Referral = require("../models/Referral");
 
 const router = express.Router();
 
@@ -250,7 +251,7 @@ router.post("/", async (req, res) => {
         actualCustomerId = phone;
         console.log(`📞 ✅ Extracted valid phone from user ID: ${phone}`);
       } else {
-        console.log(`📞 ��� Extracted phone is invalid: ${phone}`);
+        console.log(`📞 ���� Extracted phone is invalid: ${phone}`);
       }
     } else if (
       typeof customer_id === "string" &&
