@@ -771,7 +771,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
           <div className="fixed bottom-4 left-4 right-4 z-50">
             <Button
               onClick={onViewCart}
-              className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl py-3 flex items-center justify-between shadow-lg"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 flex items-center justify-between shadow-lg"
             >
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-4 w-4" />
@@ -796,7 +796,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
             </p>
             <Button
               onClick={handleBookService}
-              className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 px-8 py-3 rounded-xl text-lg font-medium"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 px-8 py-3 rounded-xl text-lg font-medium"
             >
               Get Started
             </Button>
