@@ -65,12 +65,10 @@ class ModernGoogleMapsService {
       ...config,
     };
 
-    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || "DEMO_MAP_ID";
+    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
-    this.map = new google.maps.Map(container, {
+    const mapConfig: any = {
       ...defaultConfig,
-      // Add Map ID for Advanced Markers support - use default if not provided
-      mapId: mapId,
       // Modern map styling options
       styles: [
         {
