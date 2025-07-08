@@ -25,7 +25,11 @@ import {
   CreditCard,
   Home,
 } from "lucide-react";
-import { laundryServices, LaundryService } from "@/data/laundryServices";
+import {
+  laundryServices,
+  LaundryService,
+  getCategoryDisplay,
+} from "@/data/laundryServices";
 import { OTPAuthService } from "@/services/otpAuthService";
 import {
   saveBookingFormData,
