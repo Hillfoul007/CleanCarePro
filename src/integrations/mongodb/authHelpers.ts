@@ -12,6 +12,13 @@ export const authHelpers = {
     userType: "customer" | "provider" | "rider" = "customer",
   ) {
     try {
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          error: "Backend service not available in this environment",
+        };
+      }
+
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
