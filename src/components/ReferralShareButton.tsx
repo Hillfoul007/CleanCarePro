@@ -26,6 +26,7 @@ import {
   TrendingUp,
   Check,
   ExternalLink,
+  AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
 import referralService, {
@@ -67,9 +68,34 @@ export function ReferralShareButton({
       ]);
       setShareData(shareResponse);
       setStats(statsResponse);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to load referral data:", error);
-      toast.error("Failed to load referral data");
+
+      // Provide user-friendly error message based on error type
+      if (error.message.includes("Backend API is not available")) {
+        toast.error("Referral feature temporarily unavailable");
+      } else if (error.message.includes("Unable to connect to server")) {
+        toast.error("Connection issue - please check your internet");
+      } else if (error.message.includes("timeout")) {
+        toast.error("Request timeout - please try again");
+      } else {
+        toast.error("Unable to load referral data");
+      }
+
+      // Set fallback data to prevent component breakage
+      setShareData({
+        share_url: `${window.location.origin}?ref=OFFLINE`,
+        referral_code: "OFFLINE",
+        discount_percentage: 50,
+      });
+      setStats({
+        total_referrals: 0,
+        successful_referrals: 0,
+        pending_referrals: 0,
+        active_referral_code: null,
+        available_discounts: [],
+        referral_history: [],
+      });
     } finally {
       setIsLoading(false);
     }
@@ -133,6 +159,22 @@ export function ReferralShareButton({
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Offline mode warning */}
+            {shareData?.referral_code === "OFFLINE" && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>
+                  <p className="font-medium">
+                    Referral system temporarily offline
+                  </p>
+                  <p className="text-sm">
+                    The referral feature is currently unavailable. Please try
+                    again later.
+                  </p>
+                </AlertDescription>
+              </Alert>
+            )}
+
             {/* How it works */}
             <Alert>
               <Gift className="h-4 w-4" />
