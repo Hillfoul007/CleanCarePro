@@ -645,13 +645,29 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                       <div className="aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-xl mb-3 flex items-center justify-center relative overflow-hidden">
                         {service.image ? (
                           <>
-                            <img
+                            <OptimizedImage
                               src={service.image}
                               alt={service.name}
-                              className="w-full h-full object-cover rounded-xl"
+                              className="w-full h-full rounded-xl"
+                              priority={service.popular}
+                              fallback={
+                                <span className="text-3xl">
+                                  {service.category.includes("Men")
+                                    ? "👔"
+                                    : service.category.includes("Women")
+                                      ? "👗"
+                                      : service.category.includes("Woolen")
+                                        ? "🧥"
+                                        : service.category.includes("Steam")
+                                          ? "🔥"
+                                          : service.category.includes("Iron")
+                                            ? "🏷️"
+                                            : "👕"}
+                                </span>
+                              }
                             />
                             {service.popular && (
-                              <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                              <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
                                 Popular
                               </div>
                             )}
