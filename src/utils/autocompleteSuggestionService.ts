@@ -184,8 +184,6 @@ class AutocompleteSuggestionService {
         geometry: {
           location: place.location
             ? {
-                lat: () => place.location.lat,
-                lng: () => place.location.lng,
                 lat: place.location.lat,
                 lng: place.location.lng,
               }
