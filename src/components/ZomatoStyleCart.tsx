@@ -314,7 +314,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
           <p className="text-gray-600 mb-6 text-center">
             Add some items to get started
           </p>
-          <Button onClick={onBack} className="bg-green-600 hover:bg-green-700">
+          <Button onClick={onBack} className="bg-blue-600 hover:bg-blue-700">
             Continue Shopping
           </Button>
         </div>
