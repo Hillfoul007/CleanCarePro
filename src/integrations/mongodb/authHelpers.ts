@@ -59,6 +59,13 @@ export const authHelpers = {
   // Sign in
   async signIn(email: string, password: string) {
     try {
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          error: "Backend service not available in this environment",
+        };
+      }
+
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
