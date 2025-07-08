@@ -194,10 +194,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
           {/* Action Buttons */}
           {isEditing && (
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <Button
                 onClick={handleSave}
-                className="flex-1 bg-green-600 hover:bg-green-700"
+                className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Changes
@@ -205,7 +205,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               <Button
                 onClick={handleCancel}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-800 font-semibold py-3 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200"
               >
                 <X className="h-4 w-4 mr-2" />
                 Cancel
@@ -215,7 +215,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
           {/* Logout Button */}
           {onLogout && (
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-6 border-t border-gradient-to-r from-transparent via-gray-200 to-transparent">
               <Button
                 onClick={() => {
                   // Use iOS fixes for logout
@@ -228,7 +228,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   onClose();
                 }}
                 variant="outline"
-                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 hover:border-red-300 font-semibold py-3 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Log Out
