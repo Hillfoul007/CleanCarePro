@@ -53,7 +53,7 @@ const AddressSearchDemo: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-green-600" />
+              <MapPin className="h-5 w-5 text-blue-600" />
               Full-Screen Address Page
             </CardTitle>
           </CardHeader>
@@ -64,22 +64,22 @@ const AddressSearchDemo: React.FC = () => {
             </p>
             <Button
               onClick={() => setShowZomatoPage(true)}
-              className="w-full bg-green-600 hover:bg-green-700"
+              className="w-full bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add New Address
             </Button>
 
             {savedAddress && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <h4 className="font-medium text-green-900 mb-1">
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-1">
                   Last Saved Address:
                 </h4>
-                <p className="text-sm text-green-800">
+                <p className="text-sm text-blue-800">
                   {savedAddress.fullAddress}
                 </p>
                 {savedAddress.coordinates && (
-                  <p className="text-xs text-green-600 mt-1">
+                  <p className="text-xs text-blue-600 mt-1">
                     📍 {savedAddress.coordinates.lat.toFixed(4)},{" "}
                     {savedAddress.coordinates.lng.toFixed(4)}
                   </p>
