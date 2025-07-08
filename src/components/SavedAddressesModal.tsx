@@ -247,7 +247,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-9 w-9 p-0 bg-gray-100 hover:bg-gray-200 rounded-full md:h-8 md:w-8 md:bg-transparent md:hover:bg-gray-100"
+              className="h-9 w-9 p-0 bg-gray-100 hover:bg-gray-200 rounded-full md:h-8 md:w-8 md:bg-transparent md:hover:bg-gray-100 address-modal-close-btn"
             >
               <X className="h-5 w-5 text-gray-700" />
             </Button>
