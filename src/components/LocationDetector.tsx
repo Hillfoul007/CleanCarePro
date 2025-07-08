@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { leafletLocationService } from "@/services/leafletLocationService";
 
 interface LocationDetectorProps {
   onLocationChange: (
@@ -22,15 +23,9 @@ interface LocationDetectorProps {
   ) => void;
 }
 
-declare global {
-  interface Window {
-    google: any;
-    initGoogleMaps: () => void;
-  }
-}
-
 const LocationDetector: React.FC<LocationDetectorProps> = ({
   onLocationChange,
+  onAddressSelect,
   className = "",
   showInTopBar = false,
 }) => {
@@ -40,9 +35,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [googleMapsLoaded, setGoogleMapsLoaded] = useState<boolean>(false);
 
-  const autocompleteRef = useRef<any>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
