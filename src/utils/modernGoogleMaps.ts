@@ -240,7 +240,9 @@ class ModernGoogleMapsService {
    */
   async addMultipleMarkers(
     configs: MarkerConfig[],
-  ): Promise<google.maps.marker.AdvancedMarkerElement[]> {
+  ): Promise<
+    (google.maps.marker.AdvancedMarkerElement | google.maps.Marker)[]
+  > {
     const promises = configs.map((config) => this.addAdvancedMarker(config));
     return Promise.all(promises);
   }
