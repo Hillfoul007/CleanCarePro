@@ -41,12 +41,15 @@ interface ReferralShareButtonProps {
   className?: string;
 }
 
-export function ReferralShareButton({
+export const ReferralShareButton = React.forwardRef<
+  HTMLButtonElement,
+  ReferralShareButtonProps
+>(({
   userId,
   currentUser,
   variant = "default",
   className = "",
-}: ReferralShareButtonProps) {
+}, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [shareData, setShareData] = useState<ShareLinkResponse | null>(null);
   const [stats, setStats] = useState<ReferralStats | null>(null);
@@ -136,8 +139,8 @@ export function ReferralShareButton({
             variant === "small"
               ? "h-8 w-8 p-0"
               : variant === "menu-item"
-                ? "gap-2 h-auto"
-                : "gap-2"
+              ? "gap-2 h-auto"
+              : "gap-2"
           } touch-manipulation ${className}`}
           title="Share and earn rewards"
         >
