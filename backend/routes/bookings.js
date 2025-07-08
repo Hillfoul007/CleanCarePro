@@ -1610,9 +1610,12 @@ router.get("/", async (req, res) => {
     }
 
     const bookings = await Booking.find(query)
+      .select(
+        "custom_order_id name phone customer_id status service services scheduled_date scheduled_time total_price final_amount address created_at updated_at rider_id payment_status",
+      )
       .populate("customer_id", "full_name phone email")
       .populate("rider_id", "full_name phone")
-      .sort({ created_at: -1 })
+      .sort({ custom_order_id: -1, created_at: -1 })
       .limit(parseInt(limit))
       .skip(parseInt(offset));
 
