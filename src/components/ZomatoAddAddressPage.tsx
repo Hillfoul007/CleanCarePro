@@ -182,10 +182,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         setReceiverName(editingAddress.name || "");
         setReceiverPhone(editingAddress.phone || "");
 
-        // Update map position if editing
-        if (mapInstance && editingAddress.coordinates) {
-          updateMapLocation(editingAddress.coordinates);
-        }
+        // Location will be handled by LeafletLocationPicker when opened
       } else {
         // Clear all fields for new address and autofill from account
         setSearchQuery("");
