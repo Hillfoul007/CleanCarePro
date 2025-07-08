@@ -817,21 +817,18 @@ const EnhancedAddressForm: React.FC<EnhancedAddressFormProps> = ({
         window.google.maps &&
         window.google.maps.places
       ) {
-        // Get detailed place information from Google
-        const service = new window.google.maps.places.PlacesService(
-          document.createElement("div"),
-        );
-        service.getDetails(
-          { placeId: suggestion.place_id },
-          (place, status) => {
-            if (
-              status === window.google.maps.places.PlacesServiceStatus.OK &&
-              place
-            ) {
-              parseGoogleMapsPlace(place);
-            }
-          },
-        );
+        // Get detailed place information using new Place API
+        try {
+          const { getPlaceDetails } = await import(
+            "@/utils/autocompleteSuggestionService"
+          );
+          const place = await getPlaceDetails(suggestion.place_id);
+          if (place) {
+            parseGoogleMapsPlace(place);
+          }
+        } catch (error) {
+          console.error("Error getting place details with new API:", error);
+        }
       } else if (suggestion.geometry) {
         // Use coordinates to get address details
         const coordinates = {

@@ -122,8 +122,6 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [placesService, setPlacesService] =
-    useState<google.maps.places.PlacesService | null>(null);
   const [autocompleteService, setAutocompleteService] = useState<any>(null);
   const [marker, setMarker] = useState<
     google.maps.marker.AdvancedMarkerElement | google.maps.Marker | null
@@ -190,14 +188,11 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         ],
       });
 
-      const placesService = new google.maps.places.PlacesService(map);
-
       // Initialize the new AutocompleteSuggestion service
       const { AutocompleteSuggestion, AutocompleteSessionToken } =
         await google.maps.importLibrary("places");
 
       setMapInstance(map);
-      setPlacesService(placesService);
       setAutocompleteService({
         AutocompleteSuggestion,
         AutocompleteSessionToken,
@@ -734,45 +729,86 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       }
 
-      // If no nearby points worked, try Places API for nearby streets
+      // If no nearby points worked, try new Places API for nearby streets
       if ((window as any).google?.maps?.places) {
         try {
-          const service = new (window as any).google.maps.places.PlacesService(
-            document.createElement("div"),
+          // Use modern Place API for nearby search
+          const { Place } = await (window as any).google.maps.importLibrary(
+            "places",
           );
+
+          // Create a search request using the new Places API
           const request = {
-            location: new (window as any).google.maps.LatLng(
-              coordinates.lat,
-              coordinates.lng,
-            ),
-            radius: 50, // 50 meter radius
-            type: "street_address",
+            textQuery: `street near ${coordinates.lat},${coordinates.lng}`,
+            fields: ["displayName", "formattedAddress", "location"],
+            locationBias: {
+              center: { lat: coordinates.lat, lng: coordinates.lng },
+              radius: 100, // 100 meter radius
+            },
+            maxResultCount: 1,
           };
 
-          return new Promise((resolve) => {
-            service.nearbySearch(request, (results: any, status: any) => {
-              if (
-                status ===
-                  (window as any).google.maps.places.PlacesServiceStatus.OK &&
-                results &&
-                results.length > 0
-              ) {
-                const nearbyStreet = results[0];
-                console.log(
-                  "✅ Found nearby street via Places API:",
-                  nearbyStreet.vicinity,
-                );
-                resolve({
-                  address: nearbyStreet.vicinity || nearbyStreet.name,
-                  components: null,
-                });
-              } else {
-                resolve(null);
-              }
-            });
-          });
+          // Use the new Places API text search
+          const { places } = await (
+            window as any
+          ).google.maps.places.Place.searchByText(request);
+
+          if (places && places.length > 0) {
+            const nearbyPlace = places[0];
+            console.log(
+              "✅ Found nearby place via new Places API:",
+              nearbyPlace.displayName || nearbyPlace.formattedAddress,
+            );
+            return {
+              address: nearbyPlace.displayName || nearbyPlace.formattedAddress,
+              components: null,
+            };
+          }
+
+          return null;
         } catch (error) {
-          console.warn("Places API street search failed:", error);
+          console.warn("New Places API search failed, using fallback:", error);
+
+          // Fallback to legacy PlacesService if new API fails
+          try {
+            const service = new (
+              window as any
+            ).google.maps.places.PlacesService(document.createElement("div"));
+            const request = {
+              location: new (window as any).google.maps.LatLng(
+                coordinates.lat,
+                coordinates.lng,
+              ),
+              radius: 50, // 50 meter radius
+              type: "street_address",
+            };
+
+            return new Promise((resolve) => {
+              service.nearbySearch(request, (results: any, status: any) => {
+                if (
+                  status ===
+                    (window as any).google.maps.places.PlacesServiceStatus.OK &&
+                  results &&
+                  results.length > 0
+                ) {
+                  const nearbyStreet = results[0];
+                  console.log(
+                    "✅ Found nearby street via legacy Places API:",
+                    nearbyStreet.vicinity,
+                  );
+                  resolve({
+                    address: nearbyStreet.vicinity || nearbyStreet.name,
+                    components: null,
+                  });
+                } else {
+                  resolve(null);
+                }
+              });
+            });
+          } catch (fallbackError) {
+            console.warn("Legacy Places API also failed:", fallbackError);
+            return null;
+          }
         }
       }
     } catch (error) {
@@ -1082,11 +1118,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     setSearchQuery(suggestion.description);
     setShowSuggestions(false);
 
-    if (
-      !placesService ||
-      !suggestion.place_id ||
-      suggestion.place_id.startsWith("mock_")
-    ) {
+    if (!suggestion.place_id || suggestion.place_id.startsWith("mock_")) {
       // Handle mock suggestions or when places service is not available
       let coordinates = { lat: 28.6139, lng: 77.209 }; // Default Delhi coordinates
 
@@ -1118,52 +1150,51 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     }
 
     try {
-      const request: google.maps.places.PlaceDetailsRequest = {
-        placeId: suggestion.place_id,
-        fields: [
-          "geometry.location",
-          "formatted_address",
-          "address_components",
-        ],
-      };
+      // Use the new autocompleteSuggestionService which already implements the new Place API
+      const { getPlaceDetails } = await import(
+        "@/utils/autocompleteSuggestionService"
+      );
 
-      placesService.getDetails(request, (place, status) => {
-        if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          place?.geometry?.location
-        ) {
-          const coordinates = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          };
+      const place = await getPlaceDetails(suggestion.place_id);
 
-          setSelectedLocation({
-            address: place.formatted_address || suggestion.description,
-            coordinates,
-          });
+      if (place?.geometry?.location) {
+        const coordinates = {
+          lat:
+            typeof place.geometry.location.lat === "function"
+              ? place.geometry.location.lat()
+              : place.geometry.location.lat,
+          lng:
+            typeof place.geometry.location.lng === "function"
+              ? place.geometry.location.lng()
+              : place.geometry.location.lng,
+        };
 
-          updateMapLocation(coordinates);
-          autoFillAddressFields(
-            place.formatted_address || suggestion.description,
-          );
-        } else {
-          console.error("Failed to get place details:", status);
-          // Fallback to geocoding
-          locationService
-            .geocodeAddress(suggestion.description)
-            .then((geocodeResult) => {
-              setSelectedLocation({
-                address: geocodeResult.formatted_address,
-                coordinates: geocodeResult.coordinates,
-              });
-              updateMapLocation(geocodeResult.coordinates);
-              autoFillAddressFields(geocodeResult.formatted_address);
-            })
-            .catch((geocodeError) => {
-              console.error("Geocoding fallback failed:", geocodeError);
+        setSelectedLocation({
+          address: place.formatted_address || suggestion.description,
+          coordinates,
+        });
+
+        updateMapLocation(coordinates);
+        autoFillAddressFields(
+          place.formatted_address || suggestion.description,
+        );
+      } else {
+        console.error("Failed to get place details");
+        // Fallback to geocoding
+        locationService
+          .geocodeAddress(suggestion.description)
+          .then((geocodeResult) => {
+            setSelectedLocation({
+              address: geocodeResult.formatted_address,
+              coordinates: geocodeResult.coordinates,
             });
-        }
-      });
+            updateMapLocation(geocodeResult.coordinates);
+            autoFillAddressFields(geocodeResult.formatted_address);
+          })
+          .catch((geocodeError) => {
+            console.error("Geocoding fallback failed:", geocodeError);
+          });
+      }
     } catch (error) {
       console.error("Place details request failed:", error);
     }

@@ -19,14 +19,18 @@ class ModernGoogleMapsService {
   private loader: Loader;
   private isLoaded = false;
   private map: google.maps.Map | null = null;
-  private markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  private markers: (
+    | google.maps.marker.AdvancedMarkerElement
+    | google.maps.Marker
+  )[] = [];
 
   constructor() {
+    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
     this.loader = new Loader({
       apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
       version: "weekly",
-      libraries: ["places", "marker"], // Include marker library for AdvancedMarkerElement
-      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || undefined, // Add Map ID for Advanced Markers
+      libraries: ["places", "marker"], // Include marker library for fallback
     });
   }
 
@@ -64,10 +68,10 @@ class ModernGoogleMapsService {
       ...config,
     };
 
-    this.map = new google.maps.Map(container, {
+    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
+    const mapConfig: any = {
       ...defaultConfig,
-      // Add Map ID for Advanced Markers support
-      mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID,
       // Modern map styling options
       styles: [
         {
@@ -85,50 +89,80 @@ class ModernGoogleMapsService {
       fullscreenControl: true,
       streetViewControl: true,
       mapTypeControl: true,
-    });
+    };
+
+    // Only add Map ID if it's available
+    if (mapId) {
+      mapConfig.mapId = mapId;
+    }
+
+    this.map = new google.maps.Map(container, mapConfig);
 
     console.log("🗺️ Modern Google Map created successfully");
     return this.map;
   }
 
   /**
-   * Add modern marker using AdvancedMarkerElement (replaces deprecated Marker)
+   * Add marker using AdvancedMarkerElement if Map ID available, otherwise regular Marker
    */
   async addAdvancedMarker(
     config: MarkerConfig,
-  ): Promise<google.maps.marker.AdvancedMarkerElement> {
+  ): Promise<google.maps.marker.AdvancedMarkerElement | google.maps.Marker> {
     if (!this.map) {
       throw new Error("Map must be created before adding markers");
     }
 
     await this.initialize();
 
-    // Create marker using modern AdvancedMarkerElement
-    const marker = new google.maps.marker.AdvancedMarkerElement({
+    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
+    // Use AdvancedMarkerElement if Map ID is available
+    if (mapId && google.maps.marker?.AdvancedMarkerElement) {
+      try {
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map: this.map,
+          position: config.position,
+          title: config.title,
+          gmpClickable: config.gmpClickable ?? true,
+        });
+
+        // If custom content is provided, use it
+        if (config.content) {
+          let contentElement: HTMLElement;
+
+          if (typeof config.content === "string") {
+            contentElement = document.createElement("div");
+            contentElement.innerHTML = config.content;
+            contentElement.className = "custom-marker-content";
+          } else {
+            contentElement = config.content;
+          }
+
+          marker.content = contentElement;
+        }
+
+        this.markers.push(marker as any);
+        console.log("📍 Advanced marker added successfully");
+        return marker;
+      } catch (error) {
+        console.warn(
+          "AdvancedMarkerElement failed, falling back to regular marker:",
+          error,
+        );
+      }
+    }
+
+    // Fallback to regular Marker
+    const marker = new google.maps.Marker({
       map: this.map,
       position: config.position,
       title: config.title,
-      gmpClickable: config.gmpClickable ?? true,
+      clickable: config.gmpClickable ?? true,
     });
 
-    // If custom content is provided, use it
-    if (config.content) {
-      let contentElement: HTMLElement;
-
-      if (typeof config.content === "string") {
-        contentElement = document.createElement("div");
-        contentElement.innerHTML = config.content;
-        contentElement.className = "custom-marker-content";
-      } else {
-        contentElement = config.content;
-      }
-
-      marker.content = contentElement;
-    }
-
-    this.markers.push(marker);
-    console.log("📍 Advanced marker added successfully");
-    return marker;
+    this.markers.push(marker as any);
+    console.log("📍 Regular marker added successfully");
+    return marker as any;
   }
 
   /**
@@ -206,7 +240,9 @@ class ModernGoogleMapsService {
    */
   async addMultipleMarkers(
     configs: MarkerConfig[],
-  ): Promise<google.maps.marker.AdvancedMarkerElement[]> {
+  ): Promise<
+    (google.maps.marker.AdvancedMarkerElement | google.maps.Marker)[]
+  > {
     const promises = configs.map((config) => this.addAdvancedMarker(config));
     return Promise.all(promises);
   }
@@ -216,7 +252,11 @@ class ModernGoogleMapsService {
    */
   clearMarkers(): void {
     this.markers.forEach((marker) => {
-      marker.map = null;
+      if (marker instanceof google.maps.Marker) {
+        marker.setMap(null);
+      } else {
+        marker.map = null;
+      }
     });
     this.markers = [];
     console.log("🧹 All markers cleared");
@@ -231,8 +271,15 @@ class ModernGoogleMapsService {
     const bounds = new google.maps.LatLngBounds();
 
     this.markers.forEach((marker) => {
-      if (marker.position) {
-        bounds.extend(marker.position);
+      let position;
+      if (marker instanceof google.maps.Marker) {
+        position = marker.getPosition();
+      } else {
+        position = marker.position;
+      }
+
+      if (position) {
+        bounds.extend(position);
       }
     });
 
@@ -287,8 +334,8 @@ class ModernGoogleMapsService {
    * Add marker click listener
    */
   addMarkerClickListener(
-    marker: google.maps.marker.AdvancedMarkerElement,
-    callback: (event: google.maps.marker.AdvancedMarkerClickEvent) => void,
+    marker: google.maps.marker.AdvancedMarkerElement | google.maps.Marker,
+    callback: (event: any) => void,
   ): void {
     marker.addListener("click", callback);
   }
@@ -309,14 +356,18 @@ class ModernGoogleMapsService {
    */
   showInfoWindow(
     infoWindow: google.maps.InfoWindow,
-    marker: google.maps.marker.AdvancedMarkerElement,
+    marker: google.maps.marker.AdvancedMarkerElement | google.maps.Marker,
   ): void {
     if (!this.map) return;
 
-    infoWindow.open({
-      map: this.map,
-      anchor: marker,
-    });
+    if (marker instanceof google.maps.Marker) {
+      infoWindow.open(this.map, marker);
+    } else {
+      infoWindow.open({
+        map: this.map,
+        anchor: marker,
+      });
+    }
   }
 
   /**
