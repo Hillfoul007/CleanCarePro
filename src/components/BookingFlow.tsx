@@ -649,7 +649,16 @@ const BookingFlow: React.FC<BookingFlowProps> = ({
                       Remove
                     </Button>
                   ) : (
-                    <Button variant="outline" onClick={applyCoupon} size="sm">
+                    <Button
+                      variant="outline"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        applyCoupon();
+                      }}
+                      size="sm"
+                      type="button"
+                    >
                       Apply
                     </Button>
                   )}
