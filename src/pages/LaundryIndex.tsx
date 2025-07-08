@@ -596,7 +596,7 @@ const LaundryIndex = () => {
         addNotification(
           createSuccessNotification(
             "Order Confirmed!",
-            `Your order has been placed successfully! Booking ID: ${confirmationData.bookingId.slice(-6)}`,
+            `Your order has been placed successfully! Booking ID: ${confirmationData.bookingId ? confirmationData.bookingId.slice(-6) : "N/A"}`,
           ),
         );
 
