@@ -205,23 +205,6 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     }
   }, [isOpen, editingAddress, mapInstance, currentUser]);
 
-  const handleMapClick = async (latLng: google.maps.LatLng) => {
-    const coordinates = {
-      lat: latLng.lat(),
-      lng: latLng.lng(),
-    };
-
-    try {
-      const address = await locationService.reverseGeocode(coordinates);
-      setSelectedLocation({ address, coordinates });
-      setSearchQuery(address);
-      updateMapLocation(coordinates);
-      autoFillAddressFields(address);
-    } catch (error) {
-      console.error("Reverse geocoding failed:", error);
-    }
-  };
-
   const handleCurrentLocation = async () => {
     setIsDetectingLocation(true);
 
