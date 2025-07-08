@@ -53,6 +53,42 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
 
   const dvhostingSmsService = DVHostingSmsService.getInstance();
 
+  // Error boundary effect
+  React.useEffect(() => {
+    const handleError = (error: ErrorEvent) => {
+      console.error("PhoneOtpAuthModal: Global error caught", error);
+      setHasError(true);
+    };
+
+    window.addEventListener("error", handleError);
+    return () => window.removeEventListener("error", handleError);
+  }, []);
+
+  // Early return after all hooks are declared
+  if (hasError) {
+    return (
+      <div className="fixed inset-0 z-[1000] bg-black/50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <h3 className="text-lg font-medium text-red-600 mb-2">
+            Something went wrong
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Please close this dialog and try again.
+          </p>
+          <Button
+            onClick={() => {
+              setHasError(false);
+              onClose();
+            }}
+            className="w-full"
+          >
+            Close
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const resetForm = () => {
     // Clear iOS auth state for fresh start
     if (isIosDevice()) {
