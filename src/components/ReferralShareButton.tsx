@@ -37,7 +37,7 @@ import referralService, {
 interface ReferralShareButtonProps {
   userId: string;
   currentUser: any;
-  variant?: "default" | "outline" | "ghost" | "small";
+  variant?: "default" | "outline" | "ghost" | "small" | "menu-item";
   className?: string;
 }
 
