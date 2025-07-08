@@ -250,7 +250,11 @@ class ModernGoogleMapsService {
    */
   clearMarkers(): void {
     this.markers.forEach((marker) => {
-      marker.map = null;
+      if (marker instanceof google.maps.Marker) {
+        marker.setMap(null);
+      } else {
+        marker.map = null;
+      }
     });
     this.markers = [];
     console.log("🧹 All markers cleared");
