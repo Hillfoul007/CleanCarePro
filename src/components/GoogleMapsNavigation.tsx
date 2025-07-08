@@ -98,15 +98,39 @@ const GoogleMapsNavigation: React.FC<GoogleMapsNavigationProps> = ({
     if (directionsService && directionsRenderer && origin) {
       calculateRoute();
     } else if (map && !origin) {
-      // Show just the destination marker if no origin using AdvancedMarkerElement
-      if (window.google.maps.marker?.AdvancedMarkerElement) {
-        new window.google.maps.marker.AdvancedMarkerElement({
-          position: destination,
-          map: map,
-          title: destination.address,
-        });
+      // Show just the destination marker if no origin
+      const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
+      // Only use Advanced Markers if Map ID is configured and available
+      if (
+        mapId &&
+        mapId.trim() !== "" &&
+        window.google.maps.marker?.AdvancedMarkerElement
+      ) {
+        try {
+          new window.google.maps.marker.AdvancedMarkerElement({
+            position: destination,
+            map: map,
+            title: destination.address,
+          });
+          console.log("📍 Using Advanced Marker for destination");
+        } catch (error) {
+          console.warn(
+            "Failed to create Advanced Marker, falling back to regular marker:",
+            error,
+          );
+          // Fallback to regular marker if Advanced Marker fails
+          new window.google.maps.Marker({
+            position: destination,
+            map: map,
+            title: destination.address,
+            icon: {
+              url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+            },
+          });
+        }
       } else {
-        // Fallback to old marker for backwards compatibility
+        // Use regular marker when Map ID is not configured
         new window.google.maps.Marker({
           position: destination,
           map: map,
@@ -115,6 +139,9 @@ const GoogleMapsNavigation: React.FC<GoogleMapsNavigationProps> = ({
             url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
           },
         });
+        console.log(
+          "📍 Using regular Marker for destination (no Map ID configured)",
+        );
       }
     }
   }, [directionsService, directionsRenderer, origin, destination]);
