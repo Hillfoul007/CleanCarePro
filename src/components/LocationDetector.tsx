@@ -30,6 +30,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
   onAddressSelect,
   className = "",
   showInTopBar = false,
+  showMap = false,
 }) => {
   const [currentLocation, setCurrentLocation] = useState<string>("");
   const [isDetecting, setIsDetecting] = useState<boolean>(false);
