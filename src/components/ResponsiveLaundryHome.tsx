@@ -935,7 +935,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                     console.log("Desktop signin button clicked");
                     handleLogin();
                   }}
-                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 cursor-pointer"
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 cursor-pointer"
                   type="button"
                 >
                   <User className="h-4 w-4 mr-2" />
@@ -950,18 +950,18 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
       {/* Desktop Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl text-white p-8 mb-8">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl text-white p-8 mb-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-4xl font-bold mb-4">
                 Professional Laundry & Dry Cleaning
               </h2>
-              <p className="text-green-100 mb-6 text-lg">
+              <p className="text-blue-100 mb-6 text-lg">
                 Quality service delivered to your doorstep in {deliveryTime}
               </p>
               <Button
                 onClick={handleBookService}
-                className="bg-white text-green-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl"
+                className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl"
               >
                 Browse Services
                 <ArrowRight className="ml-2 h-5 w-5" />
