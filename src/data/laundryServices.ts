@@ -315,7 +315,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Jacket.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fcc66473ded1c4c3497abf4b2ab26dbdb?format=webp&width=800",
   },
   {
     id: "dry-clean-sweater",
@@ -325,7 +326,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Sweater.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F412040582c054bfba58174dd1e8b3466?format=webp&width=800",
   },
   {
     id: "dry-clean-long-coat",
@@ -335,7 +337,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Long Coat.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F07c73c69f3e44522997d598f77b45fdc?format=webp&width=800",
   },
   {
     id: "dry-clean-shawl",
@@ -345,7 +348,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Shawl.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F25391912d8fd486b964bd9f21cc6944f?format=webp&width=800",
   },
   {
     id: "dry-clean-pashmina",
@@ -355,7 +359,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Pashmina.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F09f22a7a13bf48c783a4d2727f57e48a?format=webp&width=800",
   },
   {
     id: "dry-clean-leather-jacket",
@@ -365,7 +370,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72-96 hours",
-    image: "/images/Leather jacket.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F2a4fbb4834b746958fe48a5a64f1af94?format=webp&width=800",
   },
 ];
 
