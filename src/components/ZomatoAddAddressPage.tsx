@@ -76,8 +76,6 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
-  const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
-  const [locationAttempt, setLocationAttempt] = useState(0);
   const [selectedLocation, setSelectedLocation] = useState<{
     address: string;
     coordinates: Coordinates;
