@@ -139,15 +139,31 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
 
           <div className="p-2 space-y-1">
             <DropdownMenuItem
-              onClick={() => {
-                setIsOpen(false);
-                onViewBookings();
-              }}
-              className="cursor-pointer rounded-xl p-3 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group transform hover:scale-[1.02]"
+              onClick={() =>
+                handleItemClick("bookings", () => {
+                  setIsOpen(false);
+                  onViewBookings();
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "bookings"
+                  ? "scale-110 bg-blue-100 shadow-lg ring-2 ring-blue-300 ring-opacity-50"
+                  : ""
+              }`}
             >
               <div className="flex items-center w-full">
-                <div className="w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
-                  <Package className="h-4 w-4 text-blue-600" />
+                <div
+                  className={`w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "bookings"
+                      ? "animate-pulse bg-blue-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <Package
+                    className={`h-4 w-4 text-blue-600 transition-all duration-200 ${
+                      clickedItem === "bookings" ? "scale-125" : ""
+                    }`}
+                  />
                 </div>
                 <span className="font-medium">My Bookings</span>
               </div>
