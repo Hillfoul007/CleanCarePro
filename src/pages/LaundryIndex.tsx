@@ -730,7 +730,7 @@ const LaundryIndex = () => {
         <>
           {/* Referral Discount Banner */}
           {currentUser && (
-            <div className="px-4 pt-4">
+            <div className="px-4">
               <ReferralDiscountBanner user={currentUser} />
             </div>
           )}
