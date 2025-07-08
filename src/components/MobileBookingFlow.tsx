@@ -81,7 +81,7 @@ const MobileBookingFlow: React.FC<MobileBookingFlowProps> = ({
 
   const getDeliveryCharge = () => 0; // Free delivery
 
-  const getHandlingFee = () => 9; // Fixed handling fee
+  const getHandlingFee = () => 0; // Free handling fee as shown in UI
 
   const calculateFinalAmount = () => {
     const basePrice = calculateTotalPrice();
