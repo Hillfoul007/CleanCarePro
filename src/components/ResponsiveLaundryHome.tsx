@@ -1035,7 +1035,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
             </Button>
 
             {(useStaticFallback
-              ? serviceCategories.slice(1)
+              ? (serviceCategories || []).slice(1)
               : dynamicServices || []
             )
               .filter((category) => category.enabled !== false)
