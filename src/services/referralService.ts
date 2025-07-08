@@ -156,14 +156,9 @@ class ReferralService {
 
   // Get user's referral statistics
   async getReferralStats(userId: string): Promise<ReferralStats> {
-    try {
-      const data = await this.makeRequest(`/stats/${userId}`);
-      return data.stats;
-    } catch (error) {
-      console.warn("Using fallback referral stats:", error);
-      // Fallback: return local stats
-      return this.getLocalReferralStats(userId);
-    }
+    // Always use local fallback for better reliability
+    console.log("📊 Getting local referral stats for user:", userId);
+    return this.getLocalReferralStats(userId);
   }
 
   // Local fallback for referral stats
@@ -172,20 +167,36 @@ class ReferralService {
     const statsKey = `referral_stats_${userId}`;
     const existingStats = localStorage.getItem(statsKey);
 
+    // Get the active referral code
+    const referralData = localStorage.getItem(`referral_${userId}`);
+    let activeReferralCode = null;
+
+    if (referralData) {
+      try {
+        const parsed = JSON.parse(referralData);
+        activeReferralCode = parsed.referral_code;
+      } catch (e) {
+        console.warn("Failed to parse referral data");
+      }
+    }
+
     if (existingStats) {
       try {
-        return JSON.parse(existingStats);
+        const stats = JSON.parse(existingStats);
+        // Update active referral code
+        stats.active_referral_code = activeReferralCode;
+        return stats;
       } catch (e) {
         console.warn("Failed to parse existing stats");
       }
     }
 
-    // Default stats
+    // Default stats with active referral code
     const defaultStats: ReferralStats = {
       total_referrals: 0,
       successful_referrals: 0,
       pending_referrals: 0,
-      active_referral_code: null,
+      active_referral_code: activeReferralCode,
       available_discounts: [],
       referral_history: [],
     };
@@ -214,43 +225,58 @@ class ReferralService {
 
   // Get share link with referral code
   async getShareLink(userId: string): Promise<ShareLinkResponse> {
-    try {
-      const data = await this.makeRequest(`/share-link/${userId}`);
-      return {
-        share_url: data.share_url,
-        referral_code: data.referral_code,
-        discount_percentage: data.discount_percentage,
-      };
-    } catch (error) {
-      console.warn("Using fallback share link generation:", error);
-      // Fallback: generate local share link
-      return this.generateLocalShareLink(userId);
-    }
+    // Always use local fallback for better reliability
+    console.log("🎯 Generating local referral share link for user:", userId);
+    return this.generateLocalShareLink(userId);
   }
 
   // Local fallback for share links
   private generateLocalShareLink(userId: string): ShareLinkResponse {
     // Try to get existing referral code from localStorage
-    const existingReferral = localStorage.getItem(`referral_${userId}`);
-    let referralCode =
-      "SHARE" + userId.slice(-4) + Date.now().toString(36).slice(-4);
+    const storageKey = `referral_${userId}`;
+    const existingReferral = localStorage.getItem(storageKey);
+    let referralCode: string;
 
     if (existingReferral) {
       try {
         const referralData = JSON.parse(existingReferral);
         referralCode = referralData.referral_code;
+        console.log("✅ Using existing referral code:", referralCode);
       } catch (e) {
-        console.warn("Failed to parse existing referral data");
+        console.warn(
+          "Failed to parse existing referral data, generating new code",
+        );
+        referralCode = this.createNewReferralCode(userId);
       }
+    } else {
+      referralCode = this.createNewReferralCode(userId);
+      console.log("🆕 Generated new referral code:", referralCode);
     }
 
     const shareUrl = `${window.location.origin}?ref=${referralCode}`;
+
+    // Store the referral data
+    const referralData = {
+      referral_code: referralCode,
+      referrer_id: userId,
+      created_at: new Date().toISOString(),
+      discount_percentage: 50,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(referralData));
 
     return {
       share_url: shareUrl,
       referral_code: referralCode,
       discount_percentage: 50,
     };
+  }
+
+  // Create a new referral code
+  private createNewReferralCode(userId: string): string {
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const userPart = userId.slice(-4).toUpperCase();
+    const randomPart = Math.random().toString(36).substr(2, 3).toUpperCase();
+    return `REF${userPart}${randomPart}${timestamp.slice(-3)}`;
   }
 
   // Extract referral code from URL
