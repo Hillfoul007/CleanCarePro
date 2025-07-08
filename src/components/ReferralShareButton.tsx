@@ -138,7 +138,7 @@ export function ReferralShareButton({
               : variant === "menu-item"
                 ? "gap-2 h-auto"
                 : "gap-2"
-          } ${className}`}
+          } touch-manipulation ${className}`}
           title="Share and earn rewards"
         >
           <ButtonIcon className={variant === "small" ? "h-4 w-4" : "h-4 w-4"} />
