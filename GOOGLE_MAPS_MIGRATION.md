@@ -83,21 +83,22 @@ The migration includes comprehensive error handling:
 
 ### Common Issues
 
-1. **"Map ID not found" errors**
-   - Solution: Set `VITE_GOOGLE_MAPS_MAP_ID` environment variable
+1. **Advanced Markers not displaying**
+   - This is normal if no Map ID is configured
+   - The system automatically uses regular markers as fallback
 
-2. **Advanced Markers not working**
-   - Solution: Ensure Map ID is configured and valid
-
-3. **Place details failing**
+2. **Place details failing**
    - Solution: Check API key permissions and quota limits
 
-### Console Warnings
+3. **Maps not loading**
+   - Solution: Verify `VITE_GOOGLE_MAPS_API_KEY` is set correctly
 
-The system provides helpful console warnings for:
+### Console Messages
 
-- Missing Map ID configuration
-- API initialization failures
+The system provides helpful console messages for:
+
+- Marker type being used (Advanced vs Regular)
+- API initialization status
 - Fallback usage notifications
 
 ## Testing
