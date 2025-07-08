@@ -184,12 +184,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                 userId={currentUser.id}
                 currentUser={currentUser}
                 variant="menu-item"
-                className={`w-full justify-start p-3 h-auto font-medium hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02] ${
-                  clickedItem === "referral"
-                    ? "scale-110 bg-green-100 shadow-lg ring-2 ring-green-300 ring-opacity-50"
-                    : ""
-                }`}
-                onOpen={handleReferralClick}
+                className="w-full justify-start p-3 h-auto font-medium hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02]"
               />
             </DropdownMenuItem>
 
