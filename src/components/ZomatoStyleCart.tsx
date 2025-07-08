@@ -461,10 +461,15 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                   className="flex-1"
                 />
                 <Button
-                  onClick={applyCoupon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    applyCoupon();
+                  }}
                   variant="outline"
                   disabled={!couponCode.trim()}
                   className="border-green-600 text-green-600 hover:bg-green-50"
+                  type="button"
                 >
                   Apply
                 </Button>
