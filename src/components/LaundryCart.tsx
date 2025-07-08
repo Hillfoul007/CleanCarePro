@@ -754,17 +754,7 @@ Confirm this booking?`;
                   ) : null}
                   {/* Fallback to emoji/icon */}
                   <span className={`text-sm ${service!.image ? "hidden" : ""}`}>
-                    {service!.category.includes("Men")
-                      ? "👔"
-                      : service!.category.includes("Women")
-                        ? "👗"
-                        : service!.category.includes("Woolen")
-                          ? "🧥"
-                          : service!.category.includes("Steam")
-                            ? "🔥"
-                            : service!.category.includes("Iron")
-                              ? "🏷️"
-                              : "👕"}
+                    {getCategoryDisplay(service!.category).split(" ")[0]}
                   </span>
                 </div>
 
