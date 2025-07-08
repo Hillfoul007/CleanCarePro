@@ -260,10 +260,32 @@ html {
   /* Fix white line on mobile header after login */
   .mobile-header,
   .mobile-header *,
-  .sticky[style*="top: 0"] {
+  .sticky[style*="top: 0"],
+  [class*="sticky"][class*="top-0"],
+  [style*="position: sticky"][style*="top: 0"] {
     border-top: 0 !important;
     margin-top: 0 !important;
     outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure no white lines in mobile navigation */
+  @media (max-width: 768px) {
+    .sticky,
+    [class*="sticky"],
+    [style*="position: sticky"] {
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+      box-shadow: none !important;
+    }
+
+    /* Fix potential white line from body or html */
+    body,
+    html {
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+    }
   }
 
   /* Address modal fixes for mobile */
