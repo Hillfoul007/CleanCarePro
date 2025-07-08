@@ -72,6 +72,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
 
       setCurrentLocation(address);
       setSearchValue(address);
+      setSelectedCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
       onLocationChange(address, coordinates);
 
       // Call onAddressSelect if provided
