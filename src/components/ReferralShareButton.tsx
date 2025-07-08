@@ -144,6 +144,12 @@ export const ReferralShareButton = React.forwardRef<
                   : "gap-2"
             } touch-manipulation ${className}`}
             title="Share and earn rewards"
+            onClick={(e) => {
+              if (onClick) {
+                onClick();
+              }
+              // Don't prevent default dialog opening
+            }}
           >
             {variant === "menu-item" ? (
               <div className="flex items-center w-full">
