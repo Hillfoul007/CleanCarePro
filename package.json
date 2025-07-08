@@ -20,7 +20,7 @@
     "deploy": "chmod +x deploy.sh && ./deploy.sh",
     "render:build": "npm install && npm run build:memory-efficient && cd backend && npm install --production && echo 'Build completed successfully'",
     "render:start": "NODE_ENV=production node backend/server-laundry.js",
-    "build:memory-efficient": "NODE_OPTIONS='--max-old-space-size=512' vite build --chunkSizeWarningLimit=1000",
+    "build:memory-efficient": "node scripts/memory-efficient-build.js",
     "install:all": "npm install && cd backend && npm install",
     "build:production": "npm run install:all && npm run build"
   },
