@@ -191,6 +191,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           }
           setShowProfileModal(false);
         }}
+        onLogout={onLogout}
       />
 
       <SavedAddressesModal
