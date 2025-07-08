@@ -241,15 +241,31 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={() => {
-                setIsOpen(false);
-                setShowPreferencesModal(true);
-              }}
-              className="cursor-pointer rounded-xl p-3 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 group transform hover:scale-[1.02]"
+              onClick={() =>
+                handleItemClick("preferences", () => {
+                  setIsOpen(false);
+                  setShowPreferencesModal(true);
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "preferences"
+                  ? "scale-110 bg-indigo-100 shadow-lg ring-2 ring-indigo-300 ring-opacity-50"
+                  : ""
+              }`}
             >
               <div className="flex items-center w-full">
-                <div className="w-8 h-8 bg-indigo-100 group-hover:bg-indigo-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
-                  <Settings className="h-4 w-4 text-indigo-600" />
+                <div
+                  className={`w-8 h-8 bg-indigo-100 group-hover:bg-indigo-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "preferences"
+                      ? "animate-pulse bg-indigo-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <Settings
+                    className={`h-4 w-4 text-indigo-600 transition-all duration-200 ${
+                      clickedItem === "preferences" ? "scale-125" : ""
+                    }`}
+                  />
                 </div>
                 <span className="font-medium">Preferences</span>
               </div>
