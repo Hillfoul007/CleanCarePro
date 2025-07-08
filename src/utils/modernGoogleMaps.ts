@@ -354,14 +354,18 @@ class ModernGoogleMapsService {
    */
   showInfoWindow(
     infoWindow: google.maps.InfoWindow,
-    marker: google.maps.marker.AdvancedMarkerElement,
+    marker: google.maps.marker.AdvancedMarkerElement | google.maps.Marker,
   ): void {
     if (!this.map) return;
 
-    infoWindow.open({
-      map: this.map,
-      anchor: marker,
-    });
+    if (marker instanceof google.maps.Marker) {
+      infoWindow.open(this.map, marker);
+    } else {
+      infoWindow.open({
+        map: this.map,
+        anchor: marker,
+      });
+    }
   }
 
   /**
