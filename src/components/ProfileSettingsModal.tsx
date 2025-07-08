@@ -129,41 +129,65 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
           </div>
 
           {/* Form Fields */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Full Name</Label>
+          <div className="space-y-5">
+            <div className="group">
+              <Label
+                htmlFor="name"
+                className="text-sm font-semibold text-gray-700 mb-2 block"
+              >
+                Full Name
+              </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 disabled={!isEditing}
-                className={!isEditing ? "bg-gray-50" : ""}
+                className={`transition-all duration-200 rounded-xl border-2 ${
+                  !isEditing
+                    ? "bg-gray-50/80 border-gray-200 text-gray-600"
+                    : "bg-white border-green-200 focus:border-green-400 focus:ring-green-400/20 shadow-sm hover:shadow-md"
+                }`}
               />
             </div>
 
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
+            <div className="group">
+              <Label
+                htmlFor="phone"
+                className="text-sm font-semibold text-gray-700 mb-2 block"
+              >
+                Phone Number
+              </Label>
               <Input
                 id="phone"
                 value={formData.phone}
                 disabled={true}
-                className="bg-gray-50"
+                className="bg-gray-50/80 border-2 border-gray-200 text-gray-600 rounded-xl"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2 ml-1 flex items-center">
+                <span className="w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
                 Phone number cannot be changed
               </p>
             </div>
 
-            <div>
-              <Label htmlFor="email">Email Address</Label>
+            <div className="group">
+              <Label
+                htmlFor="email"
+                className="text-sm font-semibold text-gray-700 mb-2 block"
+              >
+                Email Address
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 disabled={!isEditing}
-                className={!isEditing ? "bg-gray-50" : ""}
                 placeholder="Enter your email address"
+                className={`transition-all duration-200 rounded-xl border-2 ${
+                  !isEditing
+                    ? "bg-gray-50/80 border-gray-200 text-gray-600"
+                    : "bg-white border-green-200 focus:border-green-400 focus:ring-green-400/20 shadow-sm hover:shadow-md"
+                }`}
               />
             </div>
           </div>
