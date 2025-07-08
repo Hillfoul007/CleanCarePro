@@ -87,7 +87,7 @@ const BookingFlow: React.FC<BookingFlowProps> = ({
   };
 
   const getHandlingFee = () => {
-    return 9; // Fixed handling fee
+    return 0; // Free handling fee as shown in UI
   };
 
   const getCouponDiscount = () => {
