@@ -38,18 +38,18 @@ The following components were updated to use the new API:
 # Google Maps API Key (Required)
 VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
 
-# Google Maps Map ID (Recommended for Advanced Markers)
+# Google Maps Map ID (Optional - for Advanced Markers)
 VITE_GOOGLE_MAPS_MAP_ID=your_map_id_here
 ```
 
-### Setting up Map ID
+### Map ID (Optional)
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to "Google Maps Platform" > "Map management"
-3. Create a new Map ID or use an existing one
-4. Add the Map ID to your environment variables
+The system now works **without requiring a Map ID**. Here's how it handles different scenarios:
 
-**Note**: If no Map ID is provided, the system will use a default "DEMO_MAP_ID" which may have limitations in production.
+- **With Map ID**: Uses Advanced Markers for enhanced visual features
+- **Without Map ID**: Falls back to regular Google Maps markers automatically
+
+**Note**: Map ID is completely optional. The system will automatically detect if a Map ID is available and use the appropriate marker type.
 
 ## API Features Used
 
