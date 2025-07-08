@@ -867,9 +867,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                 </div>
               </div>
 
-              <div className="hidden lg:flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg">
-                <Clock className="h-4 w-4 text-green-600" />
-                <span className="text-sm font-medium text-green-700">
+              <div className="hidden lg:flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
+                <Clock className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-700">
                   Delivery in {deliveryTime}
                 </span>
               </div>
