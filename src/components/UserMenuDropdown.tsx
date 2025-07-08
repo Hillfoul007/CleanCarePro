@@ -179,7 +179,9 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                     ? "scale-110 bg-green-100 shadow-lg ring-2 ring-green-300 ring-opacity-50"
                     : ""
                 }`}
-                onClick={() => handleItemClick("referral", () => {})}
+                onClick={() =>
+                  handleItemClick("referral", () => setIsOpen(false))
+                }
               />
             </DropdownMenuItem>
 
