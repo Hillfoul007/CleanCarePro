@@ -107,10 +107,6 @@ const getReverseGeocodedLocation = async (
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleApiKey}`,
         {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
           signal: controller.signal,
         },
       );
