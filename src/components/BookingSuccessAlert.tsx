@@ -51,6 +51,7 @@ const BookingSuccessAlert: React.FC<BookingSuccessAlertProps> = React.memo(
             <p className="text-green-700 text-xs">
               Booking ID: #
               {booking.custom_order_id ||
+                booking._id?.slice(-8).toUpperCase() ||
                 "CC" +
                   (booking._id
                     ? booking._id.slice(-6).toUpperCase()

@@ -30,7 +30,10 @@ const EnhancedBookingHistoryModal: React.FC<
             <Card key={booking.id || index}>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  Booking #{booking.custom_order_id || "Generating..."}
+                  Booking #
+                  {booking.custom_order_id ||
+                    booking._id?.slice(-8).toUpperCase() ||
+                    "Processing..."}
                 </CardTitle>
               </CardHeader>
               <CardContent>
