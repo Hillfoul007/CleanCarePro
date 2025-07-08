@@ -208,25 +208,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
               </div>
             </DropdownMenuItem>
           </div>
-
-          <DropdownMenuSeparator className="my-1" />
-
-          <div className="p-2">
-            <DropdownMenuItem
-              onClick={() => {
-                setIsOpen(false);
-                onLogout();
-              }}
-              className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl p-3 transition-all duration-200 group transform hover:scale-[1.02] border border-red-200 hover:border-red-300"
-            >
-              <div className="flex items-center w-full">
-                <div className="w-8 h-8 bg-red-100 group-hover:bg-red-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
-                  <LogOut className="h-4 w-4 text-red-600" />
-                </div>
-                <span className="font-medium">Log Out</span>
-              </div>
-            </DropdownMenuItem>
-          </div>
         </DropdownMenuContent>
       </DropdownMenu>
 
