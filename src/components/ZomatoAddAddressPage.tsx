@@ -1085,7 +1085,9 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
           >
             <MapPin className="h-5 w-5" />
             <span>
-              {selectedLocation ? "Change Location on Map" : "Select Location on Map"}
+              {selectedLocation
+                ? "Change Location on Map"
+                : "Select Location on Map"}
             </span>
           </Button>
         </div>
@@ -1096,85 +1098,20 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-900">Selected Location</h4>
-                <p className="text-sm text-green-700 mt-1">{selectedLocation.address}</p>
+                <h4 className="font-medium text-green-900">
+                  Selected Location
+                </h4>
+                <p className="text-sm text-green-700 mt-1">
+                  {selectedLocation.address}
+                </p>
                 <p className="text-xs text-green-600 mt-1">
-                  📍 {selectedLocation.coordinates.lat.toFixed(6)}, {selectedLocation.coordinates.lng.toFixed(6)}
+                  📍 {selectedLocation.coordinates.lat.toFixed(6)},{" "}
+                  {selectedLocation.coordinates.lng.toFixed(6)}
                 </p>
               </div>
             </div>
           </div>
         )}
-
-          {/* Map Controls Overlay */}
-          {!isMapLoading && (
-            <>
-              {/* Enhanced Map Instructions */}
-              {!selectedLocation && (
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-90 text-white px-4 py-2 rounded-lg text-xs max-w-sm text-center hidden sm:block">
-                  <div className="flex items-center gap-2 justify-center mb-1">
-                    <MapPin className="h-3 w-3" />
-                    <span>Pin Selection</span>
-                  </div>
-                  <p>
-                    Search for an address or click anywhere on the map to place
-                    a pin
-                  </p>
-                </div>
-              )}
-
-              {selectedLocation && (
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-green-600 bg-opacity-90 text-white px-4 py-2 rounded-lg text-xs max-w-sm text-center hidden sm:block">
-                  <div className="flex items-center gap-2 justify-center mb-1">
-                    <MapPin className="h-3 w-3" />
-                    <span>Location Selected</span>
-                  </div>
-                  <p>Drag the pin to adjust or click elsewhere to move</p>
-                </div>
-              )}
-
-              {/* Use Current Location Button with Enhanced Feedback */}
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
-                <div className="flex flex-col items-center gap-2">
-                  <Button
-                    onClick={handleCurrentLocation}
-                    disabled={isDetectingLocation}
-                    className="bg-white text-green-600 border border-green-600 hover:bg-green-50 rounded-full px-4 py-2 shadow-lg text-sm"
-                    size="sm"
-                  >
-                    <Navigation
-                      className={`h-4 w-4 mr-2 ${isDetectingLocation ? "animate-pulse" : ""}`}
-                    />
-                    {isDetectingLocation
-                      ? "Detecting..."
-                      : "Use current location"}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Map Type Toggle - Smaller for mobile */}
-              <div className="absolute top-2 right-2">
-                <Button
-                  onClick={() => {
-                    if (mapInstance) {
-                      const currentType = mapInstance.getMapTypeId();
-                      mapInstance.setMapTypeId(
-                        currentType === "roadmap" ? "satellite" : "roadmap",
-                      );
-                    }
-                  }}
-                  className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 text-xs px-2 py-1"
-                  size="sm"
-                >
-                  <MapIcon className="h-3 w-3 mr-1" />
-                  {mapInstance?.getMapTypeId() === "satellite"
-                    ? "Map"
-                    : "Satellite"}
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
 
         {/* Form Section - Now fully scrollable */}
         <div className="bg-white p-4 space-y-6">
