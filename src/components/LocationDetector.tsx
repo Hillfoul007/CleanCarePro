@@ -198,6 +198,24 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
         </div>
       )}
 
+      {showMap && selectedCoordinates && (
+        <div className="mt-4">
+          <LeafletMap
+            center={selectedCoordinates}
+            zoom={15}
+            markers={[
+              {
+                position: selectedCoordinates,
+                title: "Selected Location",
+                content: currentLocation || "Selected Location",
+              },
+            ]}
+            height="250px"
+            className="rounded-lg border"
+          />
+        </div>
+      )}
+
       {error && <p className="text-red-500 text-sm">{error}</p>}
     </>
   );
