@@ -140,8 +140,21 @@ export const ReferralShareButton = React.forwardRef<
           } touch-manipulation ${className}`}
           title="Share and earn rewards"
         >
-          <ButtonIcon className={variant === "small" ? "h-4 w-4" : "h-4 w-4"} />
-          {getButtonText()}
+          {variant === "menu-item" ? (
+            <div className="flex items-center w-full">
+              <div className="w-8 h-8 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
+                <ButtonIcon className="h-4 w-4 text-green-600" />
+              </div>
+              <span className="font-medium">{getButtonText()}</span>
+            </div>
+          ) : (
+            <>
+              <ButtonIcon
+                className={variant === "small" ? "h-4 w-4" : "h-4 w-4"}
+              />
+              {getButtonText()}
+            </>
+          )}
         </Button>
       </DialogTrigger>
 
