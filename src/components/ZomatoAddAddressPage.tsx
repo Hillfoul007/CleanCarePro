@@ -126,7 +126,6 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   const [isMapLoading, setIsMapLoading] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Initialize location picker when opened
@@ -206,7 +205,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     setIsDetectingLocation(true);
 
     try {
-      console.log("📍 Starting high-accuracy location detection...");
+      console.log("�� Starting high-accuracy location detection...");
 
       // Multiple attempts for better accuracy - target street-level precision
       let coordinates;
