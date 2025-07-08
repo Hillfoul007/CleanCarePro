@@ -1003,9 +1003,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                 placeholder="Search for laundry services..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="pl-12 pr-12 py-3 rounded-xl border-gray-200 focus:border-green-500"
+                className="pl-12 pr-12 py-3 rounded-xl border-gray-200 focus:border-blue-500"
               />
-              <Mic className="absolute right-4 top-3 h-5 w-5 text-gray-400 cursor-pointer hover:text-green-500" />
+              <Mic className="absolute right-4 top-3 h-5 w-5 text-gray-400 cursor-pointer hover:text-blue-500" />
             </div>
           </div>
 
@@ -1015,8 +1015,8 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
               onClick={() => setSelectedCategory("all")}
               className={`flex-shrink-0 rounded-xl ${
                 selectedCategory === "all"
-                  ? "bg-green-600 text-white"
-                  : "hover:bg-green-50 hover:border-green-200"
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-blue-50 hover:border-blue-200"
               }`}
             >
               <ShoppingBag className="h-4 w-4 mr-2" />
@@ -1037,8 +1037,8 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex-shrink-0 rounded-xl ${
                     selectedCategory === category.id
-                      ? "bg-green-600 text-white"
-                      : "hover:bg-green-50 hover:border-green-200"
+                      ? "bg-blue-600 text-white"
+                      : "hover:bg-blue-50 hover:border-blue-200"
                   }`}
                 >
                   <span className="mr-2">{category.icon}</span>
@@ -1065,7 +1065,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                     className="border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow"
                   >
                     <CardContent className="p-6">
-                      <div className="aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-xl mb-4 flex items-center justify-center">
+                      <div className="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl mb-4 flex items-center justify-center">
                         <span className="text-5xl">
                           {getCategoryDisplay(service.category).split(" ")[0]}
                         </span>
