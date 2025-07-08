@@ -226,6 +226,11 @@ export class ResendEmailService {
     phone?: string,
   ): Promise<User> {
     try {
+      // Check if backend is available first
+      if (!isBackendAvailable()) {
+        throw new Error("Backend not available in hosted environment");
+      }
+
       // Try to get existing user from backend
       const response = await fetch(`${this.apiBaseUrl}/auth/email-login`, {
         method: "POST",
