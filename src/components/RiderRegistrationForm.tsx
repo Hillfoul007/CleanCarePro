@@ -511,7 +511,7 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
   const renderStep4 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+        <CheckCircle className="w-16 h-16 text-blue-600 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900">Review & Submit</h2>
         <p className="text-gray-600">
           Please review your information before submitting
@@ -587,9 +587,9 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
         </Card>
       </div>
 
-      <Alert className="border-green-200 bg-green-50">
-        <CheckCircle className="h-4 w-4 text-green-600" />
-        <AlertDescription className="text-green-800">
+      <Alert className="border-blue-200 bg-blue-50">
+        <CheckCircle className="h-4 w-4 text-blue-600" />
+        <AlertDescription className="text-blue-800">
           <strong>Next Steps:</strong> After submission, your application will
           be reviewed within 24-48 hours. You'll be notified via email once
           approved to start accepting delivery requests.
@@ -609,15 +609,12 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
     return (
       <Card className="max-w-2xl mx-auto">
         <CardContent className="p-8 text-center">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <CheckCircle className="w-16 h-16 text-blue-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Registration Successful!
           </h2>
           <p className="text-gray-600 mb-4">{success}</p>
-          <Button
-            onClick={onCancel}
-            className="bg-green-600 hover:bg-green-700"
-          >
+          <Button onClick={onCancel} className="bg-blue-600 hover:bg-blue-700">
             Continue to Dashboard
           </Button>
         </CardContent>
@@ -704,7 +701,7 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
               >
                 {loading ? "Submitting..." : "Submit Application"}
               </Button>
