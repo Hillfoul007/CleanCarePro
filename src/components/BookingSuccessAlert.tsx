@@ -27,10 +27,10 @@ const BookingSuccessAlert: React.FC<BookingSuccessAlertProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-xl border border-green-200 p-6 max-w-md w-full">
+        <div className="bg-white rounded-2xl shadow-xl border border-blue-200 p-6 max-w-md w-full">
           <div className="text-center mb-4">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-blue-600" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               Order Successfully Placed!
@@ -41,14 +41,14 @@ const BookingSuccessAlert: React.FC<BookingSuccessAlertProps> = React.memo(
             </p>
           </div>
 
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <Database className="w-4 h-4 text-green-600" />
-              <span className="text-green-800 font-medium text-sm">
+              <Database className="w-4 h-4 text-blue-600" />
+              <span className="text-blue-800 font-medium text-sm">
                 Stored in MongoDB Database
               </span>
             </div>
-            <p className="text-green-700 text-xs">
+            <p className="text-blue-700 text-xs">
               Booking ID: #
               {booking.custom_order_id ||
                 "CC" +
