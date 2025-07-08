@@ -2,20 +2,26 @@ const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema(
   {
+    // PRIMARY BOOKING IDENTIFIERS - TOP PRIORITY
+    custom_order_id: {
+      type: String,
+      required: false,
+      index: true,
+    },
     name: {
       type: String,
       required: [true, "Customer name is required"],
       trim: true,
+      index: true,
     },
     phone: {
       type: String,
       required: [true, "Customer phone number is required"],
       trim: true,
+      index: true,
     },
-    custom_order_id: {
-      type: String,
-      required: false,
-    },
+
+    // CUSTOMER REFERENCE
     customer_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

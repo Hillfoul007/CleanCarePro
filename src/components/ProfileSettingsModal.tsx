@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Edit, Save, X } from "lucide-react";
+import { Edit, Save, X, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UserService from "@/services/userService";
 
@@ -18,6 +18,7 @@ interface ProfileSettingsModalProps {
   onClose: () => void;
   currentUser: any;
   onUpdateProfile: (updatedUser: any) => void;
+  onLogout?: () => void;
 }
 
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
@@ -25,6 +26,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   onClose,
   currentUser,
   onUpdateProfile,
+  onLogout,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -178,6 +180,29 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               >
                 <X className="h-4 w-4 mr-2" />
                 Cancel
+              </Button>
+            </div>
+          )}
+
+          {/* Logout Button */}
+          {onLogout && (
+            <div className="pt-4 border-t border-gray-200">
+              <Button
+                onClick={() => {
+                  // Use iOS fixes for logout
+                  import("../utils/iosAuthFix").then(
+                    ({ clearIosAuthState }) => {
+                      clearIosAuthState();
+                    },
+                  );
+                  onLogout();
+                  onClose();
+                }}
+                variant="outline"
+                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Log Out
               </Button>
             </div>
           )}

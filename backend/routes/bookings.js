@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking");
 const User = require("../models/User");
+const Referral = require("../models/Referral");
 
 const router = express.Router();
 
@@ -250,7 +251,7 @@ router.post("/", async (req, res) => {
         actualCustomerId = phone;
         console.log(`📞 ✅ Extracted valid phone from user ID: ${phone}`);
       } else {
-        console.log(`📞 ��� Extracted phone is invalid: ${phone}`);
+        console.log(`📞 ���� Extracted phone is invalid: ${phone}`);
       }
     } else if (
       typeof customer_id === "string" &&
@@ -548,6 +549,74 @@ router.post("/", async (req, res) => {
       booking._id,
     );
     console.log("🆔 Generated custom order ID:", booking.custom_order_id);
+
+    // Handle referral discounts after successful booking save
+    try {
+      console.log("🎁 Checking for referral discounts...");
+
+      // Check if this user has available referral discounts
+      const userWithDiscounts = await User.findById(customer._id);
+      const availableDiscount = userWithDiscounts?.available_discounts?.find(
+        (d) =>
+          d.type === "referee_discount" &&
+          !d.used &&
+          new Date() < new Date(d.expires_at),
+      );
+
+      if (availableDiscount) {
+        console.log(
+          "🎉 Found available referral discount:",
+          availableDiscount.percentage + "%",
+        );
+
+        // Apply referral discount to this booking
+        const referral = await Referral.findOne({
+          referee_id: customer._id,
+          status: "registered",
+        });
+
+        if (referral && referral.canApplyRefereeDiscount()) {
+          console.log("🎁 Applying referral discount for first-time customer");
+
+          // Mark the referral as first payment completed
+          await referral.markFirstPaymentCompleted(booking._id);
+
+          // Mark the discount as used
+          await User.findByIdAndUpdate(
+            customer._id,
+            {
+              $set: {
+                "available_discounts.$[elem].used": true,
+                "available_discounts.$[elem].booking_id": booking._id,
+              },
+            },
+            {
+              arrayFilters: [
+                { "elem.type": "referee_discount", "elem.used": false },
+              ],
+            },
+          );
+
+          // Add reward discount for referrer
+          await User.findByIdAndUpdate(referral.referrer_id, {
+            $push: {
+              available_discounts: {
+                type: "referral_reward",
+                amount: 0, // Will be calculated at booking time
+                percentage: referral.discount_percentage,
+                expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+              },
+            },
+            $inc: { "referral_stats.pending_rewards": 1 },
+          });
+
+          console.log("✅ Referral discount applied successfully");
+        }
+      }
+    } catch (referralError) {
+      console.error("❌ Error handling referral discount:", referralError);
+      // Don't fail the booking if referral processing fails
+    }
 
     // Verify the booking was saved with custom_order_id
     const savedBooking = await Booking.findById(booking._id);
@@ -1541,9 +1610,12 @@ router.get("/", async (req, res) => {
     }
 
     const bookings = await Booking.find(query)
+      .select(
+        "custom_order_id name phone customer_id status service services scheduled_date scheduled_time total_price final_amount address created_at updated_at rider_id payment_status",
+      )
       .populate("customer_id", "full_name phone email")
       .populate("rider_id", "full_name phone")
-      .sort({ created_at: -1 })
+      .sort({ custom_order_id: -1, created_at: -1 })
       .limit(parseInt(limit))
       .skip(parseInt(offset));
 

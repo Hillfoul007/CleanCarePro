@@ -18,7 +18,9 @@ import {
   MapPin,
   ChevronDown,
   MessageCircle,
+  Gift,
 } from "lucide-react";
+import ReferralShareButton from "@/components/ReferralShareButton";
 import ProfileSettingsModal from "./ProfileSettingsModal";
 import SavedAddressesModal from "./SavedAddressesModal";
 import PreferencesModal from "./PreferencesModal";
@@ -83,19 +85,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                 <span className="text-sm font-medium text-gray-900">
                   {currentUser.name || "User"}
                 </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleWhatsAppShare();
-                  }}
-                  className="p-1 h-auto w-auto flex flex-col items-center text-green-600 hover:text-green-700 hover:bg-green-50"
-                  title="Share website on WhatsApp"
-                >
-                  <MessageCircle className="h-3 w-3" />
-                  <span className="text-xs">Share</span>
-                </Button>
               </div>
               <span className="text-xs text-gray-500 -mt-1">
                 {formatPhone(currentUser.phone)}
@@ -119,20 +108,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
                     <p className="text-sm font-medium text-gray-900">
                       {currentUser.name || "User"}
                     </p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleWhatsAppShare();
-                        setIsOpen(false);
-                      }}
-                      className="p-1 h-auto w-auto flex flex-col items-center text-green-600 hover:text-green-700 hover:bg-green-50"
-                      title="Share website on WhatsApp"
-                    >
-                      <MessageCircle className="h-3 w-3" />
-                      <span className="text-xs">Share</span>
-                    </Button>
                   </div>
                   <p className="text-xs text-gray-500">
                     {formatPhone(currentUser.phone)}
@@ -153,6 +128,19 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           >
             <Package className="mr-2 h-4 w-4" />
             <span>My Bookings</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem asChild>
+            <div className="cursor-pointer">
+              <Gift className="mr-2 h-4 w-4" />
+              <span className="flex-1">Refer and Earn</span>
+              <ReferralShareButton
+                userId={currentUser.id}
+                currentUser={currentUser}
+                variant="small"
+                className="ml-2 h-6 w-6 p-0 hover:bg-green-50"
+              />
+            </div>
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -189,21 +177,6 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              // Use iOS fixes for logout
-              import("../utils/iosAuthFix").then(({ clearIosAuthState }) => {
-                clearIosAuthState();
-              });
-              onLogout();
-            }}
-            className="cursor-pointer text-red-600 focus:text-red-600"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log Out</span>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -218,6 +191,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           }
           setShowProfileModal(false);
         }}
+        onLogout={onLogout}
       />
 
       <SavedAddressesModal

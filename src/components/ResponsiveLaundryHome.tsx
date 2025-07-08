@@ -38,6 +38,7 @@ import type {
 import PhoneOtpAuthModal from "./PhoneOtpAuthModal";
 import EnhancedBookingHistoryModal from "./EnhancedBookingHistoryModal";
 import UserMenuDropdown from "./UserMenuDropdown";
+import OptimizedImage from "./OptimizedImage";
 import DebugPanel from "./DebugPanel";
 import BookingDebugPanel from "./BookingDebugPanel";
 import ConnectionStatus from "./ConnectionStatus";
@@ -46,6 +47,7 @@ import VoiceSearch from "./VoiceSearch";
 import AdminServicesManager from "./AdminServicesManager";
 import { DVHostingSmsService } from "@/services/dvhostingSmsService";
 import { saveCartData, getCartData } from "@/utils/formPersistence";
+import { preloadCriticalImages } from "@/utils/imagePreloader";
 
 interface ResponsiveLaundryHomeProps {
   currentUser?: any;
@@ -202,6 +204,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
           services.length,
           "categories",
         );
+
+        // Preload critical images for faster loading
+        preloadCriticalImages(services).catch(console.warn);
       } catch (error) {
         console.warn(
           "⚠️ Failed to load dynamic services, using static fallback:",
@@ -209,6 +214,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
         );
         setDynamicServices(laundryServices);
         setUseStaticFallback(true);
+
+        // Preload critical images for fallback services
+        preloadCriticalImages(laundryServices).catch(console.warn);
       } finally {
         setIsLoadingServices(false);
       }
@@ -645,13 +653,29 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                       <div className="aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-xl mb-3 flex items-center justify-center relative overflow-hidden">
                         {service.image ? (
                           <>
-                            <img
+                            <OptimizedImage
                               src={service.image}
                               alt={service.name}
-                              className="w-full h-full object-cover rounded-xl"
+                              className="w-full h-full rounded-xl"
+                              priority={service.popular}
+                              fallback={
+                                <span className="text-3xl">
+                                  {service.category.includes("Men")
+                                    ? "👔"
+                                    : service.category.includes("Women")
+                                      ? "👗"
+                                      : service.category.includes("Woolen")
+                                        ? "🧥"
+                                        : service.category.includes("Steam")
+                                          ? "🔥"
+                                          : service.category.includes("Iron")
+                                            ? "🏷️"
+                                            : "👕"}
+                                </span>
+                              }
                             />
                             {service.popular && (
-                              <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                              <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
                                 Popular
                               </div>
                             )}

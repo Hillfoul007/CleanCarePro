@@ -162,8 +162,15 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
 
   const initializeMap = async () => {
     try {
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!apiKey) {
+        console.warn("Google Maps API key not configured");
+        setIsMapLoading(false);
+        return;
+      }
+
       const loader = new Loader({
-        apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+        apiKey,
         version: "weekly",
         libraries: ["places", "geometry", "marker"], // Include marker library for AdvancedMarkerElement
       });
@@ -173,7 +180,10 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       // Default to India center
       const defaultCenter = { lat: 20.5937, lng: 78.9629 };
 
-      const map = new google.maps.Map(mapRef.current!, {
+      // Check if Map ID is configured for Advanced Markers
+      const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
+      const mapConfig: any = {
         center: defaultCenter,
         zoom: 5,
         mapTypeControl: false,
@@ -186,7 +196,17 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
             stylers: [{ visibility: "off" }],
           },
         ],
-      });
+      };
+
+      // Only add Map ID if it's configured
+      if (mapId && mapId.trim() !== "") {
+        mapConfig.mapId = mapId;
+        console.log("🗺️ Using Map ID for Advanced Markers:", mapId);
+      } else {
+        console.log("🗺️ No Map ID configured, using regular markers");
+      }
+
+      const map = new google.maps.Map(mapRef.current!, mapConfig);
 
       // Initialize the new AutocompleteSuggestion service
       const { AutocompleteSuggestion, AutocompleteSessionToken } =
@@ -206,24 +226,50 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       });
 
-      // Add default center marker for India using AdvancedMarkerElement
+      // Add default center marker for India
       let defaultMarker;
-      if (google.maps.marker?.AdvancedMarkerElement) {
-        const markerContent = document.createElement("div");
-        markerContent.innerHTML = `
-          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
-            <circle cx='12' cy='10' r='3' fill='white'/>
-          </svg>
-        `;
-        defaultMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: defaultCenter,
-          map: map,
-          title: "Click anywhere on the map to select location",
-          content: markerContent,
-        });
+
+      // Only use Advanced Markers if Map ID is configured and available
+      if (
+        mapId &&
+        mapId.trim() !== "" &&
+        google.maps.marker?.AdvancedMarkerElement
+      ) {
+        try {
+          const markerContent = document.createElement("div");
+          markerContent.innerHTML = `
+            <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
+              <circle cx='12' cy='10' r='3' fill='white'/>
+            </svg>
+          `;
+          defaultMarker = new google.maps.marker.AdvancedMarkerElement({
+            position: defaultCenter,
+            map: map,
+            title: "Click anywhere on the map to select location",
+            content: markerContent,
+          });
+          console.log("📍 Using Advanced Marker for default position");
+        } catch (error) {
+          console.warn(
+            "Failed to create Advanced Marker, falling back to regular marker:",
+            error,
+          );
+          // Fallback to regular marker if Advanced Marker fails
+          defaultMarker = new google.maps.Marker({
+            position: defaultCenter,
+            map: map,
+            title: "Click anywhere on the map to select location",
+            icon: {
+              url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+              scaledSize: new google.maps.Size(24, 24),
+              anchor: new google.maps.Point(12, 24),
+            },
+            animation: google.maps.Animation.BOUNCE,
+          });
+        }
       } else {
-        // Fallback to old marker
+        // Use regular marker when Map ID is not configured
         defaultMarker = new google.maps.Marker({
           position: defaultCenter,
           map: map,
@@ -235,6 +281,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
           },
           animation: google.maps.Animation.BOUNCE,
         });
+        console.log("📍 Using regular Marker (no Map ID configured)");
       }
 
       // Remove default marker after 3 seconds
@@ -300,27 +347,55 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
         }
       }
 
-      // Add new marker with enhanced visual feedback using AdvancedMarkerElement
+      // Add new marker with enhanced visual feedback
       let newMarker;
-      if (google.maps.marker?.AdvancedMarkerElement) {
-        const markerContent = document.createElement("div");
-        markerContent.innerHTML = `
-          <svg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#16a34a' stroke='#ffffff' stroke-width='1'/>
-            <circle cx='12' cy='10' r='3' fill='white'/>
-          </svg>
-        `;
-        markerContent.style.cursor = "pointer";
+      const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
-        newMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: coordinates,
-          map: mapInstance,
-          title: "Drag to adjust location or click map to move pin",
-          content: markerContent,
-          gmpDraggable: true,
-        });
+      // Only use Advanced Markers if Map ID is configured and available
+      if (
+        mapId &&
+        mapId.trim() !== "" &&
+        google.maps.marker?.AdvancedMarkerElement
+      ) {
+        try {
+          const markerContent = document.createElement("div");
+          markerContent.innerHTML = `
+            <svg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#16a34a' stroke='#ffffff' stroke-width='1'/>
+              <circle cx='12' cy='10' r='3' fill='white'/>
+            </svg>
+          `;
+          markerContent.style.cursor = "pointer";
+
+          newMarker = new google.maps.marker.AdvancedMarkerElement({
+            position: coordinates,
+            map: mapInstance,
+            title: "Drag to adjust location or click map to move pin",
+            content: markerContent,
+            gmpDraggable: true,
+          });
+          console.log("📍 Created Advanced Marker at:", coordinates);
+        } catch (error) {
+          console.warn(
+            "Failed to create Advanced Marker, falling back to regular marker:",
+            error,
+          );
+          // Fallback to regular marker if Advanced Marker fails
+          newMarker = new google.maps.Marker({
+            position: coordinates,
+            map: mapInstance,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            title: "Drag to adjust location or click map to move pin",
+            icon: {
+              url: "data:image/svg+xml;charset=UTF-8,%3csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%2316a34a' stroke='%23ffffff' stroke-width='1'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
+              scaledSize: new google.maps.Size(32, 32),
+              anchor: new google.maps.Point(16, 32),
+            },
+          });
+        }
       } else {
-        // Fallback to old marker
+        // Use regular marker when Map ID is not configured
         newMarker = new google.maps.Marker({
           position: coordinates,
           map: mapInstance,
@@ -333,6 +408,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
             anchor: new google.maps.Point(16, 32),
           },
         });
+        console.log("📍 Created regular Marker at:", coordinates);
       }
 
       // Add event listeners that work with both marker types

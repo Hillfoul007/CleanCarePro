@@ -719,11 +719,22 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-sm text-gray-900 truncate">
-                              #{booking.custom_order_id || "Generating..."}
-                            </h3>
+                            <div className="flex flex-col">
+                              <h3 className="font-bold text-base text-blue-600 truncate">
+                                #{booking.custom_order_id || "Generating..."}
+                              </h3>
+                              <div className="flex items-center gap-2 text-xs text-gray-700">
+                                <span className="font-medium">
+                                  {booking.name || "Customer"}
+                                </span>
+                                <span>•</span>
+                                <span className="font-mono">
+                                  {booking.phone || "N/A"}
+                                </span>
+                              </div>
+                            </div>
                             <Badge
-                              className={`${getStatusColor(booking.status)} text-xs px-1.5 py-0.5`}
+                              className={`${getStatusColor(booking.status)} text-xs px-1.5 py-0.5 ml-auto`}
                             >
                               {booking.status || "pending"}
                             </Badge>
@@ -837,10 +848,28 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                             Order Details
                           </h4>
                           <div className="space-y-2 bg-white p-2 rounded">
-                            <div className="flex justify-between items-center text-xs">
-                              <span className="text-gray-600">Order ID</span>
-                              <span className="font-mono font-medium text-blue-600">
+                            <div className="flex justify-between items-center text-xs border-b pb-2 mb-2">
+                              <span className="text-gray-600 font-medium">
+                                Order ID
+                              </span>
+                              <span className="font-mono font-bold text-blue-600 text-sm">
                                 #{booking.custom_order_id || "Generating..."}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="text-gray-600">
+                                Customer Name
+                              </span>
+                              <span className="font-medium text-gray-900">
+                                {booking.name || "Not specified"}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="text-gray-600">
+                                Phone Number
+                              </span>
+                              <span className="font-mono font-medium text-gray-900">
+                                {booking.phone || "Not specified"}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
