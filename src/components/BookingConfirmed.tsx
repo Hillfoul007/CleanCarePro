@@ -67,11 +67,11 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-blue-50">
       {/* Compact Header */}
       <div className="bg-white shadow-sm px-4 py-3">
         <div className="text-center">
-          <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-2" />
+          <CheckCircle className="w-12 h-12 text-blue-600 mx-auto mb-2" />
           <h1 className="text-xl font-bold text-gray-900">
             Booking Confirmed!
           </h1>
@@ -81,10 +81,10 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
       {/* Compact Content */}
       <div className="p-4 space-y-3">
         {/* Booking ID */}
-        <Card className="bg-green-50 border-green-200">
+        <Card className="bg-blue-50 border-blue-200">
           <CardContent className="p-3 text-center">
-            <p className="text-sm text-green-700 mb-1">Booking ID</p>
-            <p className="text-lg font-bold text-green-900">
+            <p className="text-sm text-blue-700 mb-1">Booking ID</p>
+            <p className="text-lg font-bold text-blue-900">
               #
               {bookingData.bookingId
                 ? bookingData.bookingId.slice(-6).toUpperCase()
@@ -176,7 +176,7 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
         <div className="space-y-2 pt-2">
           <Button
             onClick={onViewBookings}
-            className="w-full bg-green-600 hover:bg-green-700 py-3"
+            className="w-full bg-blue-600 hover:bg-blue-700 py-3"
           >
             <Eye className="h-4 w-4 mr-2" />
             View My Bookings
