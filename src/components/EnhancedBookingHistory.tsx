@@ -721,7 +721,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                           <div className="flex items-center gap-2 mb-1">
                             <div className="flex flex-col">
                               <h3 className="font-bold text-base text-blue-600 truncate">
-                                #{booking.custom_order_id || "Generating..."}
+                                #
+                                {booking.custom_order_id ||
+                                  booking.order_id ||
+                                  `CC${Date.now().toString().slice(-6)}`}
                               </h3>
                               <div className="flex items-center gap-2 text-xs text-gray-700">
                                 <span className="font-medium">
@@ -853,7 +856,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 Order ID
                               </span>
                               <span className="font-mono font-bold text-blue-600 text-sm">
-                                #{booking.custom_order_id || "Generating..."}
+                                #
+                                {booking.custom_order_id ||
+                                  booking.order_id ||
+                                  `CC${Date.now().toString().slice(-6)}`}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
@@ -861,7 +867,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 Customer Name
                               </span>
                               <span className="font-medium text-gray-900">
-                                {booking.name || "Not specified"}
+                                {booking.name ||
+                                  booking.customerName ||
+                                  booking.customer_name ||
+                                  "Not specified"}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
@@ -869,7 +878,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 Phone Number
                               </span>
                               <span className="font-mono font-medium text-gray-900">
-                                {booking.phone || "Not specified"}
+                                {booking.phone ||
+                                  booking.customerPhone ||
+                                  booking.customer_phone ||
+                                  "Not specified"}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
@@ -1171,7 +1183,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                     Discount
                                   </span>
                                   <span className="font-medium text-green-600">
-                                    -₹{booking.discount_amount}
+                                    -���{booking.discount_amount}
                                   </span>
                                 </div>
                               )}
