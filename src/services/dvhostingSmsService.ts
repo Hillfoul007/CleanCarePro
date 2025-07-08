@@ -762,6 +762,18 @@ export class DVHostingSmsService {
    */
   async saveUserToBackend(user: any): Promise<boolean> {
     try {
+      // Check if backend is available first
+      const isHostedEnv =
+        window.location.hostname.includes("fly.dev") ||
+        window.location.hostname.includes("builder.codes");
+
+      if (isHostedEnv) {
+        this.log(
+          "🌐 No backend available in hosted environment, using localStorage only",
+        );
+        return false; // Return false instead of throwing error
+      }
+
       // Use the same URL detection as booking helpers
       let apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -791,22 +803,6 @@ export class DVHostingSmsService {
       };
 
       this.log("📤 Saving user to backend:", userData);
-
-      // Check if we're in a hosted environment without backend
-      const isHostedEnv =
-        window.location.hostname.includes("fly.dev") ||
-        window.location.hostname.includes("builder.codes");
-
-      if (
-        isHostedEnv &&
-        (!apiBaseUrl || apiBaseUrl === "http://localhost:3001")
-      ) {
-        this.log(
-          "🌐 No backend available in hosted environment, using localStorage only",
-        );
-        // Return empty response to trigger localStorage fallback
-        throw new Error("Backend not available in hosted environment");
-      }
 
       const response = await fetch(`${apiBaseUrl}/auth/register`, {
         method: "POST",
