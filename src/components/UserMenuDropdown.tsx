@@ -18,6 +18,7 @@ import {
   MapPin,
   ChevronDown,
   MessageCircle,
+  Gift,
 } from "lucide-react";
 import ReferralShareButton from "@/components/ReferralShareButton";
 import ProfileSettingsModal from "./ProfileSettingsModal";
@@ -127,6 +128,25 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           >
             <Package className="mr-2 h-4 w-4" />
             <span>My Bookings</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              // Keep dropdown open for referral modal
+            }}
+            className="cursor-pointer"
+          >
+            <Gift className="mr-2 h-4 w-4" />
+            <span>Refer and Earn</span>
+            <div className="ml-auto">
+              <ReferralShareButton
+                userId={currentUser.id}
+                currentUser={currentUser}
+                variant="small"
+                className="opacity-0 pointer-events-none"
+              />
+            </div>
           </DropdownMenuItem>
 
           <DropdownMenuItem
