@@ -245,11 +245,11 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
             </h2>
             <Button
               variant="ghost"
-              size="sm"
+              size="lg"
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              className="h-10 w-10 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
-              <X className="h-5 w-5" />
+              <X className="h-6 w-6" />
             </Button>
           </div>
 
