@@ -1381,6 +1381,20 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
           Save address
         </Button>
       </div>
+
+      {/* Leaflet Location Picker Modal */}
+      {showLocationPicker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
+            <LeafletLocationPicker
+              onLocationSelect={handleLocationSelect}
+              onClose={() => setShowLocationPicker(false)}
+              defaultCoordinates={selectedLocation?.coordinates}
+              title="Select Delivery Location"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
