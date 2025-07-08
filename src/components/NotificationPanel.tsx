@@ -35,7 +35,7 @@ const NotificationPanel: React.FC = () => {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-blue-500" />;
       case "error":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
       case "warning":
@@ -51,7 +51,7 @@ const NotificationPanel: React.FC = () => {
     const baseClass = read ? "bg-gray-50" : "";
     switch (type) {
       case "success":
-        return read ? baseClass : "bg-green-50 border-l-4 border-l-green-500";
+        return read ? baseClass : "bg-blue-50 border-l-4 border-l-blue-500";
       case "error":
         return read ? baseClass : "bg-red-50 border-l-4 border-l-red-500";
       case "warning":
