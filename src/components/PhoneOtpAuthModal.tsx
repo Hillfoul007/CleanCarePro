@@ -140,7 +140,8 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
 
       const result = await dvhostingSmsService.sendSmsOTP(
         formData.phone,
-        formData.name?.trim() || `User ${formData.phone.slice(-4)}`,
+        formData.name?.trim() ||
+          `User ${formData.phone ? formData.phone.slice(-4) : "0000"}`,
       );
 
       if (result.success) {
