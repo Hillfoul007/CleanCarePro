@@ -754,6 +754,15 @@ export class DVHostingSmsService {
   }
 
   private getApiBaseUrl(): string {
+    // Check if we're in a hosted environment without backend
+    const isHostedEnv =
+      window.location.hostname.includes("fly.dev") ||
+      window.location.hostname.includes("builder.codes");
+
+    if (isHostedEnv) {
+      return ""; // Return empty string to indicate no backend available
+    }
+
     return import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
   }
 
