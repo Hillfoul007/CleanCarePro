@@ -111,7 +111,7 @@ export function GoogleMapsConfigTest() {
       >
         <div className="flex items-center gap-2">
           {overallStatus === "success" && (
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-blue-600" />
           )}
           {overallStatus === "warning" && (
             <AlertTriangle className="h-4 w-4 text-yellow-600" />
@@ -134,23 +134,23 @@ export function GoogleMapsConfigTest() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           {status.apiKey ? (
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-blue-600" />
           ) : (
             <XCircle className="h-4 w-4 text-red-600" />
           )}
-          <span className={status.apiKey ? "text-green-700" : "text-red-700"}>
+          <span className={status.apiKey ? "text-blue-700" : "text-red-700"}>
             Google Maps API Key: {status.apiKey ? "Configured" : "Missing"}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {status.apiAvailable ? (
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-blue-600" />
           ) : (
             <XCircle className="h-4 w-4 text-red-600" />
           )}
           <span
-            className={status.apiAvailable ? "text-green-700" : "text-red-700"}
+            className={status.apiAvailable ? "text-blue-700" : "text-red-700"}
           >
             Google Maps API:{" "}
             {status.apiAvailable ? "Available" : "Not Available"}
@@ -159,11 +159,11 @@ export function GoogleMapsConfigTest() {
 
         <div className="flex items-center gap-2">
           {status.mapId ? (
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-blue-600" />
           ) : (
             <AlertTriangle className="h-4 w-4 text-yellow-600" />
           )}
-          <span className={status.mapId ? "text-green-700" : "text-yellow-700"}>
+          <span className={status.mapId ? "text-blue-700" : "text-yellow-700"}>
             Map ID:{" "}
             {status.mapId
               ? "Configured (Advanced Markers available)"
