@@ -768,42 +768,23 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     try {
       let suggestions = [];
 
-      // Method 1: Google Places API (primary)
-      if (autocompleteService) {
-        try {
-          const { AutocompleteSuggestion, AutocompleteSessionToken } =
-            autocompleteService;
-          const sessionToken = new AutocompleteSessionToken();
-
-          const request = {
-            input: query,
-            sessionToken: sessionToken,
-            includedRegionCodes: ["in"],
-          };
-
-          const response =
-            await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
-          const predictions = response.suggestions;
-
-          suggestions = predictions.map((suggestion: any) => {
-            const placePrediction = suggestion.placePrediction;
-            return {
-              description: placePrediction.text,
-              main_text:
-                placePrediction.structuredFormat?.mainText ||
-                placePrediction.text,
-              secondary_text:
-                placePrediction.structuredFormat?.secondaryText || "",
-              place_id: placePrediction.placeId,
-              source: "google_places",
-            };
-          });
-        } catch (placesError) {
-          console.warn(
-            "Google Places API failed, trying alternatives:",
-            placesError,
-          );
-        }
+      // Method 1: Leaflet Location Service (primary)
+      try {
+        const leafletSuggestions =
+          await leafletLocationService.getPlaceAutocomplete(query);
+        suggestions = leafletSuggestions.map((suggestion: any) => ({
+          description: suggestion.description,
+          main_text: suggestion.structured_formatting.main_text,
+          secondary_text: suggestion.structured_formatting.secondary_text,
+          place_id: suggestion.osm_id || `leaflet_${Math.random()}`,
+          coordinates: suggestion.coordinates,
+          source: "leaflet_osm",
+        }));
+      } catch (leafletError) {
+        console.warn(
+          "Leaflet service failed, trying alternatives:",
+          leafletError,
+        );
       }
 
       // Method 2: Nominatim API fallback with enhanced search
