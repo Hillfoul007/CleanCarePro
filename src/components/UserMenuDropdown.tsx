@@ -73,7 +73,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex items-center gap-2 h-auto p-2 hover:bg-green-50"
+            className="flex items-center gap-2 h-auto p-2 hover:bg-green-50 touch-manipulation"
           >
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-green-600 text-white text-sm">
