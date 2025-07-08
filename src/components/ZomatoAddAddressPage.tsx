@@ -208,105 +208,19 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       console.log("📍 Detecting current location...");
 
       // Use Leaflet location service for current position
-      let coordinates;
-      let bestAccuracy = Infinity;
-      let attempts = 0;
-      const maxAttempts = 5; // Increased attempts for better precision
+      const coordinates = await leafletLocationService.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      });
 
-      while (attempts < maxAttempts && bestAccuracy > 10) {
-        // Tighter accuracy requirement for street-level detection
-        try {
-          setLocationAttempt(attempts + 1);
-
-          const currentCoords = await locationService.getCurrentPosition({
-            enableHighAccuracy: true,
-            timeout: attempts === 0 ? 30000 : 15000, // Much longer timeout for precision
-            maximumAge: 0, // Always get fresh location
-          });
-
-          console.log(
-            `📍 Attempt ${attempts + 1} - Accuracy: ${currentCoords.accuracy}m`,
-          );
-
-          if (
-            !coordinates ||
-            (currentCoords.accuracy && currentCoords.accuracy < bestAccuracy)
-          ) {
-            coordinates = currentCoords;
-            bestAccuracy = currentCoords.accuracy || Infinity;
-            setLocationAccuracy(bestAccuracy);
-            console.log(`✅ Better accuracy found: ${bestAccuracy}m`);
-          }
-
-          // If we get street-level accuracy, break early
-          if (currentCoords.accuracy && currentCoords.accuracy <= 10) {
-            console.log(
-              "🎯 Street-level accuracy achieved, using this location",
-            );
-            break;
-          }
-        } catch (attemptError) {
-          console.warn(
-            `⚠️ Location attempt ${attempts + 1} failed:`,
-            attemptError,
-          );
-        }
-
-        attempts++;
-
-        // Small delay between attempts
-        if (attempts < maxAttempts) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-      }
-
-      if (!coordinates) {
-        throw new Error("All location attempts failed");
-      }
-
-      console.log(`🎯 Final location accuracy: ${coordinates.accuracy}m`);
-
-      // Get detailed address with multiple geocoding sources
-      const address = await locationService.reverseGeocode(coordinates);
+      // Get address using Leaflet service
+      const address = await leafletLocationService.reverseGeocode(coordinates);
       console.log("🏠 Geocoded address:", address);
 
-      // Get additional detailed components for better auto-fill
-      const detailedComponents =
-        await locationService.getDetailedAddressComponents(coordinates);
-
-      // Try to enhance with street-level details if not found initially
-      let enhancedAddress = address;
-      let finalComponents = detailedComponents;
-
-      if (!hasStreetLevelDetails(address, detailedComponents)) {
-        console.log(
-          "🔍 Initial address lacks street details, trying enhanced detection...",
-        );
-        try {
-          const streetDetails = await getStreetLevelDetails(coordinates);
-          if (streetDetails) {
-            enhancedAddress = streetDetails.address;
-            finalComponents = streetDetails.components;
-            console.log(
-              "✅ Enhanced street-level details found:",
-              enhancedAddress,
-            );
-          }
-        } catch (error) {
-          console.warn("Street-level enhancement failed:", error);
-        }
-      }
-
-      setSelectedLocation({ address: enhancedAddress, coordinates });
-      setSearchQuery(enhancedAddress);
-      updateMapLocation(coordinates);
-
-      // Enhanced auto-fill with best available components
-      if (finalComponents) {
-        autoFillAddressFieldsFromComponents(finalComponents);
-      } else {
-        autoFillAddressFields(enhancedAddress);
-      }
+      setSelectedLocation({ address, coordinates });
+      setSearchQuery(address);
+      autoFillAddressFields(address);
     } catch (error) {
       console.error("❌ All location detection attempts failed:", error);
 
