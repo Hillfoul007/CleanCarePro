@@ -271,7 +271,7 @@ const ServiceEditor: React.FC<ServiceEditorProps> = ({
                         {getCategoryDisplay(service.category)}
                       </p>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-semibold text-green-600">
+                        <span className="text-sm font-semibold text-blue-600">
                           ₹{service.price}
                         </span>
                         <span className="text-xs text-gray-500">
@@ -283,7 +283,7 @@ const ServiceEditor: React.FC<ServiceEditorProps> = ({
                       {isSelected && (
                         <Badge
                           variant="secondary"
-                          className="text-xs bg-green-100 text-green-700 px-1"
+                          className="text-xs bg-blue-100 text-blue-700 px-1"
                         >
                           Added
                         </Badge>
@@ -312,11 +312,11 @@ const ServiceEditor: React.FC<ServiceEditorProps> = ({
 
       {/* Total */}
       {services.length > 0 && (
-        <Card className="bg-green-50 border-green-200">
+        <Card className="bg-blue-50 border-blue-200">
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
               <span className="font-semibold">Total Amount</span>
-              <span className="text-xl font-bold text-green-600">
+              <span className="text-xl font-bold text-blue-600">
                 ₹
                 {services.reduce(
                   (total, service) => total + service.price * service.quantity,
