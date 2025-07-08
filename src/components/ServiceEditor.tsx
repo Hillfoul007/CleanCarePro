@@ -268,7 +268,7 @@ const ServiceEditor: React.FC<ServiceEditorProps> = ({
                         {service.name}
                       </h4>
                       <p className="text-xs text-gray-500 mb-2 truncate">
-                        {service.category}
+                        {getCategoryDisplay(service.category)}
                       </p>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-semibold text-green-600">
