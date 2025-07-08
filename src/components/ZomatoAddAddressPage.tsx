@@ -15,7 +15,7 @@ import {
   User,
 } from "lucide-react";
 import { locationService, Coordinates } from "@/services/locationService";
-import { Loader } from "@googlemaps/js-api-loader";
+import { leafletLocationService } from "@/services/leafletLocationService";
 
 // Add CSS for bounce animation
 const bounceAnimation = `
