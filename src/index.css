@@ -129,7 +129,7 @@
   }
 
   .gradient-success {
-    @apply bg-gradient-to-r from-green-500 to-emerald-600;
+    @apply bg-gradient-to-r from-blue-500 to-blue-600;
   }
 
   .btn-primary {
