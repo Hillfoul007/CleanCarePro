@@ -24,19 +24,10 @@ class ModernGoogleMapsService {
   constructor() {
     const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
-    if (!mapId) {
-      console.warn(
-        "⚠️ VITE_GOOGLE_MAPS_MAP_ID not set. Using default Map ID. " +
-          "For production, please configure a Map ID in Google Cloud Console.",
-      );
-    }
-
     this.loader = new Loader({
       apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
       version: "weekly",
-      libraries: ["places", "marker"], // Include marker library for AdvancedMarkerElement
-      // Use a default map ID if not provided to prevent Advanced Markers warnings
-      mapId: mapId || "DEMO_MAP_ID",
+      libraries: ["places", "marker"], // Include marker library for fallback
     });
   }
 
