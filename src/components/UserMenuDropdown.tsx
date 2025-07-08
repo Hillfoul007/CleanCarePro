@@ -121,6 +121,8 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
             </div>
           </DropdownMenuLabel>
 
+          <DropdownMenuSeparator className="my-0" />
+
           <div className="p-2 space-y-1">
             <DropdownMenuItem
               onClick={() => {
