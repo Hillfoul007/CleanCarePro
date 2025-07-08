@@ -257,6 +257,30 @@ html {
     padding: env(safe-area-inset-top) 16px 16px 16px;
   }
 
+  /* Fix white line on mobile header after login */
+  .mobile-header,
+  .mobile-header *,
+  .sticky[style*="top: 0"] {
+    border-top: 0 !important;
+    margin-top: 0 !important;
+    outline: none !important;
+  }
+
+  /* Address modal fixes for mobile */
+  .address-modal-close-btn {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 50% !important;
+    min-height: 40px !important;
+    min-width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .address-modal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+
   /* Spacing utilities */
   .mobile-spacing-sm {
     margin: 8px;
