@@ -131,8 +131,14 @@ export function ReferralShareButton({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={variant}
-          className={`${variant === "small" ? "h-8 w-8 p-0" : "gap-2"} ${className}`}
+          variant={variant === "menu-item" ? "ghost" : variant}
+          className={`${
+            variant === "small"
+              ? "h-8 w-8 p-0"
+              : variant === "menu-item"
+                ? "gap-2 h-auto"
+                : "gap-2"
+          } ${className}`}
           title="Share and earn rewards"
         >
           <ButtonIcon className={variant === "small" ? "h-4 w-4" : "h-4 w-4"} />
