@@ -17,6 +17,13 @@ function App() {
   // Initialize authentication persistence and restore user session
   useEffect(() => {
     const initializeAuth = async () => {
+      // Auto-clear cart on deploy (only once)
+      const versionKey = "catalogue-version-v2";
+      if (!localStorage.getItem(versionKey)) {
+        localStorage.removeItem("cart");
+        localStorage.setItem(versionKey, "true");
+      }
+
       // Initialize auth persistence handlers (storage events, page lifecycle, etc.)
       initializeAuthPersistence();
 
