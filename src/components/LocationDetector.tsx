@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { leafletLocationService } from "@/services/leafletLocationService";
+import LeafletMap from "./LeafletMap";
 
 interface LocationDetectorProps {
   onLocationChange: (
