@@ -28,6 +28,7 @@ import {
   getSortedServices,
   searchServices,
   getServicesByCategory,
+  getCategoryDisplay,
   LaundryService,
 } from "@/data/laundryServices";
 import DynamicServicesService from "@/services/dynamicServicesService";
@@ -690,7 +691,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                                   : service.category.includes("Woolen")
                                     ? "🧥"
                                     : service.category.includes("Steam")
-                                      ? "🔥"
+                                      ? "��"
                                       : service.category.includes("Iron")
                                         ? "🏷️"
                                         : "👕"}
