@@ -95,16 +95,16 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md w-[95vw] mx-4 sm:mx-auto border-0 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/30 animate-in zoom-in-95 duration-300 fade-in-0">
+      <DialogContent className="sm:max-w-md w-[95vw] mx-4 sm:mx-auto border-0 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-blue-50/30 animate-in zoom-in-95 duration-300 fade-in-0">
         <DialogHeader className="pb-2">
-          <DialogTitle className="flex items-center justify-between text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="flex items-center justify-between text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
             Profile Settings
             {!isEditing && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsEditing(true)}
-                className="text-green-600 hover:text-green-700 hover:bg-green-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
               >
                 <Edit className="h-4 w-4 mr-1" />
                 Edit
@@ -117,12 +117,12 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
           {/* Profile Picture */}
           <div className="flex justify-center">
             <div className="relative">
-              <Avatar className="h-24 w-24 shadow-xl ring-4 ring-green-100 ring-offset-4 ring-offset-white transition-all duration-300 hover:ring-green-200 hover:shadow-2xl">
-                <AvatarFallback className="bg-gradient-to-br from-green-500 to-emerald-600 text-white text-2xl font-bold">
+              <Avatar className="h-24 w-24 shadow-xl ring-4 ring-blue-100 ring-offset-4 ring-offset-white transition-all duration-300 hover:ring-blue-200 hover:shadow-2xl">
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl font-bold">
                   {getInitials(formData.name || "User")}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
+              <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
                 <Edit className="h-4 w-4 text-white" />
               </div>
             </div>
@@ -145,7 +145,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                 className={`transition-all duration-200 rounded-xl border-2 ${
                   !isEditing
                     ? "bg-gray-50/80 border-gray-200 text-gray-600"
-                    : "bg-white border-green-200 focus:border-green-400 focus:ring-green-400/20 shadow-sm hover:shadow-md"
+                    : "bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 shadow-sm hover:shadow-md"
                 }`}
               />
             </div>
@@ -186,7 +186,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                 className={`transition-all duration-200 rounded-xl border-2 ${
                   !isEditing
                     ? "bg-gray-50/80 border-gray-200 text-gray-600"
-                    : "bg-white border-green-200 focus:border-green-400 focus:ring-green-400/20 shadow-sm hover:shadow-md"
+                    : "bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 shadow-sm hover:shadow-md"
                 }`}
               />
             </div>
@@ -197,7 +197,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
             <div className="flex gap-3 pt-2">
               <Button
                 onClick={handleSave}
-                className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Changes
