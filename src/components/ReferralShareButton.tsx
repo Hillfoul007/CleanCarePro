@@ -129,6 +129,7 @@ export const ReferralShareButton = React.forwardRef<
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
+          ref={ref}
           variant={variant === "menu-item" ? "ghost" : variant}
           className={`${
             variant === "small"
