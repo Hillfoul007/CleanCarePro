@@ -721,15 +721,18 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                           <div className="flex items-center gap-2 mb-1">
                             <div className="flex flex-col">
                               <h3 className="font-bold text-base text-blue-600 truncate">
-                                #{booking.custom_order_id || "Generating..."}
+                                #
+                                {booking.custom_order_id ||
+                                  booking._id?.slice(-8).toUpperCase() ||
+                                  "Processing..."}
                               </h3>
                               <div className="flex items-center gap-2 text-xs text-gray-700">
                                 <span className="font-medium">
-                                  {booking.name || "Customer"}
+                                  {booking.name || "Not provided"}
                                 </span>
                                 <span>•</span>
                                 <span className="font-mono">
-                                  {booking.phone || "N/A"}
+                                  {booking.phone || "No phone"}
                                 </span>
                               </div>
                             </div>
@@ -853,7 +856,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 Order ID
                               </span>
                               <span className="font-mono font-bold text-blue-600 text-sm">
-                                #{booking.custom_order_id || "Generating..."}
+                                #
+                                {booking.custom_order_id ||
+                                  booking._id?.slice(-8).toUpperCase() ||
+                                  "Processing..."}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
