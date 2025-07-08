@@ -88,41 +88,12 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
 
   const handleSearchChange = async (value: string) => {
     setSearchValue(value);
-    if (googleMapsLoaded && window.google && value.length > 2) {
+
+    if (value.length > 2) {
       try {
-        const { AutocompleteSuggestion, AutocompleteSessionToken } =
-          await window.google.maps.importLibrary("places");
-        const sessionToken = new AutocompleteSessionToken();
-
-        const request = {
-          input: value,
-          sessionToken: sessionToken,
-          includedRegionCodes: ["in", "us", "ca", "gb", "au"],
-        };
-
-        const response =
-          await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
-        const predictions = response.suggestions;
-
-        if (predictions && predictions.length > 0) {
-          const formattedPredictions = predictions.map((suggestion: any) => {
-            const placePrediction = suggestion.placePrediction;
-            return {
-              description: placePrediction.text,
-              place_id: placePrediction.placeId,
-              structured_formatting: {
-                main_text:
-                  placePrediction.structuredFormat?.mainText ||
-                  placePrediction.text,
-                secondary_text:
-                  placePrediction.structuredFormat?.secondaryText || "",
-              },
-            };
-          });
-          setSuggestions(formattedPredictions);
-        } else {
-          setSuggestions([]);
-        }
+        const suggestions =
+          await leafletLocationService.getPlaceAutocomplete(value);
+        setSuggestions(suggestions);
       } catch (error) {
         console.error("Error fetching autocomplete suggestions:", error);
         setSuggestions([]);
