@@ -205,9 +205,9 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     setIsDetectingLocation(true);
 
     try {
-      console.log("�� Starting high-accuracy location detection...");
+      console.log("📍 Detecting current location...");
 
-      // Multiple attempts for better accuracy - target street-level precision
+      // Use Leaflet location service for current position
       let coordinates;
       let bestAccuracy = Infinity;
       let attempts = 0;
