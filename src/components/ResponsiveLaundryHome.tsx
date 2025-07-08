@@ -1077,7 +1077,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                         </h4>
 
                         <div className="text-sm text-gray-600">
-                          {service.category}
+                          {getCategoryDisplay(service.category)}
                         </div>
 
                         <div className="flex items-center justify-between">
