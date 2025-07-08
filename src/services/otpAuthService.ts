@@ -156,6 +156,14 @@ export class OTPAuthService {
     try {
       console.log("🔐 Verifying OTP:", otp);
 
+      // Check if backend is available first
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          message: "Backend service not available in this environment",
+        };
+      }
+
       const phone = sessionStorage.getItem("otp_phone");
       const timestamp = sessionStorage.getItem("otp_timestamp");
 
