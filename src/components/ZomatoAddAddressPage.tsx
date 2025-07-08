@@ -157,91 +157,15 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     }
   }, [showSuggestions]);
 
-  const initializeMap = async () => {
-    try {
-      const loader = new Loader({
-        apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
-        version: "weekly",
-        libraries: ["places", "geometry", "marker"], // Include marker library for AdvancedMarkerElement
-      });
-
-      const google = await loader.load();
-
-      // Default to India center
-      const defaultCenter = { lat: 20.5937, lng: 78.9629 };
-
-      const map = new google.maps.Map(mapRef.current!, {
-        center: defaultCenter,
-        zoom: 5,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-        styles: [
-          {
-            featureType: "poi",
-            elementType: "labels",
-            stylers: [{ visibility: "off" }],
-          },
-        ],
-      });
-
-      // Initialize the new AutocompleteSuggestion service
-      const { AutocompleteSuggestion, AutocompleteSessionToken } =
-        await google.maps.importLibrary("places");
-
-      setMapInstance(map);
-      setAutocompleteService({
-        AutocompleteSuggestion,
-        AutocompleteSessionToken,
-      });
-      setIsMapLoading(false);
-
-      // Add click listener to map for pin placement
-      map.addListener("click", (event: google.maps.MapMouseEvent) => {
-        if (event.latLng) {
-          handleMapClick(event.latLng);
-        }
-      });
-
-      // Add default center marker for India using AdvancedMarkerElement
-      let defaultMarker;
-      if (google.maps.marker?.AdvancedMarkerElement) {
-        const markerContent = document.createElement("div");
-        markerContent.innerHTML = `
-          <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-            <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='#dc2626'/>
-            <circle cx='12' cy='10' r='3' fill='white'/>
-          </svg>
-        `;
-        defaultMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: defaultCenter,
-          map: map,
-          title: "Click anywhere on the map to select location",
-          content: markerContent,
-        });
-      } else {
-        // Fallback to old marker
-        defaultMarker = new google.maps.Marker({
-          position: defaultCenter,
-          map: map,
-          title: "Click anywhere on the map to select location",
-          icon: {
-            url: "data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' fill='%23dc2626'/%3e%3ccircle cx='12' cy='10' r='3' fill='white'/%3e%3c/svg%3e",
-            scaledSize: new google.maps.Size(24, 24),
-            anchor: new google.maps.Point(12, 24),
-          },
-          animation: google.maps.Animation.BOUNCE,
-        });
-      }
-
-      // Remove default marker after 3 seconds
-      setTimeout(() => {
-        defaultMarker.setMap(null);
-      }, 3000);
-    } catch (error) {
-      console.error("Failed to initialize Google Maps:", error);
-      setIsMapLoading(false);
-    }
+  const handleLocationSelect = (
+    coordinates: any,
+    address: string,
+    houseDetails?: any,
+  ) => {
+    setSelectedLocation({ address, coordinates });
+    setSearchQuery(address);
+    autoFillAddressFields(address);
+    setShowLocationPicker(false);
   };
 
   useEffect(() => {
