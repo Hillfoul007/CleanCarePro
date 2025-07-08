@@ -39,6 +39,7 @@ interface ReferralShareButtonProps {
   currentUser: any;
   variant?: "default" | "outline" | "ghost" | "small" | "menu-item";
   className?: string;
+  onClick?: () => void;
 }
 
 export const ReferralShareButton = React.forwardRef<
