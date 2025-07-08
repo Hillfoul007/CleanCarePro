@@ -64,6 +64,14 @@ export class OTPAuthService {
     try {
       console.log("📱 Sending OTP to:", phone);
 
+      // Check if backend is available first
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          message: "Backend service not available in this environment",
+        };
+      }
+
       // Test connection first
       const isConnected = await this.testConnection();
       if (!isConnected) {
