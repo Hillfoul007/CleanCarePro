@@ -68,6 +68,16 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
     window.open(whatsappUrl, "_blank");
   };
 
+  const handleItemClick = (itemId: string, action: () => void) => {
+    setClickedItem(itemId);
+    // Add a slight delay for the pop effect before executing action
+    setTimeout(() => {
+      action();
+      // Reset clicked state after action
+      setTimeout(() => setClickedItem(null), 300);
+    }, 150);
+  };
+
   return (
     <>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
