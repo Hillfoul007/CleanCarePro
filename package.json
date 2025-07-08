@@ -17,7 +17,7 @@
     "start:backend": "NODE_ENV=production node backend/server-laundry.js",
     "start:frontend": "npx serve -s dist -p 8080",
     "deploy": "chmod +x deploy.sh && ./deploy.sh",
-    "render:build": "npm install && npm run build && cd backend && npm install --production && echo 'Build completed successfully'",
+    "render:build": "npm install && NODE_OPTIONS='--max-old-space-size=4096' npm run build && cd backend && npm install --production && echo 'Build completed successfully'",
     "render:start": "NODE_ENV=production node backend/server-laundry.js",
     "install:all": "npm install && cd backend && npm install",
     "build:production": "npm run install:all && npm run build"
