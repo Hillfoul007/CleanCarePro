@@ -955,10 +955,16 @@ Confirm this booking?`;
                   className="flex-1 h-7 text-xs"
                 />
                 <Button
-                  onClick={applyCoupon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Apply button clicked");
+                    applyCoupon();
+                  }}
                   variant="outline"
                   disabled={!couponCode.trim()}
                   className="h-7 px-2 text-xs"
+                  type="button"
                 >
                   Apply
                 </Button>
