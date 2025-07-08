@@ -94,10 +94,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          align="end"
-          className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/20 backdrop-blur-sm"
-        >
+        <DropdownMenuContent align="end" className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/20 backdrop-blur-sm">
           <DropdownMenuLabel className="p-0">
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-4 text-white">
               <div className="flex items-center gap-3">
@@ -124,38 +121,45 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
             </div>
           </DropdownMenuLabel>
 
-          <DropdownMenuSeparator />
+          <div className="p-2 space-y-1">
+            <DropdownMenuItem
+              onClick={() => {
+                setIsOpen(false);
+                onViewBookings();
+              }}
+              className="cursor-pointer rounded-xl p-3 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group transform hover:scale-[1.02]"
+            >
+              <div className="flex items-center w-full">
+                <div className="w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
+                  <Package className="h-4 w-4 text-blue-600" />
+                </div>
+                <span className="font-medium">My Bookings</span>
+              </div>
+            </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              onViewBookings();
-            }}
-            className="cursor-pointer"
-          >
-            <Package className="mr-2 h-4 w-4" />
-            <span>My Bookings</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <ReferralShareButton
+                userId={currentUser.id}
+                currentUser={currentUser}
+                variant="menu-item"
+                className="w-full justify-start p-3 h-auto font-medium hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02]"
+              />
+            </DropdownMenuItem>
 
-          <DropdownMenuItem asChild>
-            <ReferralShareButton
-              userId={currentUser.id}
-              currentUser={currentUser}
-              variant="menu-item"
-              className="w-full justify-start p-2 h-auto font-normal hover:bg-accent hover:text-accent-foreground"
-            />
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              setShowProfileModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile Settings</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setIsOpen(false);
+                setShowProfileModal(true);
+              }}
+              className="cursor-pointer rounded-xl p-3 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 group transform hover:scale-[1.02]"
+            >
+              <div className="flex items-center w-full">
+                <div className="w-8 h-8 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
+                  <User className="h-4 w-4 text-purple-600" />
+                </div>
+                <span className="font-medium">Profile Settings</span>
+              </div>
+            </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => {
