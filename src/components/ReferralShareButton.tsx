@@ -79,7 +79,7 @@ export const ReferralShareButton = React.forwardRef<
 
         // Generate fallback data locally
         const fallbackCode =
-          `REF${userId.slice(-4)}${Date.now().toString(36).slice(-3)}`.toUpperCase();
+          `REF${userId ? userId.slice(-4) : "0000"}${Date.now().toString(36).slice(-3)}`.toUpperCase();
 
         setShareData({
           share_url: `${window.location.origin}?ref=${fallbackCode}`,
