@@ -248,7 +248,7 @@ const AdminServicesManager: React.FC<AdminServicesManagerProps> = ({
 
           {/* Services by Category */}
           {services.map((category) => (
-            <Card key={category.id} className="border-l-4 border-l-green-500">
+            <Card key={category.id} className="border-l-4 border-l-blue-500">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <span className="text-2xl">{category.icon}</span>
@@ -292,7 +292,7 @@ const AdminServicesManager: React.FC<AdminServicesManagerProps> = ({
                           </Badge>
                         </div>
                         <div className="text-sm text-gray-600">
-                          <span className="font-semibold text-green-600">
+                          <span className="font-semibold text-blue-600">
                             ₹{service.price}
                           </span>
                           <span className="mx-2">•</span>
