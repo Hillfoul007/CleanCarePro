@@ -569,6 +569,10 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   booking.id || booking._id,
                   `booking_${index}`,
                 ),
+                custom_order_id: sanitizeValue(
+                  booking.custom_order_id,
+                  "A20250700099"
+                ),
                 service: sanitizeValue(booking.service, "Home Service"),
                 provider_name: sanitizeValue(
                   booking.provider_name,
