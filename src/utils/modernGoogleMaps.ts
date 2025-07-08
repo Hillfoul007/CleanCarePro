@@ -19,7 +19,10 @@ class ModernGoogleMapsService {
   private loader: Loader;
   private isLoaded = false;
   private map: google.maps.Map | null = null;
-  private markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  private markers: (
+    | google.maps.marker.AdvancedMarkerElement
+    | google.maps.Marker
+  )[] = [];
 
   constructor() {
     const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
