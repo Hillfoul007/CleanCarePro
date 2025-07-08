@@ -258,9 +258,9 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
             <Button
               onClick={() => setShowAddAddressPage(true)}
               variant="ghost"
-              className="w-full h-14 justify-start text-green-600 hover:bg-green-50"
+              className="w-full h-14 justify-start text-blue-600 hover:bg-blue-50"
             >
-              <Plus className="h-5 w-5 mr-3 text-green-600" />
+              <Plus className="h-5 w-5 mr-3 text-blue-600" />
               <span className="font-medium">Add Address</span>
               <ArrowRight className="h-4 w-4 ml-auto" />
             </Button>
@@ -284,7 +284,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
                     key={address.id}
                     className={`border cursor-pointer transition-all ${
                       selectedAddressId === address.id
-                        ? "border-green-500 bg-green-50"
+                        ? "border-blue-500 bg-blue-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
@@ -378,7 +378,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0 text-green-600 hover:bg-green-50"
+                              className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onSelectAddress(address);
@@ -436,7 +436,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
               </p>
               <Button
                 onClick={() => setShowAddAddressPage(true)}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Address
@@ -453,7 +453,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
                 <span className="text-red-500">o</span>
                 <span className="text-yellow-500">o</span>
                 <span className="text-blue-500">g</span>
-                <span className="text-green-500">l</span>
+                <span className="text-blue-500">l</span>
                 <span className="text-red-500">e</span>
               </span>
             </div>
