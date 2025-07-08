@@ -54,11 +54,11 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
   };
 
   const formatPhone = (phone: string) => {
-    if (phone.startsWith("91") && phone.length === 12) {
+    if (phone && phone.startsWith("91") && phone.length === 12) {
       const number = phone.slice(2);
       return `+91 ${number.slice(0, 5)} ${number.slice(5)}`;
     }
-    return phone;
+    return phone || "";
   };
 
   const handleWhatsAppShare = () => {
