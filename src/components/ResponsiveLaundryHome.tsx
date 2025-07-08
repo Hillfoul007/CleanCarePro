@@ -1067,17 +1067,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                     <CardContent className="p-6">
                       <div className="aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-xl mb-4 flex items-center justify-center">
                         <span className="text-5xl">
-                          {service.category.includes("Men")
-                            ? "👔"
-                            : service.category.includes("Women")
-                              ? "👗"
-                              : service.category.includes("Woolen")
-                                ? "🧥"
-                                : service.category.includes("Steam")
-                                  ? "🔥"
-                                  : service.category.includes("Iron")
-                                    ? "🏷️"
-                                    : "���"}
+                          {getCategoryDisplay(service.category).split(" ")[0]}
                         </span>
                       </div>
 
