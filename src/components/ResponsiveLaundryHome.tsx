@@ -700,7 +700,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                           </h4>
 
                           <div className="text-xs text-gray-600 mb-2">
-                            {service.category}
+                            {getCategoryDisplay(service.category)}
                           </div>
                         </div>
 
