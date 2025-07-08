@@ -15,8 +15,8 @@ export const PRODUCTION_CONFIG = {
   AUTH_TOKEN_KEY: "cleancare_token",
   USER_DATA_KEY: "cleancare_user",
 
-  // Google Services
-  GOOGLE_MAPS_API_KEY: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  // Maps Services (now using OpenStreetMap - no API key required)
+  // GOOGLE_MAPS_API_KEY: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Removed to use free alternatives
 
   // SMS Service
   DVHOSTING_API_KEY: import.meta.env.VITE_DVHOSTING_API_KEY,
