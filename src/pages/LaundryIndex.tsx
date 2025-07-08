@@ -720,15 +720,34 @@ const LaundryIndex = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Referral Code Handler - handles URL-based referrals */}
+      <ReferralCodeHandler
+        currentUser={currentUser}
+        onReferralApplied={(discountPercentage) => {
+          console.log(`Referral applied with ${discountPercentage}% discount`);
+          // Refresh user data to show new discount
+          checkAuthState();
+        }}
+      />
+
       {currentView === "home" && (
-        <ResponsiveLaundryHome
-          currentUser={currentUser}
-          userLocation={currentLocation}
-          onLoginSuccess={handleLoginSuccess}
-          onViewCart={handleViewCart}
-          onViewBookings={handleViewBookings}
-          onLogout={handleLogout}
-        />
+        <>
+          {/* Referral Discount Banner */}
+          {currentUser && (
+            <div className="px-4 pt-4">
+              <ReferralDiscountBanner user={currentUser} />
+            </div>
+          )}
+
+          <ResponsiveLaundryHome
+            currentUser={currentUser}
+            userLocation={currentLocation}
+            onLoginSuccess={handleLoginSuccess}
+            onViewCart={handleViewCart}
+            onViewBookings={handleViewBookings}
+            onLogout={handleLogout}
+          />
+        </>
       )}
 
       {/* Authentication View */}
