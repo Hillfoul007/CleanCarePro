@@ -35,6 +35,11 @@ class ReferralService {
   }
 
   private async makeRequest(endpoint: string, options: RequestInit = {}) {
+    // Check if backend is available
+    if (!this.baseUrl || this.baseUrl === "") {
+      throw new Error("Backend API is not available");
+    }
+
     const url = `${this.baseUrl}/referrals${endpoint}`;
 
     const defaultOptions: RequestInit = {
@@ -42,16 +47,44 @@ class ReferralService {
         "Content-Type": "application/json",
         ...options.headers,
       },
+      // Add timeout and error handling
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     };
 
-    const response = await fetch(url, { ...defaultOptions, ...options });
-    const data = await response.json();
+    try {
+      console.log("🔗 Making referral API request to:", url);
 
-    if (!response.ok) {
-      throw new Error(data.message || "Request failed");
+      const response = await fetch(url, { ...defaultOptions, ...options });
+
+      if (!response.ok) {
+        // Try to get error message from response
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = `${errorMessage} - ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log("✅ Referral API response received");
+      return data;
+    } catch (error) {
+      console.error("❌ Referral API request failed:", error);
+
+      // Provide more specific error messages
+      if (error.name === "AbortError" || error.name === "TimeoutError") {
+        throw new Error("Request timeout - please check your connection");
+      }
+
+      if (error.message.includes("Failed to fetch")) {
+        throw new Error("Unable to connect to server - please try again later");
+      }
+
+      throw error;
     }
-
-    return data;
   }
 
   // Generate or get referral code for user
