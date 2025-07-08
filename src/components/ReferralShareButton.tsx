@@ -48,7 +48,14 @@ export const ReferralShareButton = React.forwardRef<
   ReferralShareButtonProps
 >(
   (
-    { userId, currentUser, variant = "default", className = "", onClick },
+    {
+      userId,
+      currentUser,
+      variant = "default",
+      className = "",
+      onClick,
+      onOpen,
+    },
     ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
