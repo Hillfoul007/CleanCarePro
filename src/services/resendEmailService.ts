@@ -1,3 +1,5 @@
+import { isBackendAvailable } from "../config/env";
+
 export interface ResendEmailResponse {
   success: boolean;
   message?: string;
