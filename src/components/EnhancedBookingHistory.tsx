@@ -296,7 +296,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
         case "in-progress":
           return "bg-purple-100 text-purple-800 border-purple-200";
         case "completed":
-          return "bg-green-100 text-green-800 border-green-200";
+          return "bg-blue-100 text-blue-800 border-blue-200";
         case "cancelled":
           return "bg-red-100 text-red-800 border-red-200";
         default:
@@ -784,7 +784,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                   "10:00 AM"}
                               </span>
                             </div>
-                            <div className="flex items-center gap-1 text-green-600 font-semibold ml-auto">
+                            <div className="flex items-center gap-1 text-blue-600 font-semibold ml-auto">
                               <span>₹{total}</span>
                             </div>
                           </div>
@@ -927,7 +927,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                             </div>
                             <div className="flex justify-between items-center text-xs">
                               <span className="text-gray-600">Order Value</span>
-                              <span className="font-bold text-green-600">
+                              <span className="font-bold text-blue-600">
                                 ���{total}
                               </span>
                             </div>
@@ -1038,7 +1038,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                     <span className="text-gray-600">
                                       Qty: {quantity}
                                     </span>
-                                    <span className="font-semibold text-green-600">
+                                    <span className="font-semibold text-blue-600">
                                       ₹{price * quantity}
                                     </span>
                                   </div>
@@ -1050,9 +1050,9 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
 
                         {/* Schedule Details */}
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="p-3 bg-green-50 rounded-lg">
+                          <div className="p-3 bg-blue-50 rounded-lg">
                             <div className="flex items-center gap-2 mb-1">
-                              <Calendar className="h-3 w-3 text-green-600" />
+                              <Calendar className="h-3 w-3 text-blue-600" />
                               <span className="font-medium text-gray-900 text-xs">
                                 Pickup
                               </span>
@@ -1062,7 +1062,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 booking.pickupDate || booking.scheduled_date,
                               )}
                             </p>
-                            <p className="text-xs text-green-600">
+                            <p className="text-xs text-blue-600">
                               {booking.pickupTime ||
                                 booking.scheduled_time ||
                                 "10:00"}
@@ -1121,7 +1121,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                         {/* Price Breakdown */}
                         <div className="p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
                           <h4 className="font-semibold text-gray-900 mb-2 text-xs flex items-center gap-2">
-                            <CreditCard className="h-3 w-3 text-green-600" />
+                            <CreditCard className="h-3 w-3 text-blue-600" />
                             Price Breakdown
                           </h4>
 
@@ -1146,28 +1146,28 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                   </div>
 
                                   <div className="flex justify-between items-center">
-                                    <span className="text-green-600">
+                                    <span className="text-blue-600">
                                       Delivery Fee
                                     </span>
                                     <div className="flex items-center gap-1">
                                       <span className="line-through text-gray-400 text-xs">
                                         ₹30
                                       </span>
-                                      <span className="font-medium text-green-600">
+                                      <span className="font-medium text-blue-600">
                                         FREE
                                       </span>
                                     </div>
                                   </div>
 
                                   <div className="flex justify-between items-center">
-                                    <span className="text-green-600">
+                                    <span className="text-blue-600">
                                       Handling Fee
                                     </span>
                                     <div className="flex items-center gap-1">
                                       <span className="line-through text-gray-400 text-xs">
                                         ₹9
                                       </span>
-                                      <span className="font-medium text-green-600">
+                                      <span className="font-medium text-blue-600">
                                         FREE
                                       </span>
                                     </div>
@@ -1179,10 +1179,10 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                             {booking.discount_amount &&
                               booking.discount_amount > 0 && (
                                 <div className="flex justify-between items-center">
-                                  <span className="text-green-600">
+                                  <span className="text-blue-600">
                                     Discount
                                   </span>
-                                  <span className="font-medium text-green-600">
+                                  <span className="font-medium text-blue-600">
                                     -���{booking.discount_amount}
                                   </span>
                                 </div>
@@ -1194,7 +1194,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                               <span className="font-semibold text-gray-900">
                                 Total Amount
                               </span>
-                              <span className="font-bold text-green-600">
+                              <span className="font-bold text-blue-600">
                                 ₹{total}
                               </span>
                             </div>
@@ -1349,14 +1349,14 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                 <p className="text-sm text-blue-600 mt-1">Available 24/7</p>
               </div>
 
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h4 className="font-medium text-green-900 mb-2">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">
                   WhatsApp Support
                 </h4>
-                <p className="text-green-800 font-mono text-lg">
+                <p className="text-blue-800 font-mono text-lg">
                   +91 9876543210
                 </p>
-                <p className="text-sm text-green-600 mt-1">Quick responses</p>
+                <p className="text-sm text-blue-600 mt-1">Quick responses</p>
               </div>
             </div>
 
