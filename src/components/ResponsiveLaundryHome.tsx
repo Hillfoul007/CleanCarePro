@@ -678,17 +678,11 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                         ) : (
                           <>
                             <span className="text-3xl">
-                              {service.category.includes("Men")
-                                ? "👔"
-                                : service.category.includes("Women")
-                                  ? "👗"
-                                  : service.category.includes("Woolen")
-                                    ? "🧥"
-                                    : service.category.includes("Steam")
-                                      ? "🔥"
-                                      : service.category.includes("Iron")
-                                        ? "🏷️"
-                                        : "👕"}
+                              {
+                                getCategoryDisplay(service.category).split(
+                                  " ",
+                                )[0]
+                              }
                             </span>
                             {service.popular && (
                               <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
