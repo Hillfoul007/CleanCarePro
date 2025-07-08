@@ -85,10 +85,8 @@ export const validateEnvironment = () => {
   const warnings: string[] = [];
   const errors: string[] = [];
 
-  // Required environment variables
-  if (!PRODUCTION_CONFIG.GOOGLE_MAPS_API_KEY) {
-    warnings.push("Google Maps API key not configured");
-  }
+  // Maps service info
+  warnings.push("Using OpenStreetMap (free) instead of Google Maps");
 
   if (!PRODUCTION_CONFIG.DVHOSTING_API_KEY) {
     errors.push("DVHosting API key is required");
