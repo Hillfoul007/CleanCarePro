@@ -848,10 +848,28 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                             Order Details
                           </h4>
                           <div className="space-y-2 bg-white p-2 rounded">
-                            <div className="flex justify-between items-center text-xs">
-                              <span className="text-gray-600">Order ID</span>
-                              <span className="font-mono font-medium text-blue-600">
+                            <div className="flex justify-between items-center text-xs border-b pb-2 mb-2">
+                              <span className="text-gray-600 font-medium">
+                                Order ID
+                              </span>
+                              <span className="font-mono font-bold text-blue-600 text-sm">
                                 #{booking.custom_order_id || "Generating..."}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="text-gray-600">
+                                Customer Name
+                              </span>
+                              <span className="font-medium text-gray-900">
+                                {booking.name || "Not specified"}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="text-gray-600">
+                                Phone Number
+                              </span>
+                              <span className="font-mono font-medium text-gray-900">
+                                {booking.phone || "Not specified"}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
