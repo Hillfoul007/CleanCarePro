@@ -119,6 +119,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
 
     // If suggestion has coordinates, use them
     if (suggestion.coordinates) {
+      setSelectedCoordinates(suggestion.coordinates);
       onLocationChange(suggestion.description, suggestion.coordinates);
 
       if (onAddressSelect) {
@@ -129,6 +130,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
       leafletLocationService
         .geocodeAddress(suggestion.description)
         .then((result) => {
+          setSelectedCoordinates(result.coordinates);
           onLocationChange(suggestion.description, result.coordinates);
 
           if (onAddressSelect) {
