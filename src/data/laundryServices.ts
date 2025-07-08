@@ -174,7 +174,7 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Kurta pyjama.png",
+    image: "/images/Kurta Pyjama.png",
   },
   {
     id: "dry-clean-salwar-plazo",
