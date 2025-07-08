@@ -7,8 +7,9 @@ export interface ApiResponse<T = any> {
   status?: number;
 }
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+import { getApiBaseUrl, isBackendAvailable } from "../config/env";
+
+export const API_BASE_URL = getApiBaseUrl();
 
 // Enhanced fetch with error handling and rate limit detection
 export const safeFetch = async <T = any>(
