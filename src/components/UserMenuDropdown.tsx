@@ -179,15 +179,31 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={() => {
-                setIsOpen(false);
-                setShowProfileModal(true);
-              }}
-              className="cursor-pointer rounded-xl p-3 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 group transform hover:scale-[1.02]"
+              onClick={() =>
+                handleItemClick("profile", () => {
+                  setIsOpen(false);
+                  setShowProfileModal(true);
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "profile"
+                  ? "scale-110 bg-purple-100 shadow-lg ring-2 ring-purple-300 ring-opacity-50"
+                  : ""
+              }`}
             >
               <div className="flex items-center w-full">
-                <div className="w-8 h-8 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
-                  <User className="h-4 w-4 text-purple-600" />
+                <div
+                  className={`w-8 h-8 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "profile"
+                      ? "animate-pulse bg-purple-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <User
+                    className={`h-4 w-4 text-purple-600 transition-all duration-200 ${
+                      clickedItem === "profile" ? "scale-125" : ""
+                    }`}
+                  />
                 </div>
                 <span className="font-medium">Profile Settings</span>
               </div>
