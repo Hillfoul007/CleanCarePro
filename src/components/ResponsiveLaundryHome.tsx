@@ -204,6 +204,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
           services.length,
           "categories",
         );
+
+        // Preload critical images for faster loading
+        preloadCriticalImages(services).catch(console.warn);
       } catch (error) {
         console.warn(
           "⚠️ Failed to load dynamic services, using static fallback:",
@@ -211,6 +214,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
         );
         setDynamicServices(laundryServices);
         setUseStaticFallback(true);
+
+        // Preload critical images for fallback services
+        preloadCriticalImages(laundryServices).catch(console.warn);
       } finally {
         setIsLoadingServices(false);
       }
