@@ -422,9 +422,9 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
   if (isMobile) {
     // Mobile Interface
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600">
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
         {/* Mobile Header */}
-        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white sticky top-0 z-50">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white sticky top-0 z-50">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1">
@@ -455,7 +455,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                 </div>
                 <div>
                   <h1 className="text-lg font-bold">CleanCare</h1>
-                  <div className="flex items-center gap-1 text-xs text-green-100">
+                  <div className="flex items-center gap-1 text-xs text-blue-100">
                     <Smartphone className="h-3 w-3" />
                     <span>Mobile</span>
                   </div>
