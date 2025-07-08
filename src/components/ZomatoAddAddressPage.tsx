@@ -1076,24 +1076,35 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
           </div>
         </div>
 
-        {/* Map Area - Reduced height for mobile */}
-        <div className="h-64 sm:h-80 bg-gray-100 relative overflow-hidden">
-          {/* Google Maps Container */}
-          <div
-            ref={mapRef}
-            className="absolute inset-0 w-full h-full"
-            style={{ minHeight: "200px" }}
-          />
+        {/* Location Picker Button */}
+        <div className="mb-4">
+          <Button
+            onClick={() => setShowLocationPicker(true)}
+            variant="outline"
+            className="w-full flex items-center gap-2 py-6"
+          >
+            <MapPin className="h-5 w-5" />
+            <span>
+              {selectedLocation ? "Change Location on Map" : "Select Location on Map"}
+            </span>
+          </Button>
+        </div>
 
-          {/* Map Loading Overlay */}
-          {isMapLoading && (
-            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 text-sm">Loading map...</p>
+        {/* Selected Location Display */}
+        {selectedLocation && (
+          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-green-900">Selected Location</h4>
+                <p className="text-sm text-green-700 mt-1">{selectedLocation.address}</p>
+                <p className="text-xs text-green-600 mt-1">
+                  📍 {selectedLocation.coordinates.lat.toFixed(6)}, {selectedLocation.coordinates.lng.toFixed(6)}
+                </p>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
           {/* Map Controls Overlay */}
           {!isMapLoading && (
