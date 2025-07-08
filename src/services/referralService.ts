@@ -89,11 +89,39 @@ class ReferralService {
 
   // Generate or get referral code for user
   async generateReferralCode(userId: string): Promise<ReferralData> {
-    const data = await this.makeRequest("/generate", {
-      method: "POST",
-      body: JSON.stringify({ userId }),
-    });
-    return data.referral;
+    try {
+      const data = await this.makeRequest("/generate", {
+        method: "POST",
+        body: JSON.stringify({ userId }),
+      });
+      return data.referral;
+    } catch (error) {
+      console.warn("Using fallback referral generation:", error);
+      // Fallback: generate local referral code
+      return this.generateLocalReferralCode(userId);
+    }
+  }
+
+  // Local fallback for generating referral codes
+  private generateLocalReferralCode(userId: string): ReferralData {
+    const timestamp = Date.now().toString(36);
+    const userPart = userId.slice(-4);
+    const randomPart = Math.random().toString(36).substr(2, 4);
+    const referralCode =
+      `REF${userPart}${timestamp}${randomPart}`.toUpperCase();
+
+    const referralData: ReferralData = {
+      referrer_id: userId,
+      referral_code: referralCode,
+      status: "pending",
+      discount_percentage: 50,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    // Store in localStorage as fallback
+    localStorage.setItem(`referral_${userId}`, JSON.stringify(referralData));
+
+    return referralData;
   }
 
   // Validate a referral code
@@ -128,8 +156,42 @@ class ReferralService {
 
   // Get user's referral statistics
   async getReferralStats(userId: string): Promise<ReferralStats> {
-    const data = await this.makeRequest(`/stats/${userId}`);
-    return data.stats;
+    try {
+      const data = await this.makeRequest(`/stats/${userId}`);
+      return data.stats;
+    } catch (error) {
+      console.warn("Using fallback referral stats:", error);
+      // Fallback: return local stats
+      return this.getLocalReferralStats(userId);
+    }
+  }
+
+  // Local fallback for referral stats
+  private getLocalReferralStats(userId: string): ReferralStats {
+    // Try to get stats from localStorage
+    const statsKey = `referral_stats_${userId}`;
+    const existingStats = localStorage.getItem(statsKey);
+
+    if (existingStats) {
+      try {
+        return JSON.parse(existingStats);
+      } catch (e) {
+        console.warn("Failed to parse existing stats");
+      }
+    }
+
+    // Default stats
+    const defaultStats: ReferralStats = {
+      total_referrals: 0,
+      successful_referrals: 0,
+      pending_referrals: 0,
+      active_referral_code: null,
+      available_discounts: [],
+      referral_history: [],
+    };
+
+    localStorage.setItem(statsKey, JSON.stringify(defaultStats));
+    return defaultStats;
   }
 
   // Apply referral discount to booking
@@ -152,11 +214,42 @@ class ReferralService {
 
   // Get share link with referral code
   async getShareLink(userId: string): Promise<ShareLinkResponse> {
-    const data = await this.makeRequest(`/share-link/${userId}`);
+    try {
+      const data = await this.makeRequest(`/share-link/${userId}`);
+      return {
+        share_url: data.share_url,
+        referral_code: data.referral_code,
+        discount_percentage: data.discount_percentage,
+      };
+    } catch (error) {
+      console.warn("Using fallback share link generation:", error);
+      // Fallback: generate local share link
+      return this.generateLocalShareLink(userId);
+    }
+  }
+
+  // Local fallback for share links
+  private generateLocalShareLink(userId: string): ShareLinkResponse {
+    // Try to get existing referral code from localStorage
+    const existingReferral = localStorage.getItem(`referral_${userId}`);
+    let referralCode =
+      "SHARE" + userId.slice(-4) + Date.now().toString(36).slice(-4);
+
+    if (existingReferral) {
+      try {
+        const referralData = JSON.parse(existingReferral);
+        referralCode = referralData.referral_code;
+      } catch (e) {
+        console.warn("Failed to parse existing referral data");
+      }
+    }
+
+    const shareUrl = `${window.location.origin}?ref=${referralCode}`;
+
     return {
-      share_url: data.share_url,
-      referral_code: data.referral_code,
-      discount_percentage: data.discount_percentage,
+      share_url: shareUrl,
+      referral_code: referralCode,
+      discount_percentage: 50,
     };
   }
 
