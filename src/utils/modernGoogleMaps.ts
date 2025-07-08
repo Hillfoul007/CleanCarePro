@@ -25,10 +25,23 @@ class ModernGoogleMapsService {
   )[] = [];
 
   constructor() {
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
+    if (!apiKey) {
+      console.error(
+        "❌ Google Maps API key not configured. Please set VITE_GOOGLE_MAPS_API_KEY",
+      );
+    }
+
+    if (!mapId || mapId.trim() === "") {
+      console.warn(
+        "⚠️ Google Maps Map ID not configured. Advanced Markers will not be available. Set VITE_GOOGLE_MAPS_MAP_ID to enable Advanced Markers.",
+      );
+    }
+
     this.loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+      apiKey: apiKey || "",
       version: "weekly",
       libraries: ["places", "marker"], // Include marker library for fallback
     });
@@ -91,9 +104,12 @@ class ModernGoogleMapsService {
       mapTypeControl: true,
     };
 
-    // Only add Map ID if it's available
-    if (mapId) {
+    // Only add Map ID if it's configured and not empty
+    if (mapId && mapId.trim() !== "") {
       mapConfig.mapId = mapId;
+      console.log("🗺️ Using Map ID for Advanced Markers:", mapId);
+    } else {
+      console.log("🗺️ No Map ID configured, using regular markers only");
     }
 
     this.map = new google.maps.Map(container, mapConfig);
@@ -116,8 +132,12 @@ class ModernGoogleMapsService {
 
     const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
-    // Use AdvancedMarkerElement if Map ID is available
-    if (mapId && google.maps.marker?.AdvancedMarkerElement) {
+    // Use AdvancedMarkerElement if Map ID is available and configured
+    if (
+      mapId &&
+      mapId.trim() !== "" &&
+      google.maps.marker?.AdvancedMarkerElement
+    ) {
       try {
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map: this.map,
@@ -150,6 +170,8 @@ class ModernGoogleMapsService {
           error,
         );
       }
+    } else if (!mapId || mapId.trim() === "") {
+      console.log("📍 Using regular marker (Map ID not configured)");
     }
 
     // Fallback to regular Marker

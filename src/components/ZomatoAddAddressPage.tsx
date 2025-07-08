@@ -162,8 +162,15 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
 
   const initializeMap = async () => {
     try {
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!apiKey) {
+        console.warn("Google Maps API key not configured");
+        setIsMapLoading(false);
+        return;
+      }
+
       const loader = new Loader({
-        apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+        apiKey,
         version: "weekly",
         libraries: ["places", "geometry", "marker"], // Include marker library for AdvancedMarkerElement
       });
@@ -173,7 +180,10 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       // Default to India center
       const defaultCenter = { lat: 20.5937, lng: 78.9629 };
 
-      const map = new google.maps.Map(mapRef.current!, {
+      // Check if Map ID is configured for Advanced Markers
+      const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+
+      const mapConfig: any = {
         center: defaultCenter,
         zoom: 5,
         mapTypeControl: false,
@@ -186,7 +196,17 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
             stylers: [{ visibility: "off" }],
           },
         ],
-      });
+      };
+
+      // Only add Map ID if it's configured
+      if (mapId && mapId.trim() !== "") {
+        mapConfig.mapId = mapId;
+        console.log("🗺️ Using Map ID for Advanced Markers:", mapId);
+      } else {
+        console.log("🗺️ No Map ID configured, using regular markers");
+      }
+
+      const map = new google.maps.Map(mapRef.current!, mapConfig);
 
       // Initialize the new AutocompleteSuggestion service
       const { AutocompleteSuggestion, AutocompleteSessionToken } =
