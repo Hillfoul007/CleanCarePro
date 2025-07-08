@@ -94,7 +94,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuContent align="end" className="w-64 touch-manipulation">
           <DropdownMenuLabel>
             <div className="flex flex-col space-y-1">
               <div className="flex items-center gap-2">
