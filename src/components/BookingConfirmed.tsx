@@ -85,7 +85,10 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
           <CardContent className="p-3 text-center">
             <p className="text-sm text-green-700 mb-1">Booking ID</p>
             <p className="text-lg font-bold text-green-900">
-              #{bookingData.bookingId.slice(-6).toUpperCase()}
+              #
+              {bookingData.bookingId
+                ? bookingData.bookingId.slice(-6).toUpperCase()
+                : "N/A"}
             </p>
           </CardContent>
         </Card>
