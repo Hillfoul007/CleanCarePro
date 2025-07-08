@@ -130,21 +130,15 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
             <span>My Bookings</span>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.stopPropagation();
-              // Keep dropdown open for referral modal
-            }}
-            className="cursor-pointer"
-          >
-            <Gift className="mr-2 h-4 w-4" />
-            <span>Refer and Earn</span>
-            <div className="ml-auto">
+          <DropdownMenuItem asChild>
+            <div className="cursor-pointer">
+              <Gift className="mr-2 h-4 w-4" />
+              <span className="flex-1">Refer and Earn</span>
               <ReferralShareButton
                 userId={currentUser.id}
                 currentUser={currentUser}
                 variant="small"
-                className="opacity-0 pointer-events-none"
+                className="ml-2 h-6 w-6 p-0 hover:bg-green-50"
               />
             </div>
           </DropdownMenuItem>
