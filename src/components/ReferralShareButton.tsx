@@ -113,11 +113,14 @@ export function ReferralShareButton({
 
   const getButtonText = () => {
     if (variant === "small") return "";
+    if (variant === "menu-item") return "Refer and Earn";
     return "Share & Earn";
   };
 
   const getButtonIcon = () => {
-    return variant === "small" ? Share2 : Gift;
+    if (variant === "small") return Share2;
+    if (variant === "menu-item") return Gift;
+    return Gift;
   };
 
   const ButtonIcon = getButtonIcon();
