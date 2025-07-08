@@ -323,7 +323,7 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-green-600" />
+            <MapPin className="h-5 w-5 text-blue-600" />
             Address Details
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
               variant={useSmartInput ? "default" : "outline"}
               size="sm"
               onClick={() => setUseSmartInput(!useSmartInput)}
-              className={useSmartInput ? "bg-green-600 hover:bg-green-700" : ""}
+              className={useSmartInput ? "bg-blue-600 hover:bg-blue-700" : ""}
               title={
                 useSmartInput
                   ? "Switch to manual form"
@@ -392,7 +392,7 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
                 variant="default"
                 onClick={detectCurrentLocation}
                 disabled={isDetectingLocation}
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-blue-600 hover:bg-blue-700"
               >
                 {isDetectingLocation ? (
                   <>
@@ -590,10 +590,10 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
 
         {/* Location Status */}
         {address.coordinates && (
-          <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700">
+              <MapPin className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-700">
                 📍 Location coordinates saved
               </span>
             </div>
@@ -614,7 +614,7 @@ const SimplifiedAddressForm: React.FC<SimplifiedAddressFormProps> = ({
         {onAddressUpdate && (
           <Button
             onClick={() => onAddressUpdate(address)}
-            className="w-full bg-green-600 hover:bg-green-700"
+            className="w-full bg-blue-600 hover:bg-blue-700"
             disabled={!address.street || !address.city || !address.pincode}
           >
             Save Address
