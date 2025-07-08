@@ -1,3 +1,5 @@
+import { isBackendAvailable } from "../config/env";
+
 export interface ResendEmailResponse {
   success: boolean;
   message?: string;
@@ -17,26 +19,10 @@ export interface User {
 
 export class ResendEmailService {
   private static instance: ResendEmailService;
-  private apiBaseUrl = this.getApiBaseUrl();
+  private apiBaseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
   private resendApiKey = "re_5jhaDsos_4PHJ1Cm9G47f9PNS37zbR7tH";
   private resendApiUrl = "https://api.resend.com/emails";
-
-  private getApiBaseUrl(): string {
-    const envUrl = import.meta.env.VITE_API_BASE_URL;
-    if (envUrl && envUrl !== "") {
-      return envUrl;
-    }
-
-    const hostname = window.location.hostname;
-    const isProduction =
-      !hostname.includes("localhost") && !hostname.includes("127.0.0.1");
-
-    if (isProduction) {
-      return "https://cleancarepro-95it.onrender.com/api";
-    }
-
-    return "http://localhost:3001/api";
-  }
 
   public static getInstance(): ResendEmailService {
     if (!ResendEmailService.instance) {
@@ -240,6 +226,11 @@ export class ResendEmailService {
     phone?: string,
   ): Promise<User> {
     try {
+      // Check if backend is available first
+      if (!isBackendAvailable()) {
+        throw new Error("Backend not available in hosted environment");
+      }
+
       // Try to get existing user from backend
       const response = await fetch(`${this.apiBaseUrl}/auth/email-login`, {
         method: "POST",

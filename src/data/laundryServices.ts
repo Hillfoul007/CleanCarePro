@@ -102,7 +102,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Shirt.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F956b2338703b4aedb106b956eeec70be?format=webp&width=800",
   },
   {
     id: "dry-clean-mens-trouser",
@@ -112,7 +113,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Trouser&Jeans.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Ff086d9891e0048f1b71b3d2d7f1dbbbb?format=webp&width=800",
   },
   {
     id: "dry-clean-mens-coat",
@@ -122,7 +124,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Coat.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F166b9cce6630459c922c6a3daf603ffe?format=webp&width=800",
   },
   {
     id: "dry-clean-mens-suit-2pc",
@@ -132,7 +135,8 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Suit 2 PC.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F9d850a9015104e4fb930d34ecc362d28?format=webp&width=800",
   },
   {
     id: "dry-clean-mens-suit-3pc",
@@ -142,7 +146,8 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Men suit 3 PC.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F53aca8c0e79946b2a3bdc4f1a42eb28f?format=webp&width=800",
   },
   {
     id: "dry-clean-kurta-pyjama",
@@ -152,7 +157,8 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Kurta Pyjama.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fcd60a6402dde4ba2b5a6c8f47209330b?format=webp&width=800",
   },
   {
     id: "dry-clean-achkan-sherwani",
@@ -162,7 +168,8 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Sherwani.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F0a935b4f1a3d4448b06fe906c9e50e0c?format=webp&width=800",
   },
 
   // Women's Dry Clean
@@ -174,7 +181,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Kurta Pyjama.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fcd60a6402dde4ba2b5a6c8f47209330b?format=webp&width=800",
   },
   {
     id: "dry-clean-salwar-plazo",
@@ -184,7 +192,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Plazo.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F26750ba873fc4f29b5d38ebc1680fb58?format=webp&width=800",
   },
   {
     id: "dry-clean-saree-simple",
@@ -194,7 +203,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Saree Silk.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F07a2eec0d4d24c99bab0b3f8b042acf1?format=webp&width=800",
   },
   {
     id: "dry-clean-saree-heavy",
@@ -204,7 +214,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Saree Heavy work.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F730757488f9543e781566e6b36478db9?format=webp&width=800",
   },
   {
     id: "dry-clean-blouse",
@@ -225,7 +236,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Dress.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fa2094f6e6dbe4028afd0748df9af0ddc?format=webp&width=800",
   },
   {
     id: "dry-clean-top",
@@ -246,7 +258,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Skirt Heavy Work.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fb4349ef5d3484ee8aff80bc34e5031d1?format=webp&width=800",
   },
   {
     id: "dry-clean-lehenga-1pc",
@@ -256,7 +269,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Skirt Heavy Work.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fb4349ef5d3484ee8aff80bc34e5031d1?format=webp&width=800",
   },
   {
     id: "dry-clean-lehenga-2pc",
@@ -301,7 +315,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Jacket.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2Fcc66473ded1c4c3497abf4b2ab26dbdb?format=webp&width=800",
   },
   {
     id: "dry-clean-sweater",
@@ -311,7 +326,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Sweater.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F412040582c054bfba58174dd1e8b3466?format=webp&width=800",
   },
   {
     id: "dry-clean-long-coat",
@@ -321,7 +337,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Long Coat.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F07c73c69f3e44522997d598f77b45fdc?format=webp&width=800",
   },
   {
     id: "dry-clean-shawl",
@@ -331,7 +348,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
-    image: "/images/Shawl.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F25391912d8fd486b964bd9f21cc6944f?format=webp&width=800",
   },
   {
     id: "dry-clean-pashmina",
@@ -341,7 +359,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72 hours",
-    image: "/images/Pashmina.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F09f22a7a13bf48c783a4d2727f57e48a?format=webp&width=800",
   },
   {
     id: "dry-clean-leather-jacket",
@@ -351,7 +370,8 @@ export const laundryServices: LaundryService[] = [
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72-96 hours",
-    image: "/images/Leather jacket.png",
+    image:
+      "https://cdn.builder.io/api/v1/image/assets%2F5e4945c9751a4c39baee34b838886324%2F2a4fbb4834b746958fe48a5a64f1af94?format=webp&width=800",
   },
 ];
 

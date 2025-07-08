@@ -37,7 +37,21 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  // All hooks must be declared at the top before any early returns
   const [hasError, setHasError] = React.useState(false);
+  const [currentStep, setCurrentStep] = useState<"phone" | "otp">("phone");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const isMobile = useIsMobile();
+
+  const [formData, setFormData] = useState({
+    phone: "",
+    otp: "",
+    name: "",
+  });
+
+  const dvhostingSmsService = DVHostingSmsService.getInstance();
 
   // Error boundary effect
   React.useEffect(() => {
@@ -50,6 +64,7 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
     return () => window.removeEventListener("error", handleError);
   }, []);
 
+  // Early return after all hooks are declared
   if (hasError) {
     return (
       <div className="fixed inset-0 z-[1000] bg-black/50 flex items-center justify-center p-4">
@@ -73,19 +88,6 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
       </div>
     );
   }
-  const [currentStep, setCurrentStep] = useState<"phone" | "otp">("phone");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const isMobile = useIsMobile();
-
-  const [formData, setFormData] = useState({
-    phone: "",
-    otp: "",
-    name: "",
-  });
-
-  const dvhostingSmsService = DVHostingSmsService.getInstance();
 
   const resetForm = () => {
     // Clear iOS auth state for fresh start

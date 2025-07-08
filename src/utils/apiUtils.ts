@@ -7,8 +7,9 @@ export interface ApiResponse<T = any> {
   status?: number;
 }
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+import { getApiBaseUrl, isBackendAvailable } from "../config/env";
+
+export const API_BASE_URL = getApiBaseUrl();
 
 // Enhanced fetch with error handling and rate limit detection
 export const safeFetch = async <T = any>(
@@ -17,6 +18,14 @@ export const safeFetch = async <T = any>(
   timeoutMs: number = 10000,
 ): Promise<ApiResponse<T>> => {
   try {
+    // Check if backend is available first
+    if (!isBackendAvailable()) {
+      return {
+        error: "Backend service not available in this environment",
+        success: false,
+      };
+    }
+
     // Add timeout to all requests
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);

@@ -42,6 +42,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showAddressesModal, setShowAddressesModal] = useState(false);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [clickedItem, setClickedItem] = useState<string | null>(null);
 
   const getInitials = (name: string) => {
     return name
@@ -67,13 +68,33 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
     window.open(whatsappUrl, "_blank");
   };
 
+  const handleItemClick = (itemId: string, action: () => void) => {
+    setClickedItem(itemId);
+    // Add a slight delay for the pop effect before executing action
+    setTimeout(() => {
+      action();
+      // Reset clicked state after action
+      setTimeout(() => setClickedItem(null), 300);
+    }, 150);
+  };
+
+  const handleReferralClick = () => {
+    setClickedItem("referral");
+    // Close the dropdown with a delay to allow the dialog to open properly
+    setTimeout(() => {
+      setIsOpen(false);
+      // Reset clicked state after dropdown closes
+      setTimeout(() => setClickedItem(null), 300);
+    }, 100);
+  };
+
   return (
     <>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex items-center gap-2 h-auto p-2 hover:bg-green-50"
+            className="flex items-center gap-2 h-auto p-2 hover:bg-green-50 touch-manipulation"
           >
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-green-600 text-white text-sm">
@@ -94,89 +115,201 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-64">
-          <DropdownMenuLabel>
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-green-600 text-white text-sm">
+        <DropdownMenuContent
+          align="end"
+          className="w-72 sm:w-80 touch-manipulation border-0 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-white via-gray-50/50 to-green-50/20 backdrop-blur-sm"
+        >
+          <DropdownMenuLabel className="p-0">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-4 text-white">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-12 w-12 ring-4 ring-white/30 shadow-lg">
+                  <AvatarFallback className="bg-white/20 text-white text-lg font-bold backdrop-blur-sm">
                     {getInitials(currentUser.name || "User")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-base font-bold text-white truncate">
                       {currentUser.name || "User"}
                     </p>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-green-100 truncate">
                     {formatPhone(currentUser.phone)}
                   </p>
+                  <div className="flex items-center mt-1">
+                    <div className="w-2 h-2 bg-green-300 rounded-full mr-2 animate-pulse"></div>
+                    <span className="text-xs text-green-100">Online</span>
+                  </div>
                 </div>
               </div>
             </div>
           </DropdownMenuLabel>
 
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="my-0" />
 
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              onViewBookings();
-            }}
-            className="cursor-pointer"
-          >
-            <Package className="mr-2 h-4 w-4" />
-            <span>My Bookings</span>
-          </DropdownMenuItem>
+          <div className="p-2 space-y-1">
+            <DropdownMenuItem
+              onClick={() =>
+                handleItemClick("bookings", () => {
+                  setIsOpen(false);
+                  onViewBookings();
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "bookings"
+                  ? "scale-110 bg-blue-100 shadow-lg ring-2 ring-blue-300 ring-opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center w-full">
+                <div
+                  className={`w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "bookings"
+                      ? "animate-pulse bg-blue-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <Package
+                    className={`h-4 w-4 text-blue-600 transition-all duration-200 ${
+                      clickedItem === "bookings" ? "scale-125" : ""
+                    }`}
+                  />
+                </div>
+                <span className="font-medium">My Bookings</span>
+              </div>
+            </DropdownMenuItem>
 
-          <DropdownMenuItem asChild>
-            <div className="cursor-pointer">
-              <Gift className="mr-2 h-4 w-4" />
-              <span className="flex-1">Refer and Earn</span>
-              <ReferralShareButton
-                userId={currentUser.id}
-                currentUser={currentUser}
-                variant="small"
-                className="ml-2 h-6 w-6 p-0 hover:bg-green-50"
-              />
-            </div>
-          </DropdownMenuItem>
+            <ReferralShareButton
+              userId={currentUser.id}
+              currentUser={currentUser}
+              variant="menu-item"
+              className="w-full justify-start p-3 h-auto font-medium hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-200 group transform hover:scale-[1.02] cursor-pointer mx-2"
+            />
 
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              setShowProfileModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile Settings</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleItemClick("profile", () => {
+                  setIsOpen(false);
+                  setShowProfileModal(true);
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "profile"
+                  ? "scale-110 bg-purple-100 shadow-lg ring-2 ring-purple-300 ring-opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center w-full">
+                <div
+                  className={`w-8 h-8 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "profile"
+                      ? "animate-pulse bg-purple-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <User
+                    className={`h-4 w-4 text-purple-600 transition-all duration-200 ${
+                      clickedItem === "profile" ? "scale-125" : ""
+                    }`}
+                  />
+                </div>
+                <span className="font-medium">Profile Settings</span>
+              </div>
+            </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              setShowAddressesModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <MapPin className="mr-2 h-4 w-4" />
-            <span>Saved Addresses</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleItemClick("addresses", () => {
+                  setIsOpen(false);
+                  setShowAddressesModal(true);
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-orange-50 hover:text-orange-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "addresses"
+                  ? "scale-110 bg-orange-100 shadow-lg ring-2 ring-orange-300 ring-opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center w-full">
+                <div
+                  className={`w-8 h-8 bg-orange-100 group-hover:bg-orange-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "addresses"
+                      ? "animate-pulse bg-orange-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <MapPin
+                    className={`h-4 w-4 text-orange-600 transition-all duration-200 ${
+                      clickedItem === "addresses" ? "scale-125" : ""
+                    }`}
+                  />
+                </div>
+                <span className="font-medium">Saved Addresses</span>
+              </div>
+            </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => {
-              setIsOpen(false);
-              setShowPreferencesModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Preferences</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleItemClick("preferences", () => {
+                  setIsOpen(false);
+                  setShowPreferencesModal(true);
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "preferences"
+                  ? "scale-110 bg-indigo-100 shadow-lg ring-2 ring-indigo-300 ring-opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center w-full">
+                <div
+                  className={`w-8 h-8 bg-indigo-100 group-hover:bg-indigo-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "preferences"
+                      ? "animate-pulse bg-indigo-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <Settings
+                    className={`h-4 w-4 text-indigo-600 transition-all duration-200 ${
+                      clickedItem === "preferences" ? "scale-125" : ""
+                    }`}
+                  />
+                </div>
+                <span className="font-medium">Preferences</span>
+              </div>
+            </DropdownMenuItem>
 
-          <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() =>
+                handleItemClick("share", () => {
+                  setIsOpen(false);
+                  handleWhatsAppShare();
+                })
+              }
+              className={`cursor-pointer rounded-xl p-3 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 group transform hover:scale-[1.02] ${
+                clickedItem === "share"
+                  ? "scale-110 bg-emerald-100 shadow-lg ring-2 ring-emerald-300 ring-opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center w-full">
+                <div
+                  className={`w-8 h-8 bg-emerald-100 group-hover:bg-emerald-200 rounded-lg flex items-center justify-center mr-3 transition-all duration-200 ${
+                    clickedItem === "share"
+                      ? "animate-pulse bg-emerald-200 scale-110"
+                      : ""
+                  }`}
+                >
+                  <MessageCircle
+                    className={`h-4 w-4 text-emerald-600 transition-all duration-200 ${
+                      clickedItem === "share" ? "scale-125" : ""
+                    }`}
+                  />
+                </div>
+                <span className="font-medium">Share with Friends</span>
+              </div>
+            </DropdownMenuItem>
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -1,6 +1,8 @@
 // This service has been replaced by Fast2SmsService
 // Keeping file for backward compatibility but functionality moved to Fast2SMS OTP
 
+import { isBackendAvailable } from "../config/env";
+
 export class ExotelMissedCallService {
   private static instance: ExotelMissedCallService;
   private apiBaseUrl =
@@ -105,7 +107,7 @@ export class ExotelMissedCallService {
       console.error("❌ Missed call initiation failed:", error);
 
       // Fallback to demo mode on network error
-      console.log("🔄 Network error detected, falling back to demo mode");
+      console.log("��� Network error detected, falling back to demo mode");
       return {
         success: true,
         message: "Demo mode: Click 'Verify' to simulate call verification",
@@ -188,6 +190,11 @@ export class ExotelMissedCallService {
     name: string,
   ): Promise<User> {
     try {
+      // Check if backend is available first
+      if (!isBackendAvailable()) {
+        throw new Error("Backend not available in hosted environment");
+      }
+
       // Try to get existing user from backend
       const response = await fetch(`${this.apiBaseUrl}/auth/missedcall-login`, {
         method: "POST",

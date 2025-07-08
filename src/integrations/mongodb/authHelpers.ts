@@ -1,5 +1,6 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+import { getApiBaseUrl, isBackendAvailable } from "../../config/env";
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const authHelpers = {
   // Sign up
@@ -11,6 +12,13 @@ export const authHelpers = {
     userType: "customer" | "provider" | "rider" = "customer",
   ) {
     try {
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          error: "Backend service not available in this environment",
+        };
+      }
+
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,6 +59,13 @@ export const authHelpers = {
   // Sign in
   async signIn(email: string, password: string) {
     try {
+      if (!isBackendAvailable()) {
+        return {
+          success: false,
+          error: "Backend service not available in this environment",
+        };
+      }
+
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
