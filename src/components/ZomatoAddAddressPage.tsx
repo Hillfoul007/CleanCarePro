@@ -222,50 +222,20 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       setSearchQuery(address);
       autoFillAddressFields(address);
     } catch (error) {
-      console.error("❌ All location detection attempts failed:", error);
+      console.error("❌ Location detection failed:", error);
 
-      // Enhanced fallback - try to get approximate location from IP
-      try {
-        console.log("🌐 Trying browser location fallback...");
-        const browserLocation = await getBrowserLocation();
-        if (browserLocation) {
-          setSelectedLocation(browserLocation);
-          setSearchQuery(browserLocation.address);
-          updateMapLocation(browserLocation.coordinates);
-          autoFillAddressFields(browserLocation.address);
-          return;
-        }
-      } catch (locationError) {
-        console.warn("Browser location fallback failed:", locationError);
-      }
-
-      // Ultimate fallback - major Indian cities based on common usage
-      const fallbackLocations = [
-        { lat: 28.6139, lng: 77.209, city: "New Delhi" },
-        { lat: 19.076, lng: 72.8777, city: "Mumbai" },
-        { lat: 12.9716, lng: 77.5946, city: "Bangalore" },
-        { lat: 17.385, lng: 78.4867, city: "Hyderabad" },
-        { lat: 13.0827, lng: 80.2707, city: "Chennai" },
-        { lat: 22.5726, lng: 88.3639, city: "Kolkata" },
-      ];
-
-      const randomFallback =
-        fallbackLocations[Math.floor(Math.random() * fallbackLocations.length)];
-      const fallbackAddress = `${randomFallback.city}, India`;
-
-      console.log(`🏙️ Using fallback location: ${fallbackAddress}`);
+      // Fallback to Delhi, India
+      const fallbackAddress = "New Delhi, India";
+      const fallbackCoordinates = { lat: 28.6139, lng: 77.209 };
 
       setSelectedLocation({
         address: fallbackAddress,
-        coordinates: { lat: randomFallback.lat, lng: randomFallback.lng },
+        coordinates: fallbackCoordinates,
       });
       setSearchQuery(fallbackAddress);
-      updateMapLocation({ lat: randomFallback.lat, lng: randomFallback.lng });
+      autoFillAddressFields(fallbackAddress);
     } finally {
       setIsDetectingLocation(false);
-      setLocationAttempt(0);
-      // Keep accuracy info for a bit longer to show final result
-      setTimeout(() => setLocationAccuracy(null), 3000);
     }
   };
 
