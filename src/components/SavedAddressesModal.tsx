@@ -327,7 +327,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100 relative z-20"
+                                className="h-9 w-9 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100 relative z-20 md:h-8 md:w-8 md:text-gray-400"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
