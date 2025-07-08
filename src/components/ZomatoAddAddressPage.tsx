@@ -129,10 +129,10 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Google Maps
+  // Initialize location picker when opened
   useEffect(() => {
-    if (isOpen && mapRef.current && !mapInstance) {
-      initializeMap();
+    if (isOpen) {
+      setShowLocationPicker(true);
     }
   }, [isOpen]);
 
