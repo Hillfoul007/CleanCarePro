@@ -580,13 +580,27 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   booking.additional_details,
                   "",
                 ),
+                // Customer information fields
+                name: sanitizeValue(booking.name, ""),
+                customerName: sanitizeValue(booking.customerName, ""),
+                customer_name: sanitizeValue(booking.customer_name, ""),
+                phone: sanitizeValue(booking.phone, ""),
+                customerPhone: sanitizeValue(booking.customerPhone, ""),
+                customer_phone: sanitizeValue(booking.customer_phone, ""),
+                // Order ID fields
+                custom_order_id: sanitizeValue(booking.custom_order_id, ""),
+                order_id: sanitizeValue(booking.order_id, ""),
+                // Date and time fields
                 pickupDate: sanitizeValue(booking.pickupDate, ""),
                 deliveryDate: sanitizeValue(booking.deliveryDate, ""),
                 scheduled_date: sanitizeValue(booking.scheduled_date, ""),
                 pickupTime: sanitizeValue(booking.pickupTime, ""),
                 deliveryTime: sanitizeValue(booking.deliveryTime, ""),
                 scheduled_time: sanitizeValue(booking.scheduled_time, ""),
+                // Other fields
                 address: sanitizeValue(booking.address, "Address not provided"),
+                created_at: sanitizeValue(booking.created_at, ""),
+                createdAt: sanitizeValue(booking.createdAt, ""),
                 totalAmount:
                   typeof booking.totalAmount === "number"
                     ? booking.totalAmount
