@@ -94,58 +94,48 @@ const getReverseGeocodedLocation = async (
     return `Location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
   }
 
-  // Method 1: Try Google Maps API if available
-  const googleApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  if (googleApiKey) {
-    try {
-      console.log("🗺️ Trying Google Maps API...");
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+  // Method 1: Try Leaflet Location Service (OpenStreetMap)
+  try {
+    console.log("🗺️ Trying OpenStreetMap via LeafletLocationService...");
+    const { leafletLocationService } = await import(
+      "@/services/leafletLocationService"
+    );
 
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleApiKey}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-          signal: controller.signal,
-        },
-      );
+    const address = await leafletLocationService.reverseGeocode({
+      lat: latitude,
+      lng: longitude,
+    });
 
-      clearTimeout(timeoutId);
+    // Extract city from the formatted address
+    const parts = address.split(", ");
+    let city = "";
+    let state = "";
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.results && data.results.length > 0) {
-          const result = data.results[0];
+    // Find city and state from address parts
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const part = parts[i].trim();
 
-          // Extract city from address components
-          const cityComponent = result.address_components?.find(
-            (component: any) =>
-              component.types.includes("locality") ||
-              component.types.includes("administrative_area_level_2"),
-          );
-
-          const stateComponent = result.address_components?.find(
-            (component: any) =>
-              component.types.includes("administrative_area_level_1"),
-          );
-
-          if (cityComponent) {
-            const location =
-              stateComponent &&
-              cityComponent.long_name !== stateComponent.long_name
-                ? `${cityComponent.long_name}, ${stateComponent.long_name}`
-                : cityComponent.long_name;
-            console.log("✅ Google Maps success:", location);
-            return location;
-          }
+      // Skip postal codes, country, and house numbers
+      if (!/^\d+/.test(part) && !/^\d{6}$/.test(part) && part !== "India") {
+        if (!state && part.length > 2 && part.length < 30) {
+          state = part;
+        } else if (!city && part.length > 2 && part.length < 30) {
+          city = part;
+          break;
         }
       }
-    } catch (error) {
-      console.log("❌ Google Maps geocoding failed:", error);
     }
+
+    if (city) {
+      const location = state && city !== state ? `${city}, ${state}` : city;
+      console.log("✅ LeafletLocationService success:", location);
+      return location;
+    } else if (state) {
+      console.log("✅ LeafletLocationService success (state only):", state);
+      return state;
+    }
+  } catch (error) {
+    console.log("❌ LeafletLocationService failed:", error);
   }
 
   // Method 2: Try OpenStreetMap with better error handling
