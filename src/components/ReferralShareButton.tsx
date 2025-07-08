@@ -144,17 +144,7 @@ export const ReferralShareButton = React.forwardRef<
                   : "gap-2"
             } touch-manipulation ${className}`}
             title="Share and earn rewards"
-            onClick={(e) => {
-              // Ensure event exists and handle menu-item variant properly
-              if (e) {
-                if (variant === "menu-item" && onClick) {
-                  e.stopPropagation();
-                  onClick();
-                } else if (onClick) {
-                  onClick();
-                }
-              }
-            }}
+            onClick={variant === "menu-item" ? undefined : onClick}
           >
             {variant === "menu-item" ? (
               <div className="flex items-center w-full">
