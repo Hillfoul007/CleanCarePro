@@ -1116,7 +1116,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                           <div className="space-y-1 text-xs">
                             {/* Calculate service total and delivery fee */}
                             {(() => {
-                              const handlingFee = 9; // Standard handling fee
+                              const handlingFee = 0; // Free handling fee
                               const serviceTotal = Math.max(
                                 0,
                                 total - handlingFee,
