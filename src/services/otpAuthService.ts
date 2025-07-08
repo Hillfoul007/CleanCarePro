@@ -17,26 +17,8 @@ interface OTPResponse {
 
 export class OTPAuthService {
   private static instance: OTPAuthService;
-  private apiBaseUrl = this.getApiBaseUrl();
-
-  private getApiBaseUrl(): string {
-    // Check environment variable first
-    const envUrl = import.meta.env.VITE_API_BASE_URL;
-    if (envUrl && envUrl !== "") {
-      return envUrl;
-    }
-
-    // Production detection
-    const hostname = window.location.hostname;
-    const isProduction =
-      !hostname.includes("localhost") && !hostname.includes("127.0.0.1");
-
-    if (isProduction) {
-      return "https://cleancarepro-95it.onrender.com/api";
-    }
-
-    return "http://localhost:3001/api";
-  }
+  private apiBaseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
   public static getInstance(): OTPAuthService {
     if (!OTPAuthService.instance) {
