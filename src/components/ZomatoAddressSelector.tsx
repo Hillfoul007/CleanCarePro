@@ -278,7 +278,7 @@ const ZomatoAddressSelector: React.FC<ZomatoAddressSelectorProps> = ({
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600"
+                              className="h-8 w-8 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 sm:text-gray-400 sm:hover:text-gray-600"
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}

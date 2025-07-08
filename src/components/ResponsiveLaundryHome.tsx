@@ -28,6 +28,7 @@ import {
   getSortedServices,
   searchServices,
   getServicesByCategory,
+  getCategoryDisplay,
   LaundryService,
 } from "@/data/laundryServices";
 import DynamicServicesService from "@/services/dynamicServicesService";
@@ -660,17 +661,11 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                               priority={service.popular}
                               fallback={
                                 <span className="text-3xl">
-                                  {service.category.includes("Men")
-                                    ? "👔"
-                                    : service.category.includes("Women")
-                                      ? "👗"
-                                      : service.category.includes("Woolen")
-                                        ? "🧥"
-                                        : service.category.includes("Steam")
-                                          ? "🔥"
-                                          : service.category.includes("Iron")
-                                            ? "🏷️"
-                                            : "👕"}
+                                  {
+                                    getCategoryDisplay(service.category).split(
+                                      " ",
+                                    )[0]
+                                  }
                                 </span>
                               }
                             />
@@ -683,17 +678,11 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                         ) : (
                           <>
                             <span className="text-3xl">
-                              {service.category.includes("Men")
-                                ? "👔"
-                                : service.category.includes("Women")
-                                  ? "👗"
-                                  : service.category.includes("Woolen")
-                                    ? "🧥"
-                                    : service.category.includes("Steam")
-                                      ? "🔥"
-                                      : service.category.includes("Iron")
-                                        ? "🏷️"
-                                        : "👕"}
+                              {
+                                getCategoryDisplay(service.category).split(
+                                  " ",
+                                )[0]
+                              }
                             </span>
                             {service.popular && (
                               <div className="absolute bottom-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
@@ -711,7 +700,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                           </h4>
 
                           <div className="text-xs text-gray-600 mb-2">
-                            {service.category}
+                            {getCategoryDisplay(service.category)}
                           </div>
                         </div>
 
@@ -1078,17 +1067,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                     <CardContent className="p-6">
                       <div className="aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-xl mb-4 flex items-center justify-center">
                         <span className="text-5xl">
-                          {service.category.includes("Men")
-                            ? "👔"
-                            : service.category.includes("Women")
-                              ? "👗"
-                              : service.category.includes("Woolen")
-                                ? "🧥"
-                                : service.category.includes("Steam")
-                                  ? "🔥"
-                                  : service.category.includes("Iron")
-                                    ? "🏷️"
-                                    : "���"}
+                          {getCategoryDisplay(service.category).split(" ")[0]}
                         </span>
                       </div>
 
@@ -1098,7 +1077,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                         </h4>
 
                         <div className="text-sm text-gray-600">
-                          {service.category}
+                          {getCategoryDisplay(service.category)}
                         </div>
 
                         <div className="flex items-center justify-between">

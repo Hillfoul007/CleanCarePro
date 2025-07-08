@@ -1335,11 +1335,11 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
       <div className="flex items-center gap-4 p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
         <Button
           variant="ghost"
-          size="sm"
+          size="lg"
           onClick={onClose}
-          className="h-8 w-8 p-0"
+          className="h-12 w-12 p-0"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-6 w-6" />
         </Button>
         <h1 className="text-lg font-medium text-gray-900">Add Address</h1>
       </div>

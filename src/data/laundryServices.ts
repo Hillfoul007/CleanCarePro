@@ -425,3 +425,8 @@ export const searchServices = (query: string): LaundryService[] => {
       service.category.toLowerCase().includes(lowercaseQuery),
   );
 };
+
+export const getCategoryDisplay = (categoryId: string): string => {
+  const category = serviceCategories.find((cat) => cat.id === categoryId);
+  return category ? `${category.icon} ${category.name}` : categoryId;
+};

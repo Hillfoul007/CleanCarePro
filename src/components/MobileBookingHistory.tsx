@@ -243,7 +243,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       });
 
       console.log(
-        "📊 Updated bookings:",
+        "��� Updated bookings:",
         updatedBookings.map((b) => ({ id: b.id || b._id, status: b.status })),
       );
       setBookings(updatedBookings);
@@ -641,7 +641,9 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-sm text-gray-900 truncate">
                             Order #
-                            {safeBooking.custom_order_id || "Generating..."}
+                            {safeBooking.custom_order_id ||
+                              safeBooking.order_id ||
+                              `CC${Date.now().toString().slice(-6)}`}
                           </h3>
                           <Badge
                             className={`${getStatusColor(safeBooking.status)} text-xs px-1.5 py-0.5`}
@@ -806,6 +808,81 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                             </div>
                           </div>
                         )}
+
+                      {/* Order Details Section */}
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <h4 className="font-semibold text-gray-900 text-sm mb-2 flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Order Details
+                        </h4>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Order ID</span>
+                            <span className="font-mono font-bold text-blue-600">
+                              #
+                              {safeBooking.custom_order_id ||
+                                safeBooking.order_id ||
+                                `CC${Date.now().toString().slice(-6)}`}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Customer Name</span>
+                            <span className="font-medium text-gray-900">
+                              {safeBooking.name ||
+                                safeBooking.customerName ||
+                                safeBooking.customer_name ||
+                                "Not specified"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Phone Number</span>
+                            <span className="font-mono font-medium text-gray-900">
+                              {safeBooking.phone ||
+                                safeBooking.customerPhone ||
+                                safeBooking.customer_phone ||
+                                "Not specified"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">No. of Items</span>
+                            <span className="font-medium">
+                              {safeBooking.services.reduce((total, service) => {
+                                const quantity =
+                                  typeof service === "object"
+                                    ? service.quantity || 1
+                                    : 1;
+                                return total + quantity;
+                              }, 0)}{" "}
+                              items
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Order Placed</span>
+                            <span className="font-medium">
+                              {(() => {
+                                const orderDate =
+                                  safeBooking.created_at ||
+                                  safeBooking.createdAt ||
+                                  Date.now();
+                                try {
+                                  const date = new Date(orderDate);
+                                  return `${date.toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })} at ${date.toLocaleTimeString("en-IN", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}`;
+                                } catch (error) {
+                                  return "N/A";
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
 
                       {/* Pickup & Delivery Slots */}
                       <div className="grid grid-cols-2 gap-2">

@@ -25,7 +25,11 @@ import {
   CreditCard,
   Home,
 } from "lucide-react";
-import { laundryServices, LaundryService } from "@/data/laundryServices";
+import {
+  laundryServices,
+  LaundryService,
+  getCategoryDisplay,
+} from "@/data/laundryServices";
 import { OTPAuthService } from "@/services/otpAuthService";
 import {
   saveBookingFormData,
@@ -750,17 +754,7 @@ Confirm this booking?`;
                   ) : null}
                   {/* Fallback to emoji/icon */}
                   <span className={`text-sm ${service!.image ? "hidden" : ""}`}>
-                    {service!.category.includes("Men")
-                      ? "👔"
-                      : service!.category.includes("Women")
-                        ? "👗"
-                        : service!.category.includes("Woolen")
-                          ? "🧥"
-                          : service!.category.includes("Steam")
-                            ? "🔥"
-                            : service!.category.includes("Iron")
-                              ? "🏷️"
-                              : "👕"}
+                    {getCategoryDisplay(service!.category).split(" ")[0]}
                   </span>
                 </div>
 

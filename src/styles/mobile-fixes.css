@@ -1,5 +1,40 @@
 /* Mobile-specific fixes for better UX */
 
+/* Fix status bar and viewport issues on mobile */
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+}
+
+/* Fix white line on top for mobile devices with notches */
+@supports (padding: max(0px)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Additional mobile viewport fixes */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for PWA status bar */
+.App {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  background-color: #ffffff;
+}
+
 /* Prevent zoom on input focus */
 @media screen and (max-width: 768px) {
   input[type="text"],
