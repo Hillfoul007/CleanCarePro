@@ -18,6 +18,7 @@ interface LocationDetectorProps {
   className?: string;
   showInTopBar?: boolean;
   defaultValue?: string;
+  showMap?: boolean;
   onAddressSelect?: (
     address: string,
     coordinates: { lat: number; lng: number } | null,
