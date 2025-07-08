@@ -214,7 +214,7 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   };
 
   const getHandlingFee = () => {
-    return 9; // Fixed handling fee
+    return 0; // Free handling fee as shown in UI
   };
 
   const getCouponDiscount = () => {
@@ -233,29 +233,47 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   };
 
   const applyCoupon = () => {
-    const validCoupons = {
-      FIRST10: { discount: 10, description: "10% off on first order" },
-      SAVE20: { discount: 20, description: "20% off" },
-      WELCOME5: { discount: 5, description: "5% welcome discount" },
-    };
+    console.log("applyCoupon function called with code:", couponCode);
 
-    const coupon = validCoupons[couponCode.toUpperCase()];
-    if (coupon) {
-      setAppliedCoupon({
-        code: couponCode.toUpperCase(),
-        discount: coupon.discount,
-      });
-      addNotification(
-        createSuccessNotification(
-          "Coupon Applied",
-          `${coupon.discount}% discount applied successfully!`,
-        ),
-      );
-    } else {
+    try {
+      const validCoupons = {
+        FIRST10: { discount: 10, description: "10% off on first order" },
+        SAVE20: { discount: 20, description: "20% off" },
+        WELCOME5: { discount: 5, description: "5% welcome discount" },
+      };
+
+      const coupon = validCoupons[couponCode.toUpperCase()];
+      console.log("Valid coupons:", Object.keys(validCoupons));
+      console.log("Looking for coupon:", couponCode.toUpperCase());
+      console.log("Found coupon:", coupon);
+
+      if (coupon) {
+        setAppliedCoupon({
+          code: couponCode.toUpperCase(),
+          discount: coupon.discount,
+        });
+        console.log("Coupon applied successfully");
+        addNotification(
+          createSuccessNotification(
+            "Coupon Applied",
+            `${coupon.discount}% discount applied successfully!`,
+          ),
+        );
+      } else {
+        console.log("Invalid coupon code");
+        addNotification(
+          createErrorNotification(
+            "Invalid Coupon",
+            "The coupon code you entered is not valid.",
+          ),
+        );
+      }
+    } catch (error) {
+      console.error("Error in applyCoupon:", error);
       addNotification(
         createErrorNotification(
-          "Invalid Coupon",
-          "The coupon code you entered is not valid.",
+          "Error",
+          "Something went wrong while applying the coupon.",
         ),
       );
     }
@@ -934,13 +952,27 @@ Confirm this booking?`;
                   placeholder="Coupon"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (couponCode.trim()) {
+                        applyCoupon();
+                      }
+                    }
+                  }}
                   className="flex-1 h-7 text-xs"
                 />
                 <Button
-                  onClick={applyCoupon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Apply button clicked");
+                    applyCoupon();
+                  }}
                   variant="outline"
                   disabled={!couponCode.trim()}
                   className="h-7 px-2 text-xs"
+                  type="button"
                 >
                   Apply
                 </Button>

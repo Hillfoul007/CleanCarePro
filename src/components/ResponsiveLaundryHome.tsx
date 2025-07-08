@@ -608,7 +608,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
             </Button>
 
             {(useStaticFallback
-              ? serviceCategories.slice(1)
+              ? (serviceCategories || []).slice(1)
               : dynamicServices || []
             )
               .filter((category) => category.enabled !== false)
@@ -981,7 +981,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
             <div className="hidden lg:block">
               <div className="grid grid-cols-2 gap-4">
                 {(useStaticFallback
-                  ? serviceCategories.slice(1)
+                  ? (serviceCategories || []).slice(1)
                   : dynamicServices || []
                 )
                   .filter((category) => category.enabled !== false)
@@ -1035,7 +1035,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
             </Button>
 
             {(useStaticFallback
-              ? serviceCategories.slice(1)
+              ? (serviceCategories || []).slice(1)
               : dynamicServices || []
             )
               .filter((category) => category.enabled !== false)
@@ -1088,7 +1088,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                                   ? "🔥"
                                   : service.category.includes("Iron")
                                     ? "🏷️"
-                                    : "👕"}
+                                    : "���"}
                         </span>
                       </div>
 
