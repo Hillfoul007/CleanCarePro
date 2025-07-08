@@ -736,16 +736,19 @@ export class DVHostingSmsService {
       this.currentPhone = "";
       this.otpStorage.clear();
 
-      // Call backend logout for session clearing
-      fetch(`${this.getApiBaseUrl()}/auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-cache",
-        },
-      }).catch(() => {
-        // Ignore backend errors during logout
-      });
+      // Call backend logout for session clearing (only if backend is available)
+      const apiBaseUrl = this.getApiBaseUrl();
+      if (apiBaseUrl) {
+        fetch(`${apiBaseUrl}/auth/logout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        }).catch(() => {
+          // Ignore backend errors during logout
+        });
+      }
 
       this.log("✅ User logged out successfully");
     } catch (error) {
