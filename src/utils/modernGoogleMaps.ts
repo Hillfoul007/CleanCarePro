@@ -332,8 +332,8 @@ class ModernGoogleMapsService {
    * Add marker click listener
    */
   addMarkerClickListener(
-    marker: google.maps.marker.AdvancedMarkerElement,
-    callback: (event: google.maps.marker.AdvancedMarkerClickEvent) => void,
+    marker: google.maps.marker.AdvancedMarkerElement | google.maps.Marker,
+    callback: (event: any) => void,
   ): void {
     marker.addListener("click", callback);
   }
