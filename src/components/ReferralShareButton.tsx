@@ -148,8 +148,8 @@ export const ReferralShareButton = React.forwardRef<
           >
             {variant === "menu-item" ? (
               <div className="flex items-center w-full">
-                <div className="w-8 h-8 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
-                  <ButtonIcon className="h-4 w-4 text-green-600" />
+                <div className="w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-3 transition-colors duration-200">
+                  <ButtonIcon className="h-4 w-4 text-blue-600" />
                 </div>
                 <span className="font-medium">{getButtonText()}</span>
               </div>
@@ -210,8 +210,8 @@ export const ReferralShareButton = React.forwardRef<
                       Total Referrals
                     </p>
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <div className="flex items-center justify-center gap-1 text-green-600">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center justify-center gap-1 text-blue-600">
                       <TrendingUp className="h-4 w-4" />
                       <span className="font-bold text-lg">
                         {stats.successful_referrals}
@@ -241,7 +241,7 @@ export const ReferralShareButton = React.forwardRef<
                         className="flex-shrink-0"
                       >
                         {copied === "Link" ? (
-                          <Check className="h-4 w-4 text-green-600" />
+                          <Check className="h-4 w-4 text-blue-600" />
                         ) : (
                           <Copy className="h-4 w-4" />
                         )}
@@ -267,7 +267,7 @@ export const ReferralShareButton = React.forwardRef<
                         className="flex-shrink-0"
                       >
                         {copied === "Code" ? (
-                          <Check className="h-4 w-4 text-green-600" />
+                          <Check className="h-4 w-4 text-blue-600" />
                         ) : (
                           <Copy className="h-4 w-4" />
                         )}
@@ -291,7 +291,7 @@ export const ReferralShareButton = React.forwardRef<
                             name: "WhatsApp",
                             icon: MessageCircle,
                             url: socialUrls.whatsapp,
-                            color: "text-green-600",
+                            color: "text-blue-600",
                           },
                           {
                             name: "Twitter",
