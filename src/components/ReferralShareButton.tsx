@@ -139,7 +139,15 @@ export const ReferralShareButton = React.forwardRef<
     if (!currentUser) return null;
 
     return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+          if (open && onOpen) {
+            onOpen();
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <Button
             ref={ref}
