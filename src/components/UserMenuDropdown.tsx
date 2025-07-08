@@ -131,16 +131,12 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
-            <div className="cursor-pointer">
-              <Gift className="mr-2 h-4 w-4" />
-              <span className="flex-1">Refer and Earn</span>
-              <ReferralShareButton
-                userId={currentUser.id}
-                currentUser={currentUser}
-                variant="small"
-                className="ml-2 h-6 w-6 p-0 hover:bg-green-50"
-              />
-            </div>
+            <ReferralShareButton
+              userId={currentUser.id}
+              currentUser={currentUser}
+              variant="menu-item"
+              className="w-full justify-start p-2 h-auto font-normal hover:bg-accent hover:text-accent-foreground"
+            />
           </DropdownMenuItem>
 
           <DropdownMenuItem
