@@ -243,7 +243,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       });
 
       console.log(
-        "📊 Updated bookings:",
+        "��� Updated bookings:",
         updatedBookings.map((b) => ({ id: b.id || b._id, status: b.status })),
       );
       setBookings(updatedBookings);
@@ -641,7 +641,9 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-sm text-gray-900 truncate">
                             Order #
-                            {safeBooking.custom_order_id || "Generating..."}
+                            {safeBooking.custom_order_id ||
+                              safeBooking.order_id ||
+                              `CC${Date.now().toString().slice(-6)}`}
                           </h3>
                           <Badge
                             className={`${getStatusColor(safeBooking.status)} text-xs px-1.5 py-0.5`}
