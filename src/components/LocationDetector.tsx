@@ -38,6 +38,10 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedCoordinates, setSelectedCoordinates] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
