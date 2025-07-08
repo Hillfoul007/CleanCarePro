@@ -661,17 +661,11 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                               priority={service.popular}
                               fallback={
                                 <span className="text-3xl">
-                                  {service.category.includes("Men")
-                                    ? "👔"
-                                    : service.category.includes("Women")
-                                      ? "👗"
-                                      : service.category.includes("Woolen")
-                                        ? "🧥"
-                                        : service.category.includes("Steam")
-                                          ? "🔥"
-                                          : service.category.includes("Iron")
-                                            ? "🏷️"
-                                            : "👕"}
+                                  {
+                                    getCategoryDisplay(service.category).split(
+                                      " ",
+                                    )[0]
+                                  }
                                 </span>
                               }
                             />
@@ -691,7 +685,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
                                   : service.category.includes("Woolen")
                                     ? "🧥"
                                     : service.category.includes("Steam")
-                                      ? "��"
+                                      ? "🔥"
                                       : service.category.includes("Iron")
                                         ? "🏷️"
                                         : "👕"}
