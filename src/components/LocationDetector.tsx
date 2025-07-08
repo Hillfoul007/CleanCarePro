@@ -106,38 +106,31 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
   const selectSuggestion = (suggestion: any) => {
     setSearchValue(suggestion.description);
     setCurrentLocation(suggestion.description);
-    onLocationChange(suggestion.description);
     setSuggestions([]);
     setIsOpen(false);
 
-    if (googleMapsLoaded && window.google) {
-      try {
-        // Use new Place API for getting place details
-        const getPlaceDetailsAsync = async () => {
-          const { getPlaceDetails } = await import(
-            "@/utils/autocompleteSuggestionService"
-          );
-          const place = await getPlaceDetails(suggestion.place_id);
+    // If suggestion has coordinates, use them
+    if (suggestion.coordinates) {
+      onLocationChange(suggestion.description, suggestion.coordinates);
 
-          if (place?.geometry?.location) {
-            const coordinates = {
-              lat:
-                typeof place.geometry.location.lat === "function"
-                  ? place.geometry.location.lat()
-                  : place.geometry.location.lat,
-              lng:
-                typeof place.geometry.location.lng === "function"
-                  ? place.geometry.location.lng()
-                  : place.geometry.location.lng,
-            };
-            onLocationChange(suggestion.description, coordinates);
-          }
-        };
-
-        getPlaceDetailsAsync().catch(console.error);
-      } catch (error) {
-        console.error("Error getting place details:", error);
+      if (onAddressSelect) {
+        onAddressSelect(suggestion.description, suggestion.coordinates);
       }
+    } else {
+      // Fallback to geocoding if no coordinates
+      leafletLocationService
+        .geocodeAddress(suggestion.description)
+        .then((result) => {
+          onLocationChange(suggestion.description, result.coordinates);
+
+          if (onAddressSelect) {
+            onAddressSelect(suggestion.description, result.coordinates);
+          }
+        })
+        .catch((error) => {
+          console.error("Error geocoding suggestion:", error);
+          onLocationChange(suggestion.description);
+        });
     }
   };
 
