@@ -339,10 +339,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
 
       {/* Savings Banner - Zomato Style */}
       {savingsAmount > 0 && (
-        <div className="bg-green-50 border-l-4 border-green-500 px-4 py-3 mx-4 my-2 rounded-r-lg">
+        <div className="bg-blue-50 border-l-4 border-blue-500 px-4 py-3 mx-4 my-2 rounded-r-lg">
           <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4 text-green-600" />
-            <span className="text-sm font-medium text-green-800">
+            <Tag className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-800">
               You saved ₹{savingsAmount} on this order
             </span>
           </div>
