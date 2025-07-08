@@ -42,6 +42,7 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showAddressesModal, setShowAddressesModal] = useState(false);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [clickedItem, setClickedItem] = useState<string | null>(null);
 
   const getInitials = (name: string) => {
     return name
