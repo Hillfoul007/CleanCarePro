@@ -1,3 +1,5 @@
+import { isBackendAvailable } from "../config/env";
+
 interface User {
   _id?: string;
   phone: string;
