@@ -43,7 +43,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     detectCurrentLocation();
   }, []);
 
-  const detectCurrentLocation = () => {
+  const detectCurrentLocation = async () => {
     if (!navigator.geolocation) {
       setError("Geolocation not supported.");
       return;
@@ -52,171 +52,38 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({
     setIsDetecting(true);
     setError("");
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude, accuracy } = position.coords;
-
-          if (googleMapsLoaded && window.google && window.google.maps) {
-            const geocoder = new window.google.maps.Geocoder();
-            const latlng = { lat: latitude, lng: longitude };
-
-            geocoder.geocode({ location: latlng }, (results, status) => {
-              setIsDetecting(false);
-              if (status === "OK" && results[0]) {
-                let bestAddress = results[0].formatted_address;
-                let addressWithHouseNumber = null;
-
-                // Prioritize results with house numbers for more precise detection
-                for (const result of results) {
-                  const hasHouseNumber = result.address_components?.some(
-                    (component) => component.types.includes("street_number"),
-                  );
-
-                  if (
-                    hasHouseNumber &&
-                    (result.types.includes("street_address") ||
-                      result.types.includes("premise") ||
-                      result.types.includes("subpremise"))
-                  ) {
-                    addressWithHouseNumber = result.formatted_address;
-                    break;
-                  }
-
-                  if (
-                    result.types.includes("street_address") ||
-                    result.types.includes("premise") ||
-                    result.types.includes("subpremise") ||
-                    result.types.includes("route") ||
-                    result.types.includes("point_of_interest")
-                  ) {
-                    bestAddress = result.formatted_address;
-                  }
-                }
-
-                // Use address with house number if available, otherwise use best address
-                const finalAddress = addressWithHouseNumber || bestAddress;
-
-                setCurrentLocation(finalAddress);
-                setSearchValue(finalAddress);
-                onLocationChange(finalAddress, {
-                  lat: latitude,
-                  lng: longitude,
-                  accuracy,
-                });
-
-                // If we have a house number result, also pass the detailed components
-                if (addressWithHouseNumber && onAddressSelect) {
-                  onAddressSelect(finalAddress, {
-                    lat: latitude,
-                    lng: longitude,
-                  });
-                }
-              } else {
-                const fallback = `Location ${latitude}, ${longitude}`;
-                setCurrentLocation(fallback);
-                setSearchValue(fallback);
-                onLocationChange(fallback, {
-                  lat: latitude,
-                  lng: longitude,
-                  accuracy,
-                });
-              }
-            });
-            return;
-          }
-
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            let address = "";
-            if (data.address) {
-              const parts = [];
-              // Include house number if available
-              if (data.address.house_number)
-                parts.push(data.address.house_number);
-              if (data.address.road) parts.push(data.address.road);
-              if (data.address.suburb || data.address.neighbourhood)
-                parts.push(data.address.suburb || data.address.neighbourhood);
-              if (
-                data.address.city ||
-                data.address.town ||
-                data.address.village
-              )
-                parts.push(
-                  data.address.city ||
-                    data.address.town ||
-                    data.address.village,
-                );
-              if (data.address.state) parts.push(data.address.state);
-              if (data.address.postcode) parts.push(data.address.postcode);
-              address = parts.join(", ") || data.display_name;
-            } else {
-              address = data.display_name || `${latitude}, ${longitude}`;
-            }
-
-            setCurrentLocation(address);
-            setSearchValue(address);
-            onLocationChange(address, {
-              lat: latitude,
-              lng: longitude,
-              accuracy,
-            });
-            setIsDetecting(false);
-            return;
-          }
-
-          const fallback = `Location ${latitude}, ${longitude}`;
-          setCurrentLocation(fallback);
-          setSearchValue(fallback);
-          onLocationChange(fallback, {
-            lat: latitude,
-            lng: longitude,
-            accuracy,
-          });
-          setIsDetecting(false);
-        } catch (err) {
-          console.error(err);
-          const fallback = "Your Current Location";
-          setCurrentLocation(fallback);
-          setSearchValue(fallback);
-          onLocationChange(fallback, {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-          });
-          setIsDetecting(false);
-        }
-      },
-      (error) => {
-        setIsDetecting(false);
-        let errorMessage = "";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = "Location access denied";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = "Location unavailable";
-            break;
-          case error.TIMEOUT:
-            errorMessage = "Location request timed out";
-            break;
-          default:
-            errorMessage = "Unknown location error";
-        }
-        setError(errorMessage);
-        setCurrentLocation(errorMessage);
-        onLocationChange(errorMessage);
-      },
-      {
+    try {
+      // Get current position using our service
+      const coordinates = await leafletLocationService.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 30000,
         maximumAge: 60000,
-      },
-    );
+      });
+
+      // Reverse geocode to get address
+      const address = await leafletLocationService.reverseGeocode(coordinates);
+
+      setCurrentLocation(address);
+      setSearchValue(address);
+      onLocationChange(address, coordinates);
+
+      // Call onAddressSelect if provided
+      if (onAddressSelect) {
+        onAddressSelect(address, {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+        });
+      }
+
+      setIsDetecting(false);
+    } catch (error) {
+      setIsDetecting(false);
+      const errorMessage =
+        error instanceof Error ? error.message : "Location detection failed";
+      setError(errorMessage);
+      setCurrentLocation(errorMessage);
+      onLocationChange(errorMessage);
+    }
   };
 
   useEffect(() => {
