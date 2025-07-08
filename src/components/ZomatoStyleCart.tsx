@@ -429,7 +429,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
         <Button
           variant="ghost"
           onClick={onBack}
-          className="w-full text-green-600 border border-green-600 hover:bg-green-50"
+          className="w-full text-blue-600 border border-blue-600 hover:bg-blue-50"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add more items
@@ -468,7 +468,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                   }}
                   variant="outline"
                   disabled={!couponCode.trim()}
-                  className="border-green-600 text-green-600 hover:bg-green-50"
+                  className="border-blue-600 text-blue-600 hover:bg-blue-50"
                   type="button"
                 >
                   Apply
@@ -480,12 +480,12 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-0 shadow-sm bg-green-50">
+          <Card className="border-0 shadow-sm bg-blue-50">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="font-medium text-green-800">
+                  <CheckCircle className="h-5 w-5 text-blue-600" />
+                  <span className="font-medium text-blue-800">
                     Upto {appliedCoupon.discount}% OFF applied!
                   </span>
                 </div>
@@ -493,7 +493,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                   onClick={removeCoupon}
                   variant="ghost"
                   size="sm"
-                  className="text-green-600 hover:bg-green-100"
+                  className="text-blue-600 hover:bg-blue-100"
                 >
                   Remove
                 </Button>
@@ -523,7 +523,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                 <Home className="h-4 w-4 text-gray-600" />
                 <span className="font-medium">Delivery at Home</span>
               </div>
-              <Button variant="ghost" size="sm" className="text-green-600">
+              <Button variant="ghost" size="sm" className="text-blue-600">
                 <ArrowLeft className="h-4 w-4 rotate-180" />
               </Button>
             </div>
@@ -537,7 +537,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                 initialAddress={addressData}
               />
             )}
-            <p className="text-sm text-green-600 mt-2">
+            <p className="text-sm text-blue-600 mt-2">
               Add instructions for delivery partner
             </p>
           </CardContent>
@@ -577,7 +577,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
             <div className="flex items-center gap-2 mb-4">
               <CreditCard className="h-4 w-4 text-gray-600" />
               <span className="font-medium">Total Bill ₹{getSubtotal()}</span>
-              <span className="text-sm text-green-600 font-medium">
+              <span className="text-sm text-blue-600 font-medium">
                 ₹{getTotal()}
               </span>
               <Button variant="ghost" size="sm" className="ml-auto">
@@ -591,7 +591,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                 <span>₹{getSubtotal()}</span>
               </div>
 
-              <div className="flex justify-between text-green-600">
+              <div className="flex justify-between text-blue-600">
                 <span>Delivery Fee</span>
                 <div className="flex items-center gap-2">
                   <span className="line-through text-gray-400 text-sm">
@@ -601,7 +601,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                 </div>
               </div>
 
-              <div className="flex justify-between text-green-600">
+              <div className="flex justify-between text-blue-600">
                 <span>Handling Fee</span>
                 <div className="flex items-center gap-2">
                   <span className="line-through text-gray-400 text-sm">₹9</span>
@@ -610,7 +610,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
               </div>
 
               {appliedCoupon && (
-                <div className="flex justify-between text-green-600">
+                <div className="flex justify-between text-blue-600">
                   <span>Coupon Discount</span>
                   <span>-₹{getCouponDiscount()}</span>
                 </div>
@@ -641,7 +641,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
         <Button
           onClick={handleProceedToCheckout}
           disabled={cartItems.length === 0 || isProcessingCheckout}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-lg font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isProcessingCheckout ? (
             <>
