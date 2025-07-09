@@ -653,7 +653,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                             Order #
                             {safeBooking.custom_order_id ||
                               safeBooking.order_id ||
-                              `CC${Date.now().toString().slice(-6)}`}
+                              `CC${(safeBooking.id || "").toString().slice(-6) || Math.random().toString().slice(-6)}`}
                           </h3>
                           <Badge
                             className={`${getStatusColor(safeBooking.status)} text-xs px-1.5 py-0.5`}
@@ -832,7 +832,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                               #
                               {safeBooking.custom_order_id ||
                                 safeBooking.order_id ||
-                                `CC${Date.now().toString().slice(-6)}`}
+                                `CC${(safeBooking.id || "").toString().slice(-6) || Math.random().toString().slice(-6)}`}
                             </span>
                           </div>
                           <div className="flex justify-between">
