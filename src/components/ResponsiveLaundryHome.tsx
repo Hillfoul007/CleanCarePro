@@ -192,6 +192,20 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
     }
   }, []);
 
+  // Listen for cart clearing events
+  useEffect(() => {
+    const handleClearCart = () => {
+      console.log("🧹 ResponsiveLaundryHome: Received cart clear event");
+      setCart({});
+      localStorage.removeItem("laundry_cart");
+    };
+
+    window.addEventListener("clearCart", handleClearCart);
+    return () => {
+      window.removeEventListener("clearCart", handleClearCart);
+    };
+  }, []);
+
   // Load dynamic services
   useEffect(() => {
     const loadDynamicServices = async () => {

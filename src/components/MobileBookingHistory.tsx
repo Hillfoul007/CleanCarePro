@@ -569,10 +569,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   booking.id || booking._id,
                   `booking_${index}`,
                 ),
-                custom_order_id: sanitizeValue(
-                  booking.custom_order_id,
-                  "A20250700099"
-                ),
+                custom_order_id: sanitizeValue(booking.custom_order_id, ""),
                 service: sanitizeValue(booking.service, "Home Service"),
                 provider_name: sanitizeValue(
                   booking.provider_name,
@@ -584,30 +581,11 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   booking.additional_details,
                   "",
                 ),
-                // Customer information fields - only include if they have actual values
-                ...(booking.name && { name: sanitizeValue(booking.name, "") }),
-                ...(booking.customerName && {
-                  customerName: sanitizeValue(booking.customerName, ""),
-                }),
-                ...(booking.customer_name && {
-                  customer_name: sanitizeValue(booking.customer_name, ""),
-                }),
-                ...(booking.phone && {
-                  phone: sanitizeValue(booking.phone, ""),
-                }),
-                ...(booking.customerPhone && {
-                  customerPhone: sanitizeValue(booking.customerPhone, ""),
-                }),
-                ...(booking.customer_phone && {
-                  customer_phone: sanitizeValue(booking.customer_phone, ""),
-                }),
-                // Order ID fields - only include if they have actual values
-                ...(booking.custom_order_id && {
-                  custom_order_id: sanitizeValue(booking.custom_order_id, ""),
-                }),
-                ...(booking.order_id && {
-                  order_id: sanitizeValue(booking.order_id, ""),
-                }),
+                // Customer information fields - always include for proper fallback
+                name: sanitizeValue(booking.name, "Not specified"),
+                phone: sanitizeValue(booking.phone, "Not specified"),
+                // Order ID fields - always include for proper fallback
+                order_id: sanitizeValue(booking.order_id, ""),
                 // Date and time fields
                 pickupDate: sanitizeValue(booking.pickupDate, ""),
                 deliveryDate: sanitizeValue(booking.deliveryDate, ""),
@@ -675,7 +653,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                             Order #
                             {safeBooking.custom_order_id ||
                               safeBooking.order_id ||
-                              `CC${Date.now().toString().slice(-6)}`}
+                              `CC${(safeBooking.id || "").toString().slice(-6) || Math.random().toString().slice(-6)}`}
                           </h3>
                           <Badge
                             className={`${getStatusColor(safeBooking.status)} text-xs px-1.5 py-0.5`}
@@ -854,25 +832,19 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                               #
                               {safeBooking.custom_order_id ||
                                 safeBooking.order_id ||
-                                `CC${Date.now().toString().slice(-6)}`}
+                                `CC${(safeBooking.id || "").toString().slice(-6) || Math.random().toString().slice(-6)}`}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Customer Name</span>
                             <span className="font-medium text-gray-900">
-                              {safeBooking.name ||
-                                safeBooking.customerName ||
-                                safeBooking.customer_name ||
-                                "Not specified"}
+                              {safeBooking.name || "Not specified"}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Phone Number</span>
                             <span className="font-mono font-medium text-gray-900">
-                              {safeBooking.phone ||
-                                safeBooking.customerPhone ||
-                                safeBooking.customer_phone ||
-                                "Not specified"}
+                              {safeBooking.phone || "Not specified"}
                             </span>
                           </div>
                           <div className="flex justify-between">

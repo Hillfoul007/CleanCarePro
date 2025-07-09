@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +27,37 @@ const MobileServiceCategories: React.FC<ServiceCategoriesProps> = ({
   onMultipleServicesSelect,
 }) => {
   const [cart, setCart] = useState<any[]>([]);
+
+  // Load cart from localStorage on component mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem("mobile_service_cart");
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (error) {
+        console.error("Error loading mobile cart:", error);
+      }
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("mobile_service_cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Listen for cart clearing events
+  useEffect(() => {
+    const handleClearCart = () => {
+      console.log("🧹 MobileServiceCategories: Received cart clear event");
+      setCart([]);
+      localStorage.removeItem("mobile_service_cart");
+    };
+
+    window.addEventListener("clearCart", handleClearCart);
+    return () => {
+      window.removeEventListener("clearCart", handleClearCart);
+    };
+  }, []);
 
   const categories = [
     {

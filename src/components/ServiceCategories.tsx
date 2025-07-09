@@ -47,6 +47,20 @@ const ServiceCategories: React.FC<ServiceCategoriesProps> = ({
     localStorage.setItem("service_cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Listen for cart clearing events
+  useEffect(() => {
+    const handleClearCart = () => {
+      console.log("🧹 ServiceCategories: Received cart clear event");
+      setCart([]);
+      localStorage.removeItem("service_cart");
+    };
+
+    window.addEventListener("clearCart", handleClearCart);
+    return () => {
+      window.removeEventListener("clearCart", handleClearCart);
+    };
+  }, []);
+
   const categories = [
     {
       name: "Household Services",
