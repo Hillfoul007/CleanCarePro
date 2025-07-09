@@ -571,7 +571,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                 ),
                 custom_order_id: sanitizeValue(
                   booking.custom_order_id,
-                  "A20250700099"
+                  "A20250700099",
                 ),
                 service: sanitizeValue(booking.service, "Home Service"),
                 provider_name: sanitizeValue(
@@ -860,19 +860,13 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                           <div className="flex justify-between">
                             <span className="text-gray-600">Customer Name</span>
                             <span className="font-medium text-gray-900">
-                              {safeBooking.name ||
-                                safeBooking.customerName ||
-                                safeBooking.customer_name ||
-                                "Not specified"}
+                              {safeBooking.name || "Not specified"}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Phone Number</span>
                             <span className="font-mono font-medium text-gray-900">
-                              {safeBooking.phone ||
-                                safeBooking.customerPhone ||
-                                safeBooking.customer_phone ||
-                                "Not specified"}
+                              {safeBooking.phone || "Not specified"}
                             </span>
                           </div>
                           <div className="flex justify-between">
