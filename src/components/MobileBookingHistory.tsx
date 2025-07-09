@@ -584,30 +584,11 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   booking.additional_details,
                   "",
                 ),
-                // Customer information fields - only include if they have actual values
-                ...(booking.name && { name: sanitizeValue(booking.name, "") }),
-                ...(booking.customerName && {
-                  customerName: sanitizeValue(booking.customerName, ""),
-                }),
-                ...(booking.customer_name && {
-                  customer_name: sanitizeValue(booking.customer_name, ""),
-                }),
-                ...(booking.phone && {
-                  phone: sanitizeValue(booking.phone, ""),
-                }),
-                ...(booking.customerPhone && {
-                  customerPhone: sanitizeValue(booking.customerPhone, ""),
-                }),
-                ...(booking.customer_phone && {
-                  customer_phone: sanitizeValue(booking.customer_phone, ""),
-                }),
-                // Order ID fields - only include if they have actual values
-                ...(booking.custom_order_id && {
-                  custom_order_id: sanitizeValue(booking.custom_order_id, ""),
-                }),
-                ...(booking.order_id && {
-                  order_id: sanitizeValue(booking.order_id, ""),
-                }),
+                // Customer information fields - always include for proper fallback
+                name: sanitizeValue(booking.name, "Not specified"),
+                phone: sanitizeValue(booking.phone, "Not specified"),
+                // Order ID fields - always include for proper fallback
+                order_id: sanitizeValue(booking.order_id, ""),
                 // Date and time fields
                 pickupDate: sanitizeValue(booking.pickupDate, ""),
                 deliveryDate: sanitizeValue(booking.deliveryDate, ""),
