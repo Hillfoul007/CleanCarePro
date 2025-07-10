@@ -1332,16 +1332,26 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-4 p-4 border-b border-gray-200 bg-white sticky top-0 z-10 safe-area-top">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white sticky top-0 z-10 safe-area-top">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={onClose}
+            className="h-12 w-12 p-0 hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-700" />
+          </Button>
+          <h1 className="text-lg font-medium text-gray-900">Add Address</h1>
+        </div>
         <Button
           variant="ghost"
           size="lg"
           onClick={onClose}
-          className="h-12 w-12 p-0"
+          className="h-12 w-12 p-0 hover:bg-gray-100"
         >
-          <ArrowLeft className="h-6 w-6" />
+          <X className="h-6 w-6 text-gray-700" />
         </Button>
-        <h1 className="text-lg font-medium text-gray-900">Add Address</h1>
       </div>
 
       {/* Scrollable Content */}
