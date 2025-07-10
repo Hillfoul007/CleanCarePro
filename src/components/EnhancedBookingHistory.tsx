@@ -114,9 +114,12 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
             mongoBookings = filterProductionBookings(mongoResponse.data).map(
               (booking: any) => ({
                 id: booking._id,
+                custom_order_id: booking.custom_order_id, // Add custom order ID
+                order_id: booking.custom_order_id, // Also map to order_id for compatibility
                 userId: booking.customer_id,
                 services: booking.services || [booking.service],
                 totalAmount: booking.final_amount || booking.total_price,
+                item_prices: booking.item_prices, // Include item prices from database
                 status: booking.status,
                 pickupDate: booking.scheduled_date,
                 deliveryDate: booking.scheduled_date, // Could calculate +1 day
