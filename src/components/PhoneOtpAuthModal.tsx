@@ -512,6 +512,29 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
                 </p>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="referralCode">Referral Code (Optional)</Label>
+                <div className="relative">
+                  <Gift className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="referralCode"
+                    type="text"
+                    placeholder="Enter referral code"
+                    value={formData.referralCode}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        referralCode: e.target.value.toUpperCase(),
+                      })
+                    }
+                    className="pl-10"
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  Get 50% off on your first order with a valid referral code
+                </p>
+              </div>
+
               {error && (
                 <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
                   <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
