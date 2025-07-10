@@ -67,7 +67,7 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "iron",
     estimatedTime: "24-48 hours",
-    image
+    image:
       "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Ff93ebf096d1e43529c8a1e3625dea9da?format=webp&width=800",
 
   },
