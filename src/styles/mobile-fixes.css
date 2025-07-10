@@ -181,6 +181,22 @@ select {
   padding-top: env(safe-area-inset-top);
 }
 
+/* Better safe area handling for headers with background */
+.safe-area-header {
+  position: relative;
+}
+
+.safe-area-header::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0);
+  background: inherit;
+  z-index: inherit;
+}
+
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
