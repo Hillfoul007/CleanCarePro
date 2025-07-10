@@ -1,6 +1,8 @@
 // Production MongoDB client for CleanCare Pro
 // This replaces demo functionality with real MongoDB integration
 
+import { authHelpers as mongoAuthHelpers } from "../mongodb/authHelpers";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
