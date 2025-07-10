@@ -651,25 +651,20 @@ export class DVHostingSmsService {
         localStorage.getItem("auth_token");
       const user = this.getCurrentUser();
 
-      // More thorough validation
+      // Simple validation - if we have token and user data, user is authenticated
       if (!token || !user) {
         return false;
       }
 
-      // For JWT tokens from backend, don't perform client-side expiration check
-      // Backend will handle token validation
-      if (token.startsWith("eyJ") || token.includes(".")) {
-        // This is a JWT token - let backend handle expiration
-        return true;
-      }
-
-      // For locally generated tokens (fallback), remove expiration check entirely
-      // Users should stay logged in until they explicitly log out
+      // Never check token expiration - users stay logged in until manual logout
+      // This ensures sessions persist across refreshes and time
+      console.log("✅ User is authenticated - session preserved");
       return true;
     } catch (error) {
       console.error("Error checking authentication:", error);
-      // Don't automatically logout on errors - preserve user session
-      return false;
+      // Never automatically logout on errors - preserve user session
+      console.warn("🔒 Preserving authentication state despite error");
+      return true; // Return true to preserve session
     }
   }
 
@@ -680,16 +675,25 @@ export class DVHostingSmsService {
         localStorage.getItem("current_user");
       if (userStr) {
         const user = JSON.parse(userStr);
-        // Verify user data is valid
-        if (user && (user.phone || user.id || user._id)) {
+        // Very lenient validation - any user object is considered valid
+        if (user && typeof user === "object") {
           return user;
         }
       }
       return null;
     } catch (error) {
       console.error("Error getting current user:", error);
-      // Don't automatically clear data on errors - preserve user session
-      console.warn("Corrupted user data detected, but preserving session");
+      // Never clear data on errors - try to preserve whatever we can
+      console.warn("🔒 Error parsing user data, but preserving session");
+
+      // Try to return a basic user object if localStorage has data
+      const userStr =
+        localStorage.getItem("cleancare_user") ||
+        localStorage.getItem("current_user");
+      if (userStr) {
+        console.warn("📋 Attempting to preserve raw user data");
+        return { rawData: userStr }; // Return raw data to prevent total loss
+      }
       return null;
     }
   }

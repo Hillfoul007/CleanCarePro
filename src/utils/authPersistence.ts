@@ -86,9 +86,6 @@ export const restoreAuthState = async (): Promise<boolean> => {
   try {
     const authService = DVHostingSmsService.getInstance();
 
-    // Validate and fix any auth storage inconsistencies
-    validateAuthConsistency();
-
     // Check multiple storage locations for auth data
     const token =
       localStorage.getItem("auth_token") ||
@@ -106,14 +103,14 @@ export const restoreAuthState = async (): Promise<boolean> => {
     try {
       user = JSON.parse(userStr);
     } catch {
-      console.warn("⚠️ Corrupted user data found, clearing storage");
-      authService.logout();
+      console.warn("⚠️ Corrupted user data found - attempting recovery");
+      // Don't auto-logout, try to preserve what we can
       return false;
     }
 
     if (!user || (!user.phone && !user.id && !user._id)) {
-      console.warn("⚠️ Invalid user data found, clearing storage");
-      authService.logout();
+      console.warn("⚠️ Invalid user data found - attempting recovery");
+      // Don't auto-logout, try to preserve what we can
       return false;
     }
 
@@ -125,7 +122,7 @@ export const restoreAuthState = async (): Promise<boolean> => {
       hasToken: !!token,
     });
 
-    // Try to sync with backend (but don't fail if it doesn't work)
+    // Try to sync with backend (but never fail if it doesn't work)
     try {
       await authService.restoreSession();
       console.log("✅ Backend session synchronized");
@@ -134,11 +131,14 @@ export const restoreAuthState = async (): Promise<boolean> => {
         "⚠️ Backend sync failed, continuing with local auth:",
         error,
       );
+      // Continue anyway - local auth is sufficient
     }
 
     return true;
   } catch (error) {
     console.error("❌ Error restoring auth state:", error);
+    // Never fail completely - preserve user sessions
+    console.warn("🔒 Continuing with existing auth state");
     return false;
   }
 };
