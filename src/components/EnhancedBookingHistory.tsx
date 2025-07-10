@@ -724,17 +724,8 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 #
                                 {booking.custom_order_id ||
                                   booking.order_id ||
-                                  `CC${Date.now().toString().slice(-6)}`}
+                                  "Order ID not available"}
                               </h3>
-                              <div className="flex items-center gap-2 text-xs text-gray-700">
-                                <span className="font-medium">
-                                  {booking.name || "Customer"}
-                                </span>
-                                <span>•</span>
-                                <span className="font-mono">
-                                  {booking.phone || "N/A"}
-                                </span>
-                              </div>
                             </div>
                             <Badge
                               className={`${getStatusColor(booking.status)} text-xs px-1.5 py-0.5 ml-auto`}
@@ -859,29 +850,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 #
                                 {booking.custom_order_id ||
                                   booking.order_id ||
-                                  `CC${Date.now().toString().slice(-6)}`}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-xs">
-                              <span className="text-gray-600">
-                                Customer Name
-                              </span>
-                              <span className="font-medium text-gray-900">
-                                {booking.name ||
-                                  booking.customerName ||
-                                  booking.customer_name ||
-                                  "Not specified"}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-xs">
-                              <span className="text-gray-600">
-                                Phone Number
-                              </span>
-                              <span className="font-mono font-medium text-gray-900">
-                                {booking.phone ||
-                                  booking.customerPhone ||
-                                  booking.customer_phone ||
-                                  "Not specified"}
+                                  "Not available"}
                               </span>
                             </div>
                             <div className="flex justify-between items-center text-xs">
