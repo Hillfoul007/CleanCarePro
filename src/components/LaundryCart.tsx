@@ -31,6 +31,7 @@ import {
   getCategoryDisplay,
 } from "@/data/laundryServices";
 import { OTPAuthService } from "@/services/otpAuthService";
+import { ReferralService } from "@/services/referralService";
 import {
   saveBookingFormData,
   getBookingFormData,
@@ -72,6 +73,7 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   } | null>(null);
 
   const authService = OTPAuthService.getInstance();
+  const referralService = ReferralService.getInstance();
 
   // Load saved form data on component mount (excluding date autofill)
   useEffect(() => {
@@ -224,6 +226,15 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   const getCouponDiscount = () => {
     if (!appliedCoupon) return 0;
     const subtotal = getSubtotal();
+
+    if (appliedCoupon.isReferral && appliedCoupon.maxDiscount) {
+      // For referral codes, apply max discount limit
+      const discountAmount = Math.round(
+        subtotal * (appliedCoupon.discount / 100),
+      );
+      return Math.min(discountAmount, appliedCoupon.maxDiscount);
+    }
+
     return Math.round(subtotal * (appliedCoupon.discount / 100));
   };
 
@@ -240,6 +251,30 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     console.log("applyCoupon function called with code:", couponCode);
 
     try {
+      // First check if it's a referral code
+      const referralDiscount = referralService.validateReferralCode(
+        couponCode,
+        currentUser,
+      );
+
+      if (referralDiscount) {
+        setAppliedCoupon({
+          code: referralDiscount.code,
+          discount: referralDiscount.discount,
+          maxDiscount: referralDiscount.maxDiscount,
+          isReferral: true,
+        });
+
+        addNotification(
+          createSuccessNotification(
+            "Referral Code Applied!",
+            referralDiscount.description,
+          ),
+        );
+        return;
+      }
+
+      // Then check regular coupons
       const validCoupons = {
         FIRST10: { discount: 10, description: "10% off on first order" },
         SAVE20: { discount: 20, description: "20% off" },
