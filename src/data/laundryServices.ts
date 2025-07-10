@@ -27,7 +27,8 @@ export const laundryServices: LaundryService[] = [
     category: "laundry",
     estimatedTime: "24-48 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F50ce6c1ac379418c947c17c24ccab90c?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F6b3c2663d3f1453b8e3aca8210aa20e8?format=webp&width=800",
+
     popular: true,
   },
   {
@@ -40,7 +41,8 @@ export const laundryServices: LaundryService[] = [
     category: "laundry",
     estimatedTime: "24-48 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe2cd35058c474d539527c1c79ae91bcd?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F85560ebfcaaa46bba67b1b09dfa0998e?format=webp&width=800",
+      
     popular: true,
   },
 
@@ -54,7 +56,7 @@ export const laundryServices: LaundryService[] = [
     category: "iron",
     estimatedTime: "24 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F073f84434da746a49ef6185f9a6115fe?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F4566c495ee9f41b59d0bc341b7b430ae?format=webp&width=800",
   },
   {
     id: "steam-iron-suit",
@@ -65,8 +67,9 @@ export const laundryServices: LaundryService[] = [
     unit: "SET",
     category: "iron",
     estimatedTime: "24-48 hours",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F81690113445d43dd96096a2035c2321a?format=webp&width=800",
+    image
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Ff93ebf096d1e43529c8a1e3625dea9da?format=webp&width=800",
+
   },
   {
     id: "steam-iron-ladies-suit",
@@ -78,7 +81,8 @@ export const laundryServices: LaundryService[] = [
     category: "iron",
     estimatedTime: "24 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fdba4a2f0f3634bac925b88aade98dba7?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Ff93ebf096d1e43529c8a1e3625dea9da?format=webp&width=800",
+  
   },
   {
     id: "steam-iron-general",
@@ -90,13 +94,14 @@ export const laundryServices: LaundryService[] = [
     category: "iron",
     estimatedTime: "24 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F0eacdeab65264e0fa3186728a9e3c436?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Ff93ebf096d1e43529c8a1e3625dea9da?format=webp&width=800",
+
   },
 
   // Men's Dry Clean
   {
     id: "dry-clean-mens-shirt",
-    name: "Dry Clean - Men's Shirt/T-Shirt",
+    name: "Men's Shirt/T-Shirt",
     description: "Professional dry cleaning for men's shirts and t-shirts.",
     price: 100,
     unit: "PC",
@@ -107,7 +112,7 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-mens-trouser",
-    name: "Dry Clean - Trouser/Jeans",
+    name: "Trouser/Jeans",
     description: "Expert dry cleaning for men's trousers and jeans.",
     price: 120,
     unit: "PC",
@@ -118,75 +123,81 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-mens-coat",
-    name: "Dry Clean - Coat",
+    name: "Coat",
     description: "Premium dry cleaning for men's coats and blazers.",
     price: 240,
     unit: "PC",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F3a5480ed186e482dbc6e1adb3253c827?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F81690113445d43dd96096a2035c2321a?format=webp&width=800",
+
   },
   {
     id: "dry-clean-mens-suit-2pc",
-    name: "Dry Clean - Men's Suit 2 PC",
+    name: "Men's Suit 2 PC",
     description: "Complete dry cleaning service for 2-piece men's suits.",
     price: 360,
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F4c9284cb2386421c877de620c984ee10?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F9862930473254d15aa4f75f96c5eb95c?format=webp&width=800",
+
   },
   {
     id: "dry-clean-mens-suit-3pc",
-    name: "Dry Clean - Men's Suit 3 PC",
+    name: "Men's Suit 3 PC",
     description: "Complete dry cleaning service for 3-piece men's suits.",
     price: 540,
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe8317bf58a5a44548b41ef6110314859?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe917c541f27242dd87d3aad5496d52a1?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-kurta-pyjama",
-    name: "Dry Clean - Kurta Pyjama (2 PC)",
+    name: "Kurta Pyjama (2 PC)",
     description: "Traditional dry cleaning for kurta pyjama sets.",
     price: 220,
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F53749104ab8c4c869d6d2cc00eb0707b?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe2cd35058c474d539527c1c79ae91bcd?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-achkan-sherwani",
-    name: "Dry Clean - Achkan / Sherwani",
+    name: "Achkan / Sherwani",
     description: "Premium dry cleaning for traditional formal wear.",
     price: 300,
     unit: "SET",
     category: "mens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F70bdfc9146d345c683c2cbe94657643d?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F073f84434da746a49ef6185f9a6115fe?format=webp&width=800",
+      
   },
 
   // Women's Dry Clean
   {
     id: "dry-clean-womens-kurta",
-    name: "Dry Clean - Kurta",
+    name: "Kurta",
     description: "Professional dry cleaning for women's kurtas.",
     price: 120,
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fd03681910e5141bb81c10fda58a2f990?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe2cd35058c474d539527c1c79ae91bcd?format=webp&width=800",
+
   },
   {
     id: "dry-clean-salwar-plazo",
-    name: "Dry Clean - Salwar/Plazo/Dupatta",
+    name: "Salwar/Plazo/Dupatta",
     description: "Expert dry cleaning for salwar, plazo, and dupatta.",
     price: 120,
     unit: "PC",
@@ -197,7 +208,7 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-saree-simple",
-    name: "Dry Clean - Saree Simple/Silk",
+    name: "Saree Simple/Silk",
     description: "Careful dry cleaning for simple and silk sarees.",
     price: 240,
     unit: "PC",
@@ -208,18 +219,19 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-saree-heavy",
-    name: "Dry Clean - Saree (Heavy Work)",
+    name: "Saree (Heavy Work)",
     description: "Specialized dry cleaning for heavily embroidered sarees.",
     price: 300,
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F6b3c2663d3f1453b8e3aca8210aa20e8?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F244ad171191f4fbcb5358b80ceaa36aa?format=webp&width=800",
+ 
   },
   {
     id: "dry-clean-blouse",
-    name: "Dry Clean - Blouse",
+    name: "Blouse",
     description: "Delicate dry cleaning for blouses and tops.",
     price: 90,
     unit: "PC",
@@ -230,7 +242,7 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-dress",
-    name: "Dry Clean - Dress",
+    name: "Dress",
     description: "Professional dry cleaning for women's dresses.",
     price: 240,
     unit: "PC",
@@ -241,7 +253,7 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-top",
-    name: "Dry Clean - Top",
+    name: "Top",
     description: "Quality dry cleaning for women's tops and blouses.",
     price: 140,
     unit: "PC",
@@ -252,86 +264,93 @@ export const laundryServices: LaundryService[] = [
   },
   {
     id: "dry-clean-skirt-heavy",
-    name: "Dry Clean - Skirt (Heavy Work)",
+    name: "Skirt (Heavy Work)",
     description: "Specialized cleaning for heavily embroidered skirts.",
     price: 180,
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Ff93ebf096d1e43529c8a1e3625dea9da?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F65ea10a2e5c14ebf9534062314fbbdf2?format=webp&width=800",
+
   },
   {
     id: "dry-clean-lehenga-1pc",
-    name: "Dry Clean - Lehenga 1 PC",
+    name: "Lehenga 1 PC",
     description: "Expert dry cleaning for single-piece lehengas.",
     price: 400,
     unit: "PC",
     category: "womens-dry-clean",
     estimatedTime: "72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fc6f8193b331d4fd182faf379bea4644b?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F65ea10a2e5c14ebf9534062314fbbdf2?format=webp&width=800",
+    
   },
   {
     id: "dry-clean-lehenga-2pc",
-    name: "Dry Clean - Lehenga 2+ PC",
+    name: "Lehenga 2+ PC",
     description: "Complete dry cleaning for multi-piece lehenga sets.",
     price: 600,
     unit: "SET",
     category: "womens-dry-clean",
     estimatedTime: "72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F4566c495ee9f41b59d0bc341b7b430ae?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fdfaab297b9f14eb49f30d294fab5765a?format=webp&width=800",
+     
   },
   {
     id: "dry-clean-lehenga-heavy",
-    name: "Dry Clean - Lehenga Heavy",
+    name: "Lehenga Heavy",
     description: "Premium cleaning for heavily embroidered lehengas.",
     price: 700,
     unit: "SET",
     category: "womens-dry-clean",
     estimatedTime: "72-96 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F244ad171191f4fbcb5358b80ceaa36aa?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fc6f8193b331d4fd182faf379bea4644b?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-lehenga-luxury",
-    name: "Dry Clean - Lehenga Luxury Heavy",
+    name: "Lehenga Luxury Heavy",
     description: "Luxury cleaning service for designer and luxury lehengas.",
     price: 1000,
     unit: "SET",
     category: "womens-dry-clean",
     estimatedTime: "96 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fc6f8193b331d4fd182faf379bea4644b?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F4c9284cb2386421c877de620c984ee10?format=webp&width=800",
+      
   },
 
   // Woolen Dry Clean
   {
     id: "dry-clean-jacket",
-    name: "Dry Clean - Jacket F/H Sleeves",
+    name: "Jacket F/H Sleeves",
     description: "Professional dry cleaning for full and half sleeve jackets.",
     price: 240,
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F4c9284cb2386421c877de620c984ee10?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F50ce6c1ac379418c947c17c24ccab90c?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-sweater",
-    name: "Dry Clean - Sweater / Sweat Shirt",
+    name: "Sweater / Sweat Shirt",
     description: "Gentle dry cleaning for sweaters and sweatshirts.",
     price: 180,
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe917c541f27242dd87d3aad5496d52a1?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F0eacdeab65264e0fa3186728a9e3c436?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-long-coat",
-    name: "Dry Clean - Long Coat",
+    name: "Long Coat",
     description: "Expert cleaning for long coats and overcoats.",
     price: 300,
     unit: "PC",
@@ -339,39 +358,43 @@ export const laundryServices: LaundryService[] = [
     estimatedTime: "72 hours",
     image:
       "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F3a5480ed186e482dbc6e1adb3253c827?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-shawl",
-    name: "Dry Clean - Shawl",
+    name: "Shawl",
     description: "Delicate cleaning for woolen and silk shawls.",
     price: 180,
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "48-72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F65ea10a2e5c14ebf9534062314fbbdf2?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F70bdfc9146d345c683c2cbe94657643d?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-pashmina",
-    name: "Dry Clean - Pashmina",
+    name: "Pashmina",
     description: "Luxury cleaning for premium pashmina shawls.",
     price: 300,
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F9862930473254d15aa4f75f96c5eb95c?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2F53749104ab8c4c869d6d2cc00eb0707b?format=webp&width=800",
+      
   },
   {
     id: "dry-clean-leather-jacket",
-    name: "Dry Clean - Leather Jacket",
+    name: "Leather Jacket",
     description: "Specialized cleaning for leather jackets and coats.",
     price: 480,
     unit: "PC",
     category: "woolen-dry-clean",
     estimatedTime: "72-96 hours",
     image:
-      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fdfaab297b9f14eb49f30d294fab5765a?format=webp&width=800",
+      "https://cdn.builder.io/api/v1/image/assets%2Fc97d5a75b4604b65bd2bd6fccd499b08%2Fe8317bf58a5a44548b41ef6110314859?format=webp&width=800",
+      
   },
 ];
 
