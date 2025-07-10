@@ -601,18 +601,42 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
                     type="text"
                     placeholder="Enter referral code"
                     value={formData.referralCode}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const code = e.target.value.toUpperCase();
                       setFormData({
                         ...formData,
-                        referralCode: e.target.value.toUpperCase(),
-                      })
-                    }
-                    className="pl-10"
+                        referralCode: code,
+                      });
+                      if (code.length >= 3) {
+                        validateReferralCode(code);
+                      } else {
+                        setReferralValidation({ isValid: null });
+                      }
+                    }}
+                    className={`pl-10 ${
+                      referralValidation.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : referralValidation.isValid === false
+                          ? "border-red-500 focus:border-red-500"
+                          : ""
+                    }`}
                   />
                 </div>
-                <p className="text-xs text-gray-500">
-                  Get 50% off on your first order with a valid referral code
-                </p>
+                {referralValidation.isValid === true && (
+                  <p className="text-xs text-green-600">
+                    ✓ {referralValidation.message}
+                  </p>
+                )}
+                {referralValidation.isValid === false && (
+                  <p className="text-xs text-red-600">
+                    ✗ {referralValidation.message}
+                  </p>
+                )}
+                {referralValidation.isValid === null && (
+                  <p className="text-xs text-gray-500">
+                    Get 50% off on your first order with a valid referral code
+                  </p>
+                )}
               </div>
 
               {error && (
