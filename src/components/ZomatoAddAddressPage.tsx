@@ -13,6 +13,7 @@ import {
   MapIcon,
   Phone,
   User,
+  X,
 } from "lucide-react";
 import { locationService, Coordinates } from "@/services/locationService";
 import { Loader } from "@googlemaps/js-api-loader";
