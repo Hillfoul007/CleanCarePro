@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Gift, UserCheck, X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import referralService from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralCodeHandlerProps {
   currentUser: any;
