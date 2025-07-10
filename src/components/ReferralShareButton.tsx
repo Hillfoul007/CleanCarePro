@@ -315,69 +315,24 @@ export const ReferralShareButton = React.forwardRef<
                   <div className="space-y-3">
                     <Label>Share via</Label>
                     <div className="grid grid-cols-2 gap-2">
-                      {React.useMemo(() => {
-                        const socialUrls =
-                          referralService.generateSocialShareUrls(
-                            shareData.share_url,
-                            shareData.referral_code,
-                          );
-
-                        return [
-                          {
-                            name: "WhatsApp",
-                            icon: MessageCircle,
-                            url: socialUrls.whatsapp,
-                            color: "text-green-600",
-                          },
-                          {
-                            name: "Twitter",
-                            icon: Twitter,
-                            url: socialUrls.twitter,
-                            color: "text-blue-500",
-                          },
-                          {
-                            name: "Facebook",
-                            icon: Facebook,
-                            url: socialUrls.facebook,
-                            color: "text-blue-600",
-                          },
-                          {
-                            name: "Telegram",
-                            icon: Send,
-                            url: socialUrls.telegram,
-                            color: "text-blue-400",
-                          },
-                          {
-                            name: "SMS",
-                            icon: Smartphone,
-                            url: socialUrls.sms,
-                            color: "text-gray-600",
-                          },
-                          {
-                            name: "Email",
-                            icon: Mail,
-                            url: socialUrls.email,
-                            color: "text-gray-600",
-                          },
-                        ].map((social) => {
-                          const Icon = social.icon;
-                          return (
-                            <Button
-                              key={social.name}
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                handleSocialShare(social.name, social.url)
-                              }
-                              className="flex items-center justify-center gap-2 h-10"
-                            >
-                              <Icon className={`h-4 w-4 ${social.color}`} />
-                              <span className="text-sm">{social.name}</span>
-                              <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                            </Button>
-                          );
-                        });
-                      }, [shareData?.share_url, shareData?.referral_code])}
+                      {socialShareButtons?.map((social) => {
+                        const Icon = social.icon;
+                        return (
+                          <Button
+                            key={social.name}
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleSocialShare(social.name, social.url)
+                            }
+                            className="flex items-center justify-center gap-2 h-10"
+                          >
+                            <Icon className={`h-4 w-4 ${social.color}`} />
+                            <span className="text-sm">{social.name}</span>
+                            <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                          </Button>
+                        );
+                      })}
                     </div>
                   </div>
 
