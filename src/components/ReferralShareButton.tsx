@@ -54,6 +54,55 @@ export const ReferralShareButton = React.forwardRef<
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState<string | null>(null);
 
+    // Memoize social share buttons to prevent re-computation on every render
+    const socialShareButtons = React.useMemo(() => {
+      if (!shareData) return null;
+
+      const socialUrls = referralService.generateSocialShareUrls(
+        shareData.share_url,
+        shareData.referral_code,
+      );
+
+      return [
+        {
+          name: "WhatsApp",
+          icon: MessageCircle,
+          url: socialUrls.whatsapp,
+          color: "text-green-600",
+        },
+        {
+          name: "Twitter",
+          icon: Twitter,
+          url: socialUrls.twitter,
+          color: "text-blue-500",
+        },
+        {
+          name: "Facebook",
+          icon: Facebook,
+          url: socialUrls.facebook,
+          color: "text-blue-600",
+        },
+        {
+          name: "Telegram",
+          icon: Send,
+          url: socialUrls.telegram,
+          color: "text-blue-400",
+        },
+        {
+          name: "SMS",
+          icon: Smartphone,
+          url: socialUrls.sms,
+          color: "text-gray-600",
+        },
+        {
+          name: "Email",
+          icon: Mail,
+          url: socialUrls.email,
+          color: "text-gray-600",
+        },
+      ];
+    }, [shareData?.share_url, shareData?.referral_code]);
+
     useEffect(() => {
       if (isOpen && !shareData) {
         loadShareData();
