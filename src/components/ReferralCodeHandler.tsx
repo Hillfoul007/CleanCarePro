@@ -23,6 +23,7 @@ export function ReferralCodeHandler({
   currentUser,
   onReferralApplied,
 }: ReferralCodeHandlerProps) {
+  const referralService = ReferralService.getInstance();
   const [showReferralDialog, setShowReferralDialog] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
