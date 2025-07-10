@@ -111,7 +111,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       setAddresses(newAddresses);
     };
 
-        const handleNewAddressSave = async (newAddress: any) => {
+    const handleNewAddressSave = async (newAddress: any) => {
       if (!currentUser) return;
 
       try {
@@ -155,7 +155,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       }
     };
 
-        const handleEditAddress = async (updatedAddress: AddressData) => {
+    const handleEditAddress = async (updatedAddress: AddressData) => {
       if (!editingAddress?.id) {
         console.error("No editing address ID found");
         return;
@@ -185,19 +185,40 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
           // Fallback to local update
           const updatedAddresses = addresses.map((addr) =>
             addr.id === editingAddress.id
-          ? {
-              ...updatedAddress,
-              id: editingAddress.id,
-              createdAt: editingAddress.createdAt || new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
-          : addr,
-      );
+              ? {
+                  ...updatedAddress,
+                  id: editingAddress.id,
+                  createdAt:
+                    editingAddress.createdAt || new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                }
+              : addr,
+          );
 
-      saveAddresses(updatedAddresses);
-      setEditingAddress(null);
-      setShowAddAddressPage(false);
-      console.log("✅ Address updated successfully");
+          saveAddresses(updatedAddresses);
+          setEditingAddress(null);
+          setShowAddAddressPage(false);
+          console.log("✅ Address updated locally");
+        }
+      } catch (error) {
+        console.error("Failed to update address:", error);
+        // Fallback to local update
+        const updatedAddresses = addresses.map((addr) =>
+          addr.id === editingAddress.id
+            ? {
+                ...updatedAddress,
+                id: editingAddress.id,
+                createdAt: editingAddress.createdAt || new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              }
+            : addr,
+        );
+
+        saveAddresses(updatedAddresses);
+        setEditingAddress(null);
+        setShowAddAddressPage(false);
+        console.log("✅ Address updated locally (error fallback)");
+      }
     };
 
     const handleDeleteAddress = async (id: string) => {
