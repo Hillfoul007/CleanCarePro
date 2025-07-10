@@ -85,7 +85,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       // Use the new method that automatically handles user ID resolution
       const response = await bookingService.getCurrentUserBookings();
 
-      console.log("📊 Booking service response:", {
+      console.log("���� Booking service response:", {
         success: response.success,
         bookingsCount: response.bookings?.length || 0,
         error: response.error,
@@ -524,15 +524,61 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
               const sanitizeServices = (services: any) => {
                 if (!Array.isArray(services)) return [];
 
-                // Use default price instead of dividing total
-                const defaultPrice = 50; // Standard default price per service
+                const servicePriceMap: { [key: string]: number } = {
+                  kurta: 140,
+                  jacket: 300,
+                  "jacket (full/half sleeves)": 300,
+                  shirt: 90,
+                  trouser: 120,
+                  jeans: 120,
+                  coat: 220,
+                  sweater: 200,
+                  sweatshirt: 200,
+                  saree: 210,
+                  lehenga: 330,
+                  dress: 330,
+                  "laundry and fold": 70,
+                  "laundry and iron": 120,
+                  "steam iron": 30,
+                  "home service": 100,
+                };
 
                 return services.map((service, index) => {
+                  let serviceName = "";
+                  let price = 50; // fallback price
+
+                  if (typeof service === "string") {
+                    serviceName = service;
+                  } else if (typeof service === "object" && service) {
+                    serviceName = service.name || service.service || "";
+                  } else {
+                    serviceName = String(service) || "Unknown Service";
+                  }
+
+                  // Get price from service price map
+                  const lowerServiceName = serviceName.toLowerCase();
+                  if (servicePriceMap[lowerServiceName]) {
+                    price = servicePriceMap[lowerServiceName];
+                  } else {
+                    // Find partial match
+                    for (const [key, value] of Object.entries(
+                      servicePriceMap,
+                    )) {
+                      if (
+                        lowerServiceName.includes(key) ||
+                        key.includes(lowerServiceName)
+                      ) {
+                        price = value;
+                        break;
+                      }
+                    }
+                  }
+
                   if (typeof service === "string") {
                     return {
                       name: service,
                       quantity: 1,
-                      price: defaultPrice,
+                      price: price,
                       id: `service_${index}`,
                     };
                   }
@@ -551,14 +597,14 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                           ? service.price
                           : typeof service.amount === "number"
                             ? service.amount
-                            : defaultPrice,
+                            : price,
                       id: service.id || `service_${index}`,
                     };
                   }
                   return {
                     name: String(service) || "Unknown Service",
                     quantity: 1,
-                    price: defaultPrice,
+                    price: price,
                     id: `service_${index}`,
                   };
                 });

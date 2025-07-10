@@ -17,9 +17,18 @@ export const initializeAuthPersistence = () => {
   // Handle page visibility changes (user switching tabs, minimizing browser)
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-      // User returned to the tab - ensure auth is still valid
-      if (authService.isAuthenticated()) {
-        console.log("✅ User returned to tab - auth state maintained");
+      // User returned to the tab - ensure auth is still valid and refresh it
+      const user = authService.getCurrentUser();
+      if (user) {
+        console.log("✅ User returned to tab - refreshing auth state");
+        // Refresh auth state to prevent any timeouts
+        authService.setCurrentUser(user);
+        // Dispatch auth event to update UI
+        window.dispatchEvent(
+          new CustomEvent("auth-login", {
+            detail: { user: user },
+          }),
+        );
       }
     }
   });
@@ -75,6 +84,23 @@ export const initializeAuthPersistence = () => {
   };
 
   window.addEventListener("pagehide", handlePageHide);
+
+  // Periodic auth refresh every 5 minutes to prevent any timeouts
+  const refreshInterval = setInterval(
+    () => {
+      const user = authService.getCurrentUser();
+      if (user) {
+        console.log("🔄 Periodic auth refresh - maintaining session");
+        authService.setCurrentUser(user);
+      }
+    },
+    5 * 60 * 1000,
+  ); // 5 minutes
+
+  // Clear interval on page unload
+  window.addEventListener("beforeunload", () => {
+    clearInterval(refreshInterval);
+  });
 
   console.log("✅ Authentication persistence initialized");
 };

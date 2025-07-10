@@ -337,6 +337,10 @@ const LaundryIndex = () => {
         console.log("ℹ️ No valid authentication data found");
         console.log("🔒 Preserving current login state to prevent auto-logout");
         // Don't call setIsLoggedIn(false) or setCurrentUser(null) here
+        // Only log out if user was never logged in
+        if (!currentUser && !isLoggedIn) {
+          console.log("👤 User was never logged in - staying logged out");
+        }
       }
     } catch (error) {
       console.error("Error checking auth state:", error);
@@ -411,7 +415,7 @@ const LaundryIndex = () => {
     const targetView = previousView || "home";
     setCurrentView(targetView);
 
-    console.log("✅ User logged in successfully:", user.name || user.phone);
+    console.log("��� User logged in successfully:", user.name || user.phone);
     console.log("📍 Redirecting to:", targetView);
 
     // Add success notification
@@ -594,10 +598,7 @@ const LaundryIndex = () => {
 
         // Store booking data for confirmation screen
         const confirmationData = {
-          bookingId:
-            mongoResult.data.custom_order_id ||
-            mongoResult.data._id ||
-            `local_${Date.now()}`,
+          bookingId: mongoResult.data._id || `local_${Date.now()}`, // Use MongoDB _id for API calls
           custom_order_id: mongoResult.data.custom_order_id, // Add custom_order_id field
           services: detailedServices, // Use detailed services with quantities
           totalAmount: cartData.totalAmount,
@@ -620,7 +621,9 @@ const LaundryIndex = () => {
 
         // Clear cart and form data
         localStorage.removeItem("laundry_cart");
+        localStorage.removeItem("cleancare_cart"); // Add the correct cart storage key
         localStorage.removeItem("laundry_booking_form");
+        localStorage.removeItem("cleancare_booking_form"); // Add correct booking form key
         localStorage.removeItem("user_bookings"); // Clear cached bookings
 
         // Clear any cached cart state
@@ -668,6 +671,7 @@ const LaundryIndex = () => {
           // Store booking data for confirmation screen
           const confirmationData = {
             bookingId: `local_${Date.now()}`,
+            custom_order_id: undefined, // Will be fetched by BookingConfirmed component or generated locally
             services: detailedServices, // Use detailed services with quantities
             totalAmount: cartData.totalAmount,
             pickupDate: cartData.pickupDate,
@@ -690,6 +694,7 @@ const LaundryIndex = () => {
 
           // Clear cart
           localStorage.removeItem("laundry_cart");
+          localStorage.removeItem("cleancare_cart"); // Add the correct cart storage key
 
           // Show booking confirmation screen
           setCurrentView("booking-confirmed");

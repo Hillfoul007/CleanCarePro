@@ -111,10 +111,37 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       setAddresses(newAddresses);
     };
 
-    const handleNewAddressSave = (newAddress: any) => {
+    const handleNewAddressSave = async (newAddress: any) => {
       if (!currentUser) return;
 
       try {
+        console.log("💾 Saving new address to backend:", newAddress);
+
+        // Use AddressService to save to backend and localStorage
+        const result = await addressService.saveAddress(newAddress);
+
+        if (result.success) {
+          // Refresh addresses from server
+          loadAddresses();
+          setShowAddAddressPage(false);
+          console.log("✅ New address saved successfully");
+        } else {
+          console.error("Failed to save address:", result.error);
+          // Still try to save locally as fallback
+          const addressWithId = {
+            ...newAddress,
+            id: `addr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const updatedAddresses = [...addresses, addressWithId];
+          saveAddresses(updatedAddresses);
+          setShowAddAddressPage(false);
+        }
+      } catch (error) {
+        console.error("Failed to save new address:", error);
+        // Fallback to local storage
         const addressWithId = {
           ...newAddress,
           id: `addr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -124,37 +151,74 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
 
         const updatedAddresses = [...addresses, addressWithId];
         saveAddresses(updatedAddresses);
-
         setShowAddAddressPage(false);
-        console.log("✅ New address saved successfully");
-      } catch (error) {
-        console.error("Failed to save new address:", error);
       }
     };
 
-    const handleEditAddress = (updatedAddress: AddressData) => {
+    const handleEditAddress = async (updatedAddress: AddressData) => {
       if (!editingAddress?.id) {
         console.error("No editing address ID found");
         return;
       }
 
-      console.log("💾 Saving edited address:", editingAddress.id);
+      try {
+        console.log("💾 Saving edited address to backend:", editingAddress.id);
 
-      const updatedAddresses = addresses.map((addr) =>
-        addr.id === editingAddress.id
-          ? {
-              ...updatedAddress,
-              id: editingAddress.id,
-              createdAt: editingAddress.createdAt || new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
-          : addr,
-      );
+        // Include the ID for updating
+        const addressToUpdate = {
+          ...updatedAddress,
+          id: editingAddress.id,
+          _id: editingAddress._id || editingAddress.id,
+        };
 
-      saveAddresses(updatedAddresses);
-      setEditingAddress(null);
-      setShowAddAddressPage(false);
-      console.log("✅ Address updated successfully");
+        // Use AddressService to save to backend and localStorage
+        const result = await addressService.saveAddress(addressToUpdate);
+
+        if (result.success) {
+          // Refresh addresses from server
+          loadAddresses();
+          setShowAddAddressPage(false);
+          setEditingAddress(null);
+          console.log("✅ Address updated successfully");
+        } else {
+          console.error("Failed to update address:", result.error);
+          // Fallback to local update
+          const updatedAddresses = addresses.map((addr) =>
+            addr.id === editingAddress.id
+              ? {
+                  ...updatedAddress,
+                  id: editingAddress.id,
+                  createdAt:
+                    editingAddress.createdAt || new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                }
+              : addr,
+          );
+
+          saveAddresses(updatedAddresses);
+          setEditingAddress(null);
+          setShowAddAddressPage(false);
+          console.log("✅ Address updated locally");
+        }
+      } catch (error) {
+        console.error("Failed to update address:", error);
+        // Fallback to local update
+        const updatedAddresses = addresses.map((addr) =>
+          addr.id === editingAddress.id
+            ? {
+                ...updatedAddress,
+                id: editingAddress.id,
+                createdAt: editingAddress.createdAt || new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              }
+            : addr,
+        );
+
+        saveAddresses(updatedAddresses);
+        setEditingAddress(null);
+        setShowAddAddressPage(false);
+        console.log("✅ Address updated locally (error fallback)");
+      }
     };
 
     const handleDeleteAddress = async (id: string) => {

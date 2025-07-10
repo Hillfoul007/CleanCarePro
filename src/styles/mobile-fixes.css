@@ -1,6 +1,10 @@
 /* Mobile-specific fixes for better UX */
 
 /* Fix status bar and viewport issues on mobile */
+html {
+  background-color: #10b981; /* Green background for safe area */
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -10,9 +14,14 @@ body {
 
 /* Fix white line on top for mobile devices with notches */
 @supports (padding: max(0px)) {
+  html {
+    background-color: #10b981; /* Match header green color */
+  }
+
   body {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    background-color: #ffffff;
   }
 }
 
@@ -179,6 +188,22 @@ select {
 
 .safe-area-top {
   padding-top: env(safe-area-inset-top);
+}
+
+/* Better safe area handling for headers with background */
+.safe-area-header {
+  position: relative;
+}
+
+.safe-area-header::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0);
+  background: inherit;
+  z-index: inherit;
 }
 
 /* Smooth scroll behavior */

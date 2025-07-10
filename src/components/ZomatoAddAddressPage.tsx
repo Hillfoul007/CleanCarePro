@@ -13,6 +13,7 @@ import {
   MapIcon,
   Phone,
   User,
+  X,
 } from "lucide-react";
 import { locationService, Coordinates } from "@/services/locationService";
 import { Loader } from "@googlemaps/js-api-loader";
@@ -1033,7 +1034,7 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
     if (cleanParts.length === 1) {
       // Only one part - use it as the area
       setArea(cleanParts[0]);
-      console.log("🏘��� Single part used for area:", cleanParts[0]);
+      console.log("🏘���� Single part used for area:", cleanParts[0]);
     } else if (cleanParts.length === 2) {
       // Two parts - first as street, second as area
       setStreet(cleanParts[0]);
@@ -1332,22 +1333,32 @@ const ZomatoAddAddressPage: React.FC<ZomatoAddAddressPageProps> = ({
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-4 p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white sticky top-0 z-10 safe-area-top">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={onClose}
+            className="h-12 w-12 p-0 hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-700" />
+          </Button>
+          <h1 className="text-lg font-medium text-gray-900">Add Address</h1>
+        </div>
         <Button
           variant="ghost"
           size="lg"
           onClick={onClose}
-          className="h-12 w-12 p-0"
+          className="h-12 w-12 p-0 hover:bg-gray-100"
         >
-          <ArrowLeft className="h-6 w-6" />
+          <X className="h-6 w-6 text-gray-700" />
         </Button>
-        <h1 className="text-lg font-medium text-gray-900">Add Address</h1>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Search Bar */}
-        <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10 safe-area-top">
           <div className="relative">
             <div className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg bg-gray-50">
               <Search className="h-5 w-5 text-green-600 flex-shrink-0" />
