@@ -112,6 +112,7 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
     });
     setError("");
     setSuccess("");
+    setReferralValidation({ isValid: null });
     setCurrentStep("phone");
   };
 
