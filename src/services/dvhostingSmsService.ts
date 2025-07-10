@@ -651,25 +651,20 @@ export class DVHostingSmsService {
         localStorage.getItem("auth_token");
       const user = this.getCurrentUser();
 
-      // More thorough validation
+      // Simple validation - if we have token and user data, user is authenticated
       if (!token || !user) {
         return false;
       }
 
-      // For JWT tokens from backend, don't perform client-side expiration check
-      // Backend will handle token validation
-      if (token.startsWith("eyJ") || token.includes(".")) {
-        // This is a JWT token - let backend handle expiration
-        return true;
-      }
-
-      // For locally generated tokens (fallback), remove expiration check entirely
-      // Users should stay logged in until they explicitly log out
+      // Never check token expiration - users stay logged in until manual logout
+      // This ensures sessions persist across refreshes and time
+      console.log("✅ User is authenticated - session preserved");
       return true;
     } catch (error) {
       console.error("Error checking authentication:", error);
-      // Don't automatically logout on errors - preserve user session
-      return false;
+      // Never automatically logout on errors - preserve user session
+      console.warn("🔒 Preserving authentication state despite error");
+      return true; // Return true to preserve session
     }
   }
 
