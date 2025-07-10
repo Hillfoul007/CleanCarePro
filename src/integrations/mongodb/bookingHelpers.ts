@@ -624,7 +624,12 @@ export const bookingHelpers = {
         };
       }
 
-      return { data: data.booking, error: null };
+      // Ensure custom_order_id is included in response
+      const bookingWithOrderId = {
+        ...data.booking,
+        custom_order_id: data.booking.custom_order_id || data.booking.order_id,
+      };
+      return { data: bookingWithOrderId, error: null };
     } catch (error: any) {
       console.error("Booking fetch error:", error);
       return {
