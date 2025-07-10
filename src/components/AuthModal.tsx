@@ -174,6 +174,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
         formData.name,
         formData.phone,
         formData.userType,
+        formData.referralCode,
       );
 
       if (error) {
