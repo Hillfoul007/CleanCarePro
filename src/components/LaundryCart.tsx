@@ -823,7 +823,7 @@ Confirm this booking?`;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm px-3 sm:px-4 py-4 flex items-center sticky top-0 z-10">
+      <div className="bg-white shadow-sm px-3 sm:px-4 py-4 flex items-center sticky top-0 z-10 safe-area-top">
         <div className="flex items-center gap-2 sm:gap-4">
           <Button variant="ghost" onClick={onBack} className="p-0 h-8 w-8">
             <ArrowLeft className="h-5 w-5" />
