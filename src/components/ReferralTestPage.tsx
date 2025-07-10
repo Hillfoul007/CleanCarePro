@@ -22,7 +22,7 @@ import {
 import ReferralShareButton from "@/components/ReferralShareButton";
 import ReferralCodeHandler from "@/components/ReferralCodeHandler";
 import ReferralDiscountBanner from "@/components/ReferralDiscountBanner";
-import referralService from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralTestPageProps {
   currentUser: any;
