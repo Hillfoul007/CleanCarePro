@@ -47,9 +47,9 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
     // Only fetch if custom_order_id is not already present
     if (!bookingData.custom_order_id && bookingData.bookingId) {
       // Replace this with your actual API/service call
-      getBookingById(bookingData.bookingId).then((booking) => {
-        if (booking && booking.custom_order_id) {
-          setCustomOrderId(booking.custom_order_id);
+      bookingHelpers.getBookingById(bookingData.bookingId).then((result) => {
+        if (result.data && result.data.custom_order_id) {
+          setCustomOrderId(result.data.custom_order_id);
         }
       });
     }
