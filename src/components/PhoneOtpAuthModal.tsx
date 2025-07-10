@@ -45,6 +45,12 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [referralValidation, setReferralValidation] = useState<{
+    isValid: boolean | null;
+    discount?: number;
+    referrerName?: string;
+    message?: string;
+  }>({ isValid: null });
   const isMobile = useIsMobile();
 
   const [formData, setFormData] = useState({
