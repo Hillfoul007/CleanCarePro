@@ -293,10 +293,26 @@ export class OTPAuthService {
   // Logout user
   logout(): void {
     console.log("👋 Logging out user");
+
+    // Clear auth data
     localStorage.removeItem("auth_token");
     localStorage.removeItem("current_user");
+    localStorage.removeItem("cleancare_auth_token");
+    localStorage.removeItem("cleancare_user");
+
+    // Clear session data
     sessionStorage.removeItem("otp_phone");
     sessionStorage.removeItem("otp_timestamp");
+
+    // Clear checkout form states
+    localStorage.removeItem("checkout_form_state");
+    localStorage.removeItem("address_flow_state");
+    localStorage.removeItem("laundry_booking_form");
+
+    // Emit logout event for components to respond
+    window.dispatchEvent(new CustomEvent("auth-logout"));
+
+    console.log("✅ All authentication data cleared");
   }
 
   // Get current user
