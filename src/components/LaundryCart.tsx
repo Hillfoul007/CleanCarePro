@@ -1049,7 +1049,7 @@ Confirm this booking?`;
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                Proceed to Checkout • ₹{getTotal()}
+                Proceed to Book • ₹{getTotal()}
               </>
             )}
           </Button>
