@@ -266,7 +266,7 @@ export const ReferralShareButton = React.forwardRef<
                   <div className="space-y-3">
                     <Label>Share via</Label>
                     <div className="grid grid-cols-2 gap-2">
-                      {(() => {
+                      {React.useMemo(() => {
                         const socialUrls =
                           referralService.generateSocialShareUrls(
                             shareData.share_url,
@@ -328,7 +328,7 @@ export const ReferralShareButton = React.forwardRef<
                             </Button>
                           );
                         });
-                      })()}
+                      }, [shareData?.share_url, shareData?.referral_code])}
                     </div>
                   </div>
 
