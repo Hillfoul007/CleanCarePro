@@ -29,10 +29,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
-import referralService, {
-  ShareLinkResponse,
-  ReferralStats,
-} from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralShareButtonProps {
   userId: string;
