@@ -33,9 +33,6 @@ interface BookingConfirmedProps {
   onViewBookings: () => void;
 }
 
-// Add your booking fetching function import here
-// import { getBookingById } from "@/services/BookingService"; // Adjust path as needed
-
 const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
   bookingData,
   onGoHome,
