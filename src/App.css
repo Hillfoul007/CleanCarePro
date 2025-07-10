@@ -8,6 +8,7 @@
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #10b981; /* Green background for safe area */
   }
 
   body {
@@ -25,6 +26,7 @@
       "Helvetica Neue",
       sans-serif;
     overflow-x: hidden;
+    background-color: #10b981; /* Green background for safe area */
   }
 
   /* Improve touch targets on mobile */
