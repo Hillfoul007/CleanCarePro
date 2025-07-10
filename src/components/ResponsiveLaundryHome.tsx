@@ -436,7 +436,7 @@ const ResponsiveLaundryHome: React.FC<ResponsiveLaundryHomeProps> = ({
   if (isMobile) {
     // Mobile Interface
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600">
+      <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600 pt-0">
         {/* Mobile Header */}
         <div className="bg-gradient-to-r from-green-500 to-green-600 text-white sticky top-0 z-50 safe-area-top safe-area-header">
           <div className="flex items-center justify-between p-4">
