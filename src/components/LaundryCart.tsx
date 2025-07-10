@@ -115,10 +115,25 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
       localStorage.removeItem("laundry_cart");
     };
 
+    const handleLogout = () => {
+      console.log("🚪 Logout detected - clearing cart and form data");
+      setCart({});
+      setAddressData(null);
+      setPhoneNumber("");
+      setSpecialInstructions("");
+      setSelectedDate(undefined);
+      setSelectedTime("");
+      setCouponCode("");
+      setAppliedCoupon(null);
+      setSelectedSavedAddress(null);
+    };
+
     window.addEventListener("clearCart", handleClearCart);
+    window.addEventListener("auth-logout", handleLogout);
 
     return () => {
       window.removeEventListener("clearCart", handleClearCart);
+      window.removeEventListener("auth-logout", handleLogout);
     };
   }, []);
 
