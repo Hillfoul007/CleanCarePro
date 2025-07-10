@@ -13,7 +13,12 @@ export function ReferralDiscountBanner({
   user,
   className = "",
 }: ReferralDiscountBannerProps) {
-  if (!user || !referralService.hasAvailableDiscount(user)) {
+  const referralService = ReferralService.getInstance();
+
+  // Since these methods don't exist in our service, return null for now
+  return null;
+
+  /*if (!user || !referralService.hasAvailableDiscount(user)) {
     return null;
   }
 
