@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Gift, Sparkles, Timer } from "lucide-react";
-import referralService from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralDiscountBannerProps {
   user: any;
