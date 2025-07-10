@@ -412,7 +412,7 @@ const LaundryIndex = () => {
     setCurrentView(targetView);
 
     console.log("✅ User logged in successfully:", user.name || user.phone);
-    console.log("📍 Redirecting to:", targetView);
+    console.log("�� Redirecting to:", targetView);
 
     // Add success notification
     addNotification(
@@ -617,7 +617,9 @@ const LaundryIndex = () => {
 
         // Clear cart and form data
         localStorage.removeItem("laundry_cart");
+        localStorage.removeItem("cleancare_cart"); // Add the correct cart storage key
         localStorage.removeItem("laundry_booking_form");
+        localStorage.removeItem("cleancare_booking_form"); // Add correct booking form key
         localStorage.removeItem("user_bookings"); // Clear cached bookings
 
         // Clear any cached cart state
