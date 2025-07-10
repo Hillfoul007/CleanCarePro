@@ -285,65 +285,63 @@ const LaundryIndex = () => {
 
   const checkAuthState = async () => {
     try {
-      // Always check auth state - don't auto-logout on errors
+      console.log("🔍 Checking authentication state...");
+
+      // First, always check localStorage directly for auth data
+      const token =
+        localStorage.getItem("auth_token") ||
+        localStorage.getItem("cleancare_auth_token");
+      const userStr =
+        localStorage.getItem("current_user") ||
+        localStorage.getItem("cleancare_user");
+
+      // If we have both token and user data, restore session immediately
+      if (token && userStr) {
+        try {
+          const storedUser = JSON.parse(userStr);
+          if (
+            storedUser &&
+            (storedUser.phone || storedUser.id || storedUser._id)
+          ) {
+            setCurrentUser(storedUser);
+            setIsLoggedIn(true);
+            console.log("✅ User session restored from localStorage:", {
+              phone: storedUser.phone,
+              name: storedUser.name,
+              id: storedUser.id || storedUser._id,
+            });
+
+            // Ensure auth service has the latest data
+            authService.setCurrentUser(storedUser, token);
+            return; // Exit early - user is authenticated
+          }
+        } catch (parseError) {
+          console.warn("⚠️ Error parsing stored user data:", parseError);
+        }
+      }
+
+      // Fallback: check auth service state
       const user = authService.getCurrentUser();
       const isAuth = authService.isAuthenticated();
 
       if (isAuth && user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
-        console.log("✅ User authentication confirmed:", {
+        console.log("✅ User authentication confirmed via auth service:", {
           phone: user.phone,
           name: user.name,
           isVerified: user.isVerified,
         });
-
-        // Ensure auth data is properly stored in all required keys
-        const token =
-          localStorage.getItem("auth_token") ||
-          localStorage.getItem("cleancare_auth_token");
-        if (token) {
-          authService.setCurrentUser(user, token);
-        }
       } else {
-        // Only clear state if explicitly no auth data found
-        const hasAnyAuthData = !!(
-          localStorage.getItem("auth_token") ||
-          localStorage.getItem("cleancare_auth_token") ||
-          localStorage.getItem("current_user") ||
-          localStorage.getItem("cleancare_user")
-        );
-
-        if (!hasAnyAuthData) {
-          setIsLoggedIn(false);
-          setCurrentUser(null);
-          console.log("ℹ️ No authentication data found");
-        } else {
-          console.log(
-            "⚠️ Auth data found but validation failed - preserving state",
-          );
-          // Try to use the available data
-          const userStr =
-            localStorage.getItem("current_user") ||
-            localStorage.getItem("cleancare_user");
-          if (userStr) {
-            try {
-              const preservedUser = JSON.parse(userStr);
-              if (preservedUser && (preservedUser.phone || preservedUser.id)) {
-                setCurrentUser(preservedUser);
-                setIsLoggedIn(true);
-                console.log("✅ Preserved user session from localStorage");
-              }
-            } catch (parseError) {
-              console.warn("⚠️ Could not parse preserved user data");
-            }
-          }
-        }
+        // Only log state, never automatically clear login
+        console.log("ℹ️ No valid authentication data found");
+        console.log("🔒 Preserving current login state to prevent auto-logout");
+        // Don't call setIsLoggedIn(false) or setCurrentUser(null) here
       }
     } catch (error) {
       console.error("Error checking auth state:", error);
-      // Don't auto-logout on errors - preserve existing state
-      console.warn("Preserving current auth state despite error");
+      // Never auto-logout on errors - always preserve existing state
+      console.warn("🔒 Preserving current auth state despite error");
     }
   };
 
