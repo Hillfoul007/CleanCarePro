@@ -29,10 +29,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
-import referralService, {
-  ShareLinkResponse,
-  ReferralStats,
-} from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralShareButtonProps {
   userId: string;
@@ -50,9 +47,10 @@ export const ReferralShareButton = React.forwardRef<
     { userId, currentUser, variant = "default", className = "", onClick },
     ref,
   ) => {
+    const referralService = ReferralService.getInstance();
     const [isOpen, setIsOpen] = useState(false);
-    const [shareData, setShareData] = useState<ShareLinkResponse | null>(null);
-    const [stats, setStats] = useState<ReferralStats | null>(null);
+    const [shareData, setShareData] = useState<any>(null);
+    const [stats, setStats] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -66,31 +64,20 @@ export const ReferralShareButton = React.forwardRef<
       setIsLoading(true);
       try {
         console.log("🎯 Loading referral share data...");
-        const [shareResponse, statsResponse] = await Promise.all([
-          referralService.getShareLink(userId),
-          referralService.getReferralStats(userId),
-        ]);
 
-        setShareData(shareResponse);
-        setStats(statsResponse);
-        console.log("✅ Referral data loaded successfully");
-      } catch (error: any) {
-        console.warn("Using fallback referral data:", error);
-
-        // Generate fallback data locally
-        const fallbackCode =
-          `REF${userId ? userId.slice(-4) : "0000"}${Date.now().toString(36).slice(-3)}`.toUpperCase();
+        // Generate referral code using the service
+        const referralCode = referralService.generateReferralCode(currentUser);
 
         setShareData({
-          share_url: `${window.location.origin}?ref=${fallbackCode}`,
-          referral_code: fallbackCode,
+          share_url: `${window.location.origin}?ref=${referralCode}`,
+          referral_code: referralCode,
           discount_percentage: 50,
         });
         setStats({
           total_referrals: 0,
           successful_referrals: 0,
           pending_referrals: 0,
-          active_referral_code: fallbackCode,
+          active_referral_code: referralCode,
           available_discounts: [],
           referral_history: [],
         });

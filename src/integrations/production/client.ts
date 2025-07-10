@@ -1,6 +1,8 @@
 // Production MongoDB client for CleanCare Pro
 // This replaces demo functionality with real MongoDB integration
 
+import { authHelpers as mongoAuthHelpers } from "../mongodb/authHelpers";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
@@ -31,8 +33,10 @@ const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   }
 };
 
-// Auth helpers for production
+// Auth helpers for production - merge with MongoDB authHelpers
 export const authHelpers = {
+  // Include all MongoDB authHelpers methods
+  ...mongoAuthHelpers,
   getCurrentUser: async () => {
     const userData = localStorage.getItem("cleancare_user");
     if (!userData) return null;

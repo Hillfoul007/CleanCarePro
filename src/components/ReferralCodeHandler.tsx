@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Gift, UserCheck, X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import referralService from "@/services/referralService";
+import { ReferralService } from "@/services/referralService";
 
 interface ReferralCodeHandlerProps {
   currentUser: any;
@@ -23,6 +23,7 @@ export function ReferralCodeHandler({
   currentUser,
   onReferralApplied,
 }: ReferralCodeHandlerProps) {
+  const referralService = ReferralService.getInstance();
   const [showReferralDialog, setShowReferralDialog] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
@@ -71,7 +72,10 @@ export function ReferralCodeHandler({
     setError(null);
 
     try {
-      const validation = await referralService.validateReferralCode(code);
+      const validation = referralService.validateReferralCode(
+        code,
+        currentUser,
+      );
       setValidatedReferral(validation);
     } catch (error: any) {
       setError(error.message);

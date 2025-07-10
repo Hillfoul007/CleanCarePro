@@ -10,6 +10,7 @@ export const authHelpers = {
     name: string,
     phone: string,
     userType: "customer" | "provider" | "rider" = "customer",
+    referralCode?: string,
   ) {
     try {
       if (!isBackendAvailable()) {
@@ -22,7 +23,14 @@ export const authHelpers = {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, phone, userType }),
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          phone,
+          userType,
+          referralCode,
+        }),
       });
 
       const data = await response.json();

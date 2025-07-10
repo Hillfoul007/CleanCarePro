@@ -31,6 +31,7 @@ import {
   getCategoryDisplay,
 } from "@/data/laundryServices";
 import { OTPAuthService } from "@/services/otpAuthService";
+import { ReferralService } from "@/services/referralService";
 import {
   saveBookingFormData,
   getBookingFormData,
@@ -69,9 +70,12 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
     discount: number;
+    maxDiscount?: number;
+    isReferral?: boolean;
   } | null>(null);
 
   const authService = OTPAuthService.getInstance();
+  const referralService = ReferralService.getInstance();
 
   // Load saved form data on component mount (excluding date autofill)
   useEffect(() => {
@@ -111,10 +115,25 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
       localStorage.removeItem("laundry_cart");
     };
 
+    const handleLogout = () => {
+      console.log("🚪 Logout detected - clearing cart and form data");
+      setCart({});
+      setAddressData(null);
+      setPhoneNumber("");
+      setSpecialInstructions("");
+      setSelectedDate(undefined);
+      setSelectedTime("");
+      setCouponCode("");
+      setAppliedCoupon(null);
+      setSelectedSavedAddress(null);
+    };
+
     window.addEventListener("clearCart", handleClearCart);
+    window.addEventListener("auth-logout", handleLogout);
 
     return () => {
       window.removeEventListener("clearCart", handleClearCart);
+      window.removeEventListener("auth-logout", handleLogout);
     };
   }, []);
 
@@ -151,6 +170,41 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
           localStorage.removeItem("checkout_form_state");
         } catch (error) {
           console.error("Failed to restore checkout state:", error);
+        }
+      }
+
+      // Handle address flow after login
+      const addressFlowState = localStorage.getItem("address_flow_state");
+      if (addressFlowState) {
+        try {
+          const state = JSON.parse(addressFlowState);
+          // Only restore if saved within last 30 minutes
+          if (Date.now() - state.timestamp < 30 * 60 * 1000) {
+            if (state.addressData) setAddressData(state.addressData);
+            if (state.phoneNumber && !phoneNumber)
+              setPhoneNumber(state.phoneNumber);
+            if (state.selectedDate)
+              setSelectedDate(new Date(state.selectedDate));
+            if (state.selectedTime) setSelectedTime(state.selectedTime);
+            if (state.specialInstructions)
+              setSpecialInstructions(state.specialInstructions);
+            if (state.appliedCoupon) setAppliedCoupon(state.appliedCoupon);
+
+            // If redirectToAddress flag is set, open address page
+            if (state.redirectToAddress) {
+              console.log("🏠 Redirecting to address page after login");
+              setTimeout(() => {
+                setEditingAddress(null);
+                setShowZomatoAddressSelector(false);
+                setShowZomatoAddAddressPage(true);
+              }, 500); // Small delay to ensure UI is ready
+            }
+
+            console.log("🔄 Restored address flow state after login");
+          }
+          localStorage.removeItem("address_flow_state");
+        } catch (error) {
+          console.error("Failed to restore address flow state:", error);
         }
       }
     }
@@ -224,6 +278,15 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   const getCouponDiscount = () => {
     if (!appliedCoupon) return 0;
     const subtotal = getSubtotal();
+
+    if (appliedCoupon.isReferral && appliedCoupon.maxDiscount) {
+      // For referral codes, apply max discount limit
+      const discountAmount = Math.round(
+        subtotal * (appliedCoupon.discount / 100),
+      );
+      return Math.min(discountAmount, appliedCoupon.maxDiscount);
+    }
+
     return Math.round(subtotal * (appliedCoupon.discount / 100));
   };
 
@@ -240,6 +303,30 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     console.log("applyCoupon function called with code:", couponCode);
 
     try {
+      // First check if it's a referral code
+      const referralDiscount = referralService.validateReferralCode(
+        couponCode,
+        currentUser,
+      );
+
+      if (referralDiscount) {
+        setAppliedCoupon({
+          code: referralDiscount.code,
+          discount: referralDiscount.discount,
+          maxDiscount: referralDiscount.maxDiscount,
+          isReferral: true,
+        });
+
+        addNotification(
+          createSuccessNotification(
+            "Referral Code Applied!",
+            referralDiscount.description,
+          ),
+        );
+        return;
+      }
+
+      // Then check regular coupons
       const validCoupons = {
         FIRST10: { discount: 10, description: "10% off on first order" },
         SAVE20: { discount: 20, description: "20% off" },
@@ -536,6 +623,20 @@ Confirm this booking?`;
 
           console.log("✅ Checkout initiated successfully");
 
+          // Track referral usage if referral code was applied
+          if (appliedCoupon && appliedCoupon.isReferral) {
+            const userId =
+              currentUser._id || currentUser.id || currentUser.phone;
+            referralService.trackReferralUsage(
+              appliedCoupon.code,
+              userId,
+              getCouponDiscount(),
+            );
+
+            // Award bonus to referrer (this would normally be done on backend after payment confirmation)
+            referralService.awardReferralBonus(appliedCoupon.code);
+          }
+
           // Clear cart after successful booking
           console.log("🧹 Clearing cart after successful booking");
           localStorage.removeItem("laundry_cart");
@@ -630,6 +731,14 @@ Confirm this booking?`;
       }
 
       setShowZomatoAddAddressPage(false);
+
+      // Add success notification for the completed address flow
+      addNotification(
+        createSuccessNotification(
+          "Address Added",
+          "You can now proceed with your booking",
+        ),
+      );
     } catch (error) {
       console.error("Failed to save new address:", error);
 
@@ -848,12 +957,43 @@ Confirm this booking?`;
                   No address selected
                 </p>
                 <Button
-                  onClick={() => setShowZomatoAddressSelector(true)}
+                  onClick={() => {
+                    if (!currentUser) {
+                      // Save current cart state with specific flag for address flow
+                      const addressFlowState = {
+                        addressData,
+                        phoneNumber,
+                        selectedDate: selectedDate?.toISOString(),
+                        selectedTime,
+                        specialInstructions,
+                        appliedCoupon,
+                        timestamp: Date.now(),
+                        redirectToAddress: true, // Flag to indicate address flow
+                      };
+                      localStorage.setItem(
+                        "address_flow_state",
+                        JSON.stringify(addressFlowState),
+                      );
+
+                      if (onLoginRequired) {
+                        onLoginRequired();
+                      } else {
+                        addNotification(
+                          createWarningNotification(
+                            "Login Required",
+                            "Please sign in to add an address",
+                          ),
+                        );
+                      }
+                    } else {
+                      setShowZomatoAddressSelector(true);
+                    }
+                  }}
                   variant="outline"
                   className="w-full border-green-600 text-green-600 hover:bg-green-50"
                 >
                   <MapPin className="h-4 w-4 mr-2" />
-                  Select Address
+                  {!currentUser ? "Login to Add Address" : "Select Address"}
                 </Button>
               </div>
             )}
@@ -1049,7 +1189,7 @@ Confirm this booking?`;
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                Proceed to Checkout • ₹{getTotal()}
+                Proceed to Book • ₹{getTotal()}
               </>
             )}
           </Button>
