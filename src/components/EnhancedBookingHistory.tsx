@@ -270,7 +270,9 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
     }, [currentUser]);
     */
 
-    // Refresh when user comes back to the page
+    // Disabled visibility change refresh to prevent logout issues
+    // Users can manually refresh if needed
+    /*
     useEffect(() => {
       const handleVisibilityChange = () => {
         if (!document.hidden && currentUser) {
@@ -288,6 +290,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
           handleVisibilityChange,
         );
     }, [currentUser]);
+    */
 
     const getStatusColor = (status: string) => {
       switch (status?.toLowerCase()) {
