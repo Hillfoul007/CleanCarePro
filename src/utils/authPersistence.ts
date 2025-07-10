@@ -85,6 +85,23 @@ export const initializeAuthPersistence = () => {
 
   window.addEventListener("pagehide", handlePageHide);
 
+  // Periodic auth refresh every 5 minutes to prevent any timeouts
+  const refreshInterval = setInterval(
+    () => {
+      const user = authService.getCurrentUser();
+      if (user) {
+        console.log("🔄 Periodic auth refresh - maintaining session");
+        authService.setCurrentUser(user);
+      }
+    },
+    5 * 60 * 1000,
+  ); // 5 minutes
+
+  // Clear interval on page unload
+  window.addEventListener("beforeunload", () => {
+    clearInterval(refreshInterval);
+  });
+
   console.log("✅ Authentication persistence initialized");
 };
 
