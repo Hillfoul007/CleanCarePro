@@ -571,6 +571,20 @@ Confirm this booking?`;
 
           console.log("✅ Checkout initiated successfully");
 
+          // Track referral usage if referral code was applied
+          if (appliedCoupon && appliedCoupon.isReferral) {
+            const userId =
+              currentUser._id || currentUser.id || currentUser.phone;
+            referralService.trackReferralUsage(
+              appliedCoupon.code,
+              userId,
+              getCouponDiscount(),
+            );
+
+            // Award bonus to referrer (this would normally be done on backend after payment confirmation)
+            referralService.awardReferralBonus(appliedCoupon.code);
+          }
+
           // Clear cart after successful booking
           console.log("🧹 Clearing cart after successful booking");
           localStorage.removeItem("laundry_cart");
