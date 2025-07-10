@@ -17,6 +17,7 @@ import {
   Shield,
   MessageSquare,
   X,
+  Gift,
 } from "lucide-react";
 import { DVHostingSmsService } from "@/services/dvhostingSmsService";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -49,6 +50,7 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
     phone: "",
     otp: "",
     name: "",
+    referralCode: "",
   });
 
   const dvhostingSmsService = DVHostingSmsService.getInstance();
@@ -99,6 +101,7 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
       phone: "",
       otp: "",
       name: "",
+      referralCode: "",
     });
     setError("");
     setSuccess("");
