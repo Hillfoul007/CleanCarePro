@@ -215,4 +215,25 @@ export class ReferralService {
       ...generalCoupons,
     ];
   }
+
+  // Extract referral code from URL
+  extractReferralFromUrl(): string | null {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("ref") || urlParams.get("referral");
+  }
+
+  // Store referral code for later use
+  storeReferralCode(code: string): void {
+    localStorage.setItem("pending_referral_code", code);
+  }
+
+  // Get stored referral code
+  getStoredReferralCode(): string | null {
+    return localStorage.getItem("pending_referral_code");
+  }
+
+  // Clear stored referral code
+  clearStoredReferralCode(): void {
+    localStorage.removeItem("pending_referral_code");
+  }
 }
