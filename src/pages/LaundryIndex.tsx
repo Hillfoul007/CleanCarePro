@@ -412,7 +412,7 @@ const LaundryIndex = () => {
     setCurrentView(targetView);
 
     console.log("✅ User logged in successfully:", user.name || user.phone);
-    console.log("�� Redirecting to:", targetView);
+    console.log("📍 Redirecting to:", targetView);
 
     // Add success notification
     addNotification(
@@ -690,6 +690,7 @@ const LaundryIndex = () => {
 
           // Clear cart
           localStorage.removeItem("laundry_cart");
+          localStorage.removeItem("cleancare_cart"); // Add the correct cart storage key
 
           // Show booking confirmation screen
           setCurrentView("booking-confirmed");
