@@ -316,7 +316,7 @@ const LaundryIndex = () => {
             return; // Exit early - user is authenticated
           }
         } catch (parseError) {
-          console.warn("⚠️ Error parsing stored user data:", parseError);
+          console.warn("��️ Error parsing stored user data:", parseError);
         }
       }
 
@@ -598,6 +598,7 @@ const LaundryIndex = () => {
             mongoResult.data.custom_order_id ||
             mongoResult.data._id ||
             `local_${Date.now()}`,
+          custom_order_id: mongoResult.data.custom_order_id, // Add custom_order_id field
           services: detailedServices, // Use detailed services with quantities
           totalAmount: cartData.totalAmount,
           pickupDate: cartData.pickupDate,
