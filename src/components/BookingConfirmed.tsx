@@ -15,7 +15,7 @@ import {
   Home,
   Eye,
 } from "lucide-react";
-import { getBookingById } from "@/services/BookingService"; // Adjust the path if needed
+import { getBookingById } from "../services/BookingService";
 
 interface BookingConfirmedProps {
   bookingData: {
