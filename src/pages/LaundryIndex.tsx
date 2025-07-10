@@ -594,10 +594,7 @@ const LaundryIndex = () => {
 
         // Store booking data for confirmation screen
         const confirmationData = {
-          bookingId:
-            mongoResult.data.custom_order_id ||
-            mongoResult.data._id ||
-            `local_${Date.now()}`,
+          bookingId: mongoResult.data._id || `local_${Date.now()}`, // Use MongoDB _id for API calls
           custom_order_id: mongoResult.data.custom_order_id, // Add custom_order_id field
           services: detailedServices, // Use detailed services with quantities
           totalAmount: cartData.totalAmount,
