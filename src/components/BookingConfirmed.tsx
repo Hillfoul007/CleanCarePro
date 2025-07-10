@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,10 +15,12 @@ import {
   Home,
   Eye,
 } from "lucide-react";
+import { getBookingById } from "@/services/BookingService"; // Adjust the path if needed
 
 interface BookingConfirmedProps {
   bookingData: {
     bookingId: string;
+    custom_order_id?: string; // <-- Add this line
     services: any[];
     totalAmount: number;
     pickupDate: string;
@@ -31,11 +33,28 @@ interface BookingConfirmedProps {
   onViewBookings: () => void;
 }
 
+// Add your booking fetching function import here
+// import { getBookingById } from "@/services/BookingService"; // Adjust path as needed
+
 const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
   bookingData,
   onGoHome,
   onViewBookings,
 }) => {
+  const [customOrderId, setCustomOrderId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Only fetch if custom_order_id is not already present
+    if (!bookingData.custom_order_id && bookingData.bookingId) {
+      // Replace this with your actual API/service call
+      getBookingById(bookingData.bookingId).then((booking) => {
+        if (booking && booking.custom_order_id) {
+          setCustomOrderId(booking.custom_order_id);
+        }
+      });
+    }
+  }, [bookingData.custom_order_id, bookingData.bookingId]);
+
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
@@ -83,11 +102,15 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
         {/* Booking ID */}
         <Card className="bg-green-50 border-green-200">
           <CardContent className="p-3 text-center">
-            <p className="text-sm text-green-700 mb-1">Booking ID</p>
+            <p className="text-sm text-green-700 mb-1">Order ID</p>
             <p className="text-lg font-bold text-green-900">
               #
-              {bookingData.bookingId
-                ? bookingData.bookingId.slice(-6).toUpperCase()
+              {bookingData.custom_order_id
+                ? bookingData.custom_order_id
+                : customOrderId
+                ? customOrderId
+                : bookingData.bookingId
+                ? bookingData.bookingId
                 : "N/A"}
             </p>
           </CardContent>

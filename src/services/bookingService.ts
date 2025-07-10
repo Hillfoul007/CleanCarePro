@@ -2,6 +2,18 @@ import MongoDBService from "./mongodbService";
 import { DVHostingSmsService } from "./dvhostingSmsService";
 import { config } from "../config/env";
 
+export interface AddressDetails {
+  fullAddress?: string;
+  flatNo?: string;
+  street?: string;
+  landmark?: string;
+  village?: string;
+  city?: string;
+  pincode?: string;
+  coordinates?: { lat: number; lng: number };
+  [key: string]: any;
+}
+
 export interface BookingDetails {
   id: string;
   custom_order_id?: string;
@@ -13,7 +25,7 @@ export interface BookingDetails {
   deliveryDate: string;
   pickupTime: string;
   deliveryTime: string;
-  address: string;
+  address: string | AddressDetails;
   contactDetails: {
     phone: string;
     name: string;
@@ -23,6 +35,8 @@ export interface BookingDetails {
   paymentMethod?: string;
   createdAt: string;
   updatedAt: string;
+  additional_details?: string;
+  discount_amount?: number;
 }
 
 export interface BookingResponse {
@@ -176,10 +190,10 @@ export class BookingService {
             backendSaveSuccess = true;
 
             // If backend returns a booking with custom_order_id, use that
-            if (result && result.custom_order_id) {
+            if (result && (result as any).custom_order_id) {
               backendBooking = {
                 ...booking,
-                custom_order_id: result.custom_order_id,
+                custom_order_id: (result as any).custom_order_id,
               };
               // Update localStorage with backend data
               this.saveBookingToLocalStorage(backendBooking);
@@ -534,7 +548,7 @@ export class BookingService {
   /**
    * Sync booking to backend - now throws errors for better error handling
    */
-  private async syncBookingToBackend(booking: BookingDetails): Promise<void> {
+  private async syncBookingToBackend(booking: BookingDetails): Promise<{ custom_order_id?: string } | undefined> {
     try {
       // Skip backend sync if no API URL configured (fly.dev environment)
       if (!this.apiBaseUrl) {
@@ -590,7 +604,7 @@ export class BookingService {
 
       // Ensure total_price is a valid number greater than 0
       const totalPrice = Number(
-        booking.totalAmount || booking.total_price || 50,
+        booking.totalAmount || 50,
       );
       if (isNaN(totalPrice) || totalPrice <= 0) {
         throw new Error("Invalid total price - must be greater than 0");
@@ -634,9 +648,8 @@ export class BookingService {
         services: servicesArray,
         scheduled_date:
           booking.pickupDate ||
-          booking.scheduled_date ||
           new Date().toISOString().split("T")[0],
-        scheduled_time: booking.pickupTime || booking.scheduled_time || "10:00",
+        scheduled_time: booking.pickupTime || "10:00",
         provider_name: "CleanCare Pro",
         address: addressString,
         coordinates: coordinates,
