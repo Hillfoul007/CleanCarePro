@@ -253,4 +253,23 @@ export class ReferralService {
       }, 1000);
     });
   }
+
+  // Generate social sharing URLs
+  generateSocialShareUrls(shareUrl: string, referralCode: string) {
+    const message = `🧼 Join me on CleanCare Pro and get 50% OFF your first laundry service! Use my referral code: ${referralCode} or click my link: ${shareUrl}`;
+    const encodedMessage = encodeURIComponent(message);
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const shortMessage = encodeURIComponent(
+      `Get 50% OFF your first CleanCare Pro order with code ${referralCode}!`,
+    );
+
+    return {
+      whatsapp: `https://wa.me/?text=${encodedMessage}`,
+      twitter: `https://twitter.com/intent/tweet?text=${shortMessage}&url=${encodedUrl}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${shortMessage}`,
+      telegram: `https://t.me/share/url?url=${encodedUrl}&text=${shortMessage}`,
+      sms: `sms:?body=${encodedMessage}`,
+      email: `mailto:?subject=${encodeURIComponent("Get 50% OFF with CleanCare Pro!")}&body=${encodedMessage}`,
+    };
+  }
 }

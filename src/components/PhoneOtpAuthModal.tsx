@@ -17,6 +17,7 @@ import {
   Shield,
   MessageSquare,
   X,
+  Gift,
 } from "lucide-react";
 import { DVHostingSmsService } from "@/services/dvhostingSmsService";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,6 +26,7 @@ import {
   addIosOtpDelay,
   isIosDevice,
 } from "@/utils/iosAuthFix";
+import { apiClient } from "@/lib/apiClient";
 
 interface PhoneOtpAuthModalProps {
   isOpen: boolean;
@@ -43,12 +45,19 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [referralValidation, setReferralValidation] = useState<{
+    isValid: boolean | null;
+    discount?: number;
+    referrerName?: string;
+    message?: string;
+  }>({ isValid: null });
   const isMobile = useIsMobile();
 
   const [formData, setFormData] = useState({
     phone: "",
     otp: "",
     name: "",
+    referralCode: "",
   });
 
   const dvhostingSmsService = DVHostingSmsService.getInstance();
@@ -99,15 +108,46 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
       phone: "",
       otp: "",
       name: "",
+      referralCode: "",
     });
     setError("");
     setSuccess("");
+    setReferralValidation({ isValid: null });
     setCurrentStep("phone");
   };
 
   const validatePhone = (phone: string) => {
     const phoneRegex = /^[6-9]\d{9}$/;
     return phoneRegex.test(phone);
+  };
+
+  const validateReferralCode = async (code: string) => {
+    if (!code || code.trim().length === 0) {
+      setReferralValidation({ isValid: null });
+      return;
+    }
+
+    try {
+      const response = await apiClient.validateReferralCode(code.trim());
+      if (response.data && response.data.success) {
+        setReferralValidation({
+          isValid: true,
+          discount: response.data.referral.discount_percentage,
+          referrerName: response.data.referral.referrer_name,
+          message: `Valid! You'll get ${response.data.referral.discount_percentage}% off`,
+        });
+      } else {
+        setReferralValidation({
+          isValid: false,
+          message: response.data?.message || "Invalid referral code",
+        });
+      }
+    } catch (error: any) {
+      setReferralValidation({
+        isValid: false,
+        message: "Unable to validate referral code",
+      });
+    }
   };
 
   const handleSendOTP = async (e?: React.FormEvent) => {
@@ -192,6 +232,24 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
           await dvhostingSmsService.saveUserToBackend(result.user);
         } catch (userSaveError) {
           // Silent fail for user save to backend
+        }
+
+        // Apply referral code if provided and valid
+        if (formData.referralCode && referralValidation.isValid) {
+          try {
+            const referralResponse = await apiClient.applyReferralCode(
+              formData.referralCode.trim(),
+              result.user._id,
+            );
+            if (referralResponse.data?.success) {
+              setSuccess(
+                `Login successful! ${referralResponse.data.message || "Referral code applied!"}`,
+              );
+            }
+          } catch (referralError) {
+            console.warn("Failed to apply referral code:", referralError);
+            // Don't fail the login if referral application fails
+          }
         }
 
         onSuccess(result.user);
@@ -285,6 +343,59 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
                         required
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="referralCode"
+                      className="text-sm font-medium"
+                    >
+                      Referral Code (Optional)
+                    </Label>
+                    <div className="mt-1 relative">
+                      <Gift className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="referralCode"
+                        type="text"
+                        placeholder="Enter referral code"
+                        value={formData.referralCode}
+                        onChange={(e) => {
+                          const code = e.target.value.toUpperCase();
+                          setFormData({
+                            ...formData,
+                            referralCode: code,
+                          });
+                          if (code.length >= 3) {
+                            validateReferralCode(code);
+                          } else {
+                            setReferralValidation({ isValid: null });
+                          }
+                        }}
+                        className={`pl-10 ${
+                          referralValidation.isValid === true
+                            ? "border-green-500 focus:border-green-500"
+                            : referralValidation.isValid === false
+                              ? "border-red-500 focus:border-red-500"
+                              : ""
+                        }`}
+                      />
+                    </div>
+                    {referralValidation.isValid === true && (
+                      <p className="text-xs text-green-600 mt-1">
+                        ✓ {referralValidation.message}
+                      </p>
+                    )}
+                    {referralValidation.isValid === false && (
+                      <p className="text-xs text-red-600 mt-1">
+                        ✗ {referralValidation.message}
+                      </p>
+                    )}
+                    {referralValidation.isValid === null && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Get 50% off on your first order with a valid referral
+                        code
+                      </p>
+                    )}
                   </div>
 
                   {error && (
@@ -479,6 +590,53 @@ const PhoneOtpAuthModal: React.FC<PhoneOtpAuthModalProps> = ({
                 <p className="text-xs text-gray-500">
                   OTP will be sent to this number via SMS
                 </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="referralCode">Referral Code (Optional)</Label>
+                <div className="relative">
+                  <Gift className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="referralCode"
+                    type="text"
+                    placeholder="Enter referral code"
+                    value={formData.referralCode}
+                    onChange={(e) => {
+                      const code = e.target.value.toUpperCase();
+                      setFormData({
+                        ...formData,
+                        referralCode: code,
+                      });
+                      if (code.length >= 3) {
+                        validateReferralCode(code);
+                      } else {
+                        setReferralValidation({ isValid: null });
+                      }
+                    }}
+                    className={`pl-10 ${
+                      referralValidation.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : referralValidation.isValid === false
+                          ? "border-red-500 focus:border-red-500"
+                          : ""
+                    }`}
+                  />
+                </div>
+                {referralValidation.isValid === true && (
+                  <p className="text-xs text-green-600">
+                    ✓ {referralValidation.message}
+                  </p>
+                )}
+                {referralValidation.isValid === false && (
+                  <p className="text-xs text-red-600">
+                    ✗ {referralValidation.message}
+                  </p>
+                )}
+                {referralValidation.isValid === null && (
+                  <p className="text-xs text-gray-500">
+                    Get 50% off on your first order with a valid referral code
+                  </p>
+                )}
               </div>
 
               {error && (
