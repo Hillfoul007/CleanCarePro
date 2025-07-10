@@ -259,7 +259,7 @@ router.post("/", async (req, res) => {
     ) {
       extractedPhone = customer_id;
     }
-    console.log("👤 Actual customer_id to use:", actualCustomerId);
+    console.log("��� Actual customer_id to use:", actualCustomerId);
     console.log("📞 Extracted phone:", extractedPhone);
 
     // CONSOLIDATED CUSTOMER LOOKUP STRATEGY
@@ -552,7 +552,7 @@ router.post("/", async (req, res) => {
 
     // Handle referral discounts after successful booking save
     try {
-      console.log("🎁 Checking for referral discounts...");
+      console.log("��� Checking for referral discounts...");
 
       // Check if this user has available referral discounts
       const userWithDiscounts = await User.findById(customer._id);
@@ -705,7 +705,7 @@ router.get("/customer/:customerId", async (req, res) => {
     const { status, limit = 50, offset = 0 } = req.query;
 
     console.log("📋 Fetching bookings for customer:", customerId);
-    console.log("📊 Customer ID type:", typeof customerId);
+    console.log("�� Customer ID type:", typeof customerId);
 
     // CONSOLIDATED CUSTOMER LOOKUP - Same logic as booking creation
     let targetCustomerId = null;
@@ -866,6 +866,7 @@ router.get("/customer/:customerId", async (req, res) => {
     }
 
     const bookings = await Booking.find(query)
+      .select("+item_prices +charges_breakdown") // Explicitly include item_prices and charges_breakdown
       .populate("customer_id", "full_name phone email")
       .populate("rider_id", "full_name phone")
       .sort({ created_at: -1 })
@@ -1101,6 +1102,7 @@ router.get("/:bookingId", async (req, res) => {
     const { bookingId } = req.params;
 
     const booking = await Booking.findById(bookingId)
+      .select("+item_prices +charges_breakdown") // Include all pricing details
       .populate("customer_id", "full_name phone email")
       .populate("rider_id", "full_name phone");
 
@@ -1611,7 +1613,7 @@ router.get("/", async (req, res) => {
 
     const bookings = await Booking.find(query)
       .select(
-        "custom_order_id name phone customer_id status service services scheduled_date scheduled_time total_price final_amount address created_at updated_at rider_id payment_status",
+        "custom_order_id name phone customer_id status service services scheduled_date scheduled_time total_price final_amount address created_at updated_at rider_id payment_status item_prices charges_breakdown",
       )
       .populate("customer_id", "full_name phone email")
       .populate("rider_id", "full_name phone")

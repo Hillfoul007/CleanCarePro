@@ -44,11 +44,21 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
     // Only fetch if custom_order_id is not already present
     if (!bookingData.custom_order_id && bookingData.bookingId) {
       // Replace this with your actual API/service call
-      bookingHelpers.getBookingById(bookingData.bookingId).then((result) => {
-        if (result.data && result.data.custom_order_id) {
-          setCustomOrderId(result.data.custom_order_id);
-        }
-      });
+      bookingHelpers
+        .getBookingById(bookingData.bookingId)
+        .then((result) => {
+          if (result.data && result.data.custom_order_id) {
+            setCustomOrderId(result.data.custom_order_id);
+          } else {
+            console.log(
+              "Custom order ID not found in booking data:",
+              result.data,
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch booking details:", error);
+        });
     }
   }, [bookingData.custom_order_id, bookingData.bookingId]);
 
@@ -102,13 +112,11 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
             <p className="text-sm text-green-700 mb-1">Order ID</p>
             <p className="text-lg font-bold text-green-900">
               #
-              {bookingData.custom_order_id
-                ? bookingData.custom_order_id
-                : customOrderId
-                  ? customOrderId
-                  : bookingData.bookingId
-                    ? bookingData.bookingId
-                    : "N/A"}
+              {bookingData.custom_order_id ||
+                customOrderId ||
+                (bookingData.bookingId
+                  ? `CC${bookingData.bookingId.slice(-6)}`
+                  : "Generating...")}
             </p>
           </CardContent>
         </Card>

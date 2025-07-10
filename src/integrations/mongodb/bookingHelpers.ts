@@ -452,7 +452,12 @@ export const bookingHelpers = {
         };
       }
 
-      return { data: data.bookings, error: null };
+      // Ensure custom_order_id is included in all bookings
+      const bookingsWithOrderIds = data.bookings.map((booking: any) => ({
+        ...booking,
+        custom_order_id: booking.custom_order_id || booking.order_id,
+      }));
+      return { data: bookingsWithOrderIds, error: null };
     } catch (error: any) {
       console.error("Bookings fetch error:", error);
       return {
@@ -619,7 +624,12 @@ export const bookingHelpers = {
         };
       }
 
-      return { data: data.booking, error: null };
+      // Ensure custom_order_id is included in response
+      const bookingWithOrderId = {
+        ...data.booking,
+        custom_order_id: data.booking.custom_order_id || data.booking.order_id,
+      };
+      return { data: bookingWithOrderId, error: null };
     } catch (error: any) {
       console.error("Booking fetch error:", error);
       return {

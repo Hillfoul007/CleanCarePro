@@ -33,7 +33,7 @@ const EnhancedBookingHistoryModal: React.FC<
                   Booking #
                   {booking.custom_order_id ||
                     booking.order_id ||
-                    `CC${Date.now().toString().slice(-6)}`}
+                    "Order ID not available"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -42,7 +42,10 @@ const EnhancedBookingHistoryModal: React.FC<
                 </p>
                 <p>
                   <strong>Total:</strong> ₹
-                  {booking.totalAmount || booking.total_price}
+                  {booking.totalAmount ||
+                    booking.total_price ||
+                    booking.final_amount ||
+                    0}
                 </p>
                 <p>
                   <strong>Date:</strong>{" "}
