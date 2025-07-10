@@ -236,4 +236,21 @@ export class ReferralService {
   clearStoredReferralCode(): void {
     localStorage.removeItem("pending_referral_code");
   }
+
+  // Apply referral code for a user
+  applyReferralCode(
+    code: string,
+    userId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    return new Promise((resolve) => {
+      // In a real app, this would be an API call
+      // For now, just simulate success
+      setTimeout(() => {
+        resolve({
+          success: true,
+          message: `Referral code ${code} applied successfully! You'll get 50% off your first order.`,
+        });
+      }, 1000);
+    });
+  }
 }
