@@ -253,7 +253,9 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
       };
     }, [currentUser]);
 
-    // Auto-refresh bookings every 30 seconds to catch new bookings
+    // Disabled auto-refresh to prevent logout issues
+    // Users can manually refresh using the refresh button if needed
+    /*
     useEffect(() => {
       if (!currentUser) return;
 
@@ -266,6 +268,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
 
       return () => clearInterval(interval);
     }, [currentUser]);
+    */
 
     // Refresh when user comes back to the page
     useEffect(() => {
