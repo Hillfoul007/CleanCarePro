@@ -923,53 +923,48 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                 typeof service === "object"
                                   ? service.quantity || 1
                                   : 1;
-                              // Get actual service price from laundry services data or booking data
+                              // Get actual service price - prioritize database item_prices
                               let price = 50; // Default price
+                              let totalServicePrice = 0;
 
+                              // First priority: Use stored item_prices from database
                               if (
-                                typeof service === "object" &&
-                                service.price
-                              ) {
-                                price = service.price;
-                              } else if (
                                 booking.item_prices &&
+                                Array.isArray(booking.item_prices) &&
                                 booking.item_prices.length > 0
                               ) {
-                                // Find matching price from stored item_prices
                                 const matchingPrice = booking.item_prices.find(
                                   (item: any) =>
-                                    item.service_name === serviceName,
+                                    item.service_name === serviceName ||
+                                    item.service_name.toLowerCase() ===
+                                      serviceName.toLowerCase(),
                                 );
                                 if (matchingPrice) {
                                   price = matchingPrice.unit_price;
-                                }
-                              } else {
-                                // Import and use laundry services to get original prices
-                                try {
-                                  import("@/data/laundryServices").then(
-                                    ({ getServiceById, getSortedServices }) => {
-                                      const allServices = getSortedServices();
-                                      const matchingService = allServices.find(
-                                        (s) =>
-                                          s.name.toLowerCase() ===
-                                            serviceName.toLowerCase() ||
-                                          serviceName
-                                            .toLowerCase()
-                                            .includes(s.name.toLowerCase()),
-                                      );
-                                      if (matchingService) {
-                                        price = matchingService.price;
-                                      }
-                                    },
-                                  );
-                                } catch (error) {
-                                  console.error(
-                                    "Error loading service prices:",
-                                    error,
+                                  totalServicePrice =
+                                    matchingPrice.total_price ||
+                                    price * quantity;
+                                  console.log(
+                                    `Using database price for ${serviceName}: ₹${price}`,
                                   );
                                 }
+                              }
 
-                                // Fallback: Use known service prices
+                              // Second priority: Service object has price
+                              else if (
+                                typeof service === "object" &&
+                                service.price &&
+                                service.price > 0
+                              ) {
+                                price = service.price;
+                                totalServicePrice = price * quantity;
+                                console.log(
+                                  `Using service object price for ${serviceName}: ₹${price}`,
+                                );
+                              }
+
+                              // Third priority: Use known service prices as fallback
+                              else {
                                 const servicePriceMap: {
                                   [key: string]: number;
                                 } = {
@@ -990,19 +985,40 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                   "laundry and fold": 70,
                                   "laundry and iron": 120,
                                   "steam iron": 30,
+                                  "home service": 100,
                                 };
 
                                 const lowerServiceName =
                                   serviceName.toLowerCase();
-                                for (const [key, value] of Object.entries(
-                                  servicePriceMap,
-                                )) {
-                                  if (lowerServiceName.includes(key)) {
-                                    price = value;
-                                    break;
+
+                                // Find exact match first
+                                if (servicePriceMap[lowerServiceName]) {
+                                  price = servicePriceMap[lowerServiceName];
+                                } else {
+                                  // Find partial match
+                                  for (const [key, value] of Object.entries(
+                                    servicePriceMap,
+                                  )) {
+                                    if (
+                                      lowerServiceName.includes(key) ||
+                                      key.includes(lowerServiceName)
+                                    ) {
+                                      price = value;
+                                      break;
+                                    }
                                   }
                                 }
+                                totalServicePrice = price * quantity;
+                                console.log(
+                                  `Using fallback price for ${serviceName}: ₹${price}`,
+                                );
                               }
+
+                              // Use calculated total or calculate from unit price
+                              const displayPrice =
+                                totalServicePrice > 0
+                                  ? totalServicePrice
+                                  : price * quantity;
 
                               return (
                                 <div
@@ -1017,7 +1033,7 @@ const EnhancedBookingHistory: React.FC<EnhancedBookingHistoryProps> =
                                       Qty: {quantity}
                                     </span>
                                     <span className="font-semibold text-green-600">
-                                      ₹{price * quantity}
+                                      ₹{displayPrice}
                                     </span>
                                   </div>
                                 </div>
