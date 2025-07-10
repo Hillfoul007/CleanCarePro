@@ -32,6 +32,7 @@ const API_BASE_URL = getApiBaseUrl();
 
 interface Booking {
   _id?: string;
+  custom_order_id?: string; // Add custom_order_id field
   customer_id: string;
   rider_id?: string;
   service: string;

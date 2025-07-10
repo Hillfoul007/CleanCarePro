@@ -472,6 +472,7 @@ export class BookingService {
   private transformBackendBooking(backendBooking: any): BookingDetails {
     return {
       id: backendBooking._id || backendBooking.id,
+      custom_order_id: backendBooking.custom_order_id, // Add custom_order_id mapping
       userId: backendBooking.customer_id,
       services: backendBooking.services?.map(
         (serviceName: string) => serviceName,
@@ -548,7 +549,9 @@ export class BookingService {
   /**
    * Sync booking to backend - now throws errors for better error handling
    */
-  private async syncBookingToBackend(booking: BookingDetails): Promise<{ custom_order_id?: string } | undefined> {
+  private async syncBookingToBackend(
+    booking: BookingDetails,
+  ): Promise<{ custom_order_id?: string } | undefined> {
     try {
       // Skip backend sync if no API URL configured (fly.dev environment)
       if (!this.apiBaseUrl) {
@@ -603,9 +606,7 @@ export class BookingService {
       }
 
       // Ensure total_price is a valid number greater than 0
-      const totalPrice = Number(
-        booking.totalAmount || 50,
-      );
+      const totalPrice = Number(booking.totalAmount || 50);
       if (isNaN(totalPrice) || totalPrice <= 0) {
         throw new Error("Invalid total price - must be greater than 0");
       }
@@ -647,8 +648,7 @@ export class BookingService {
         service_type: "home-service",
         services: servicesArray,
         scheduled_date:
-          booking.pickupDate ||
-          new Date().toISOString().split("T")[0],
+          booking.pickupDate || new Date().toISOString().split("T")[0],
         scheduled_time: booking.pickupTime || "10:00",
         provider_name: "CleanCare Pro",
         address: addressString,
