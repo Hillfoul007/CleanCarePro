@@ -716,6 +716,14 @@ Confirm this booking?`;
       }
 
       setShowZomatoAddAddressPage(false);
+
+      // Add success notification for the completed address flow
+      addNotification(
+        createSuccessNotification(
+          "Address Added",
+          "You can now proceed with your booking",
+        ),
+      );
     } catch (error) {
       console.error("Failed to save new address:", error);
 
