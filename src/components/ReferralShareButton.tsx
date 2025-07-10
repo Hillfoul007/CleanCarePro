@@ -47,9 +47,10 @@ export const ReferralShareButton = React.forwardRef<
     { userId, currentUser, variant = "default", className = "", onClick },
     ref,
   ) => {
+    const referralService = ReferralService.getInstance();
     const [isOpen, setIsOpen] = useState(false);
-    const [shareData, setShareData] = useState<ShareLinkResponse | null>(null);
-    const [stats, setStats] = useState<ReferralStats | null>(null);
+    const [shareData, setShareData] = useState<any>(null);
+    const [stats, setStats] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState<string | null>(null);
 
