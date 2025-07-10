@@ -38,7 +38,7 @@ function App() {
     <ErrorBoundary>
       <NotificationProvider>
         <Router>
-          <div className="App bg-green-500">
+          <div className="App">
             <Routes>
               <Route path="/" element={<LaundryIndex />} />
               <Route path="/address-demo" element={<AddressSearchDemo />} />
