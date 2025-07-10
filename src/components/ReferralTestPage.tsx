@@ -29,6 +29,7 @@ interface ReferralTestPageProps {
 }
 
 export function ReferralTestPage({ currentUser }: ReferralTestPageProps) {
+  const referralService = ReferralService.getInstance();
   const [testResults, setTestResults] = useState<any[]>([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [shareData, setShareData] = useState<any>(null);
