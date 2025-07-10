@@ -130,12 +130,56 @@ export class ReferralService {
       JSON.stringify(referrerCoupons),
     );
 
+    // Add notification to user's notification queue
+    const notifications = JSON.parse(
+      localStorage.getItem("user_notifications") || "[]",
+    );
+    notifications.push({
+      id: `referral_${Date.now()}`,
+      type: "referral_bonus",
+      title: "Referral Bonus Earned! 🎉",
+      message: `You've earned a ${bonusCoupon.discount}% discount coupon for referring a friend!`,
+      couponCode: bonusCoupon.code,
+      createdAt: new Date().toISOString(),
+      read: false,
+    });
+    localStorage.setItem("user_notifications", JSON.stringify(notifications));
+
     // Trigger notification for referrer
     window.dispatchEvent(
       new CustomEvent("referralBonusAwarded", {
         detail: { referralCode, bonusCoupon },
       }),
     );
+
+    // Trigger notification update event
+    window.dispatchEvent(
+      new CustomEvent("notificationUpdate", {
+        detail: { type: "referral_bonus", coupon: bonusCoupon },
+      }),
+    );
+  }
+
+  // Get user notifications
+  getUserNotifications(): any[] {
+    return JSON.parse(localStorage.getItem("user_notifications") || "[]");
+  }
+
+  // Mark notification as read
+  markNotificationAsRead(notificationId: string): void {
+    const notifications = this.getUserNotifications();
+    const updatedNotifications = notifications.map((notif) =>
+      notif.id === notificationId ? { ...notif, read: true } : notif,
+    );
+    localStorage.setItem(
+      "user_notifications",
+      JSON.stringify(updatedNotifications),
+    );
+  }
+
+  // Clear all notifications
+  clearAllNotifications(): void {
+    localStorage.setItem("user_notifications", JSON.stringify([]));
   }
 
   // Get user's available coupons (including referral bonuses)
