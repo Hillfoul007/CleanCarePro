@@ -44,14 +44,12 @@ export function ReferralTestPage({ currentUser }: ReferralTestPageProps) {
     try {
       // Test 1: Generate referral code
       try {
-        const referralData = await referralService.generateReferralCode(
-          currentUser.id,
-        );
+        const referralCode = referralService.generateReferralCode(currentUser);
         results.push({
           test: "Generate Referral Code",
           status: "success",
-          message: `Generated code: ${referralData.referral_code}`,
-          data: referralData,
+          message: `Generated code: ${referralCode}`,
+          data: { referral_code: referralCode },
         });
       } catch (error) {
         results.push({
