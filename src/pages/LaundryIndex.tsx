@@ -668,6 +668,7 @@ const LaundryIndex = () => {
           // Store booking data for confirmation screen
           const confirmationData = {
             bookingId: `local_${Date.now()}`,
+            custom_order_id: undefined, // Will be fetched by BookingConfirmed component or generated locally
             services: detailedServices, // Use detailed services with quantities
             totalAmount: cartData.totalAmount,
             pickupDate: cartData.pickupDate,
