@@ -299,7 +299,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white shadow-sm px-4 py-4 flex items-center gap-4 sticky top-0 z-10">
+        <div className="bg-white shadow-sm px-4 py-4 flex items-center gap-4 sticky top-0 z-10 safe-area-top">
           <Button variant="ghost" onClick={onBack} className="p-0 h-8 w-8">
             <ArrowLeft className="h-5 w-5" />
           </Button>
