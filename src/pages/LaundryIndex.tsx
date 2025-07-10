@@ -231,8 +231,23 @@ const LaundryIndex = () => {
       setCurrentView("home");
     };
 
+    // Handle referral notifications
+    const handleReferralBonus = (event: CustomEvent) => {
+      const { bonusCoupon } = event.detail;
+      addNotification(
+        createSuccessNotification(
+          "Referral Bonus Earned! 🎉",
+          `You've earned a ${bonusCoupon.discount}% discount coupon (${bonusCoupon.code}) for referring a friend!`,
+        ),
+      );
+    };
+
     window.addEventListener("auth-login", handleAuthLogin as EventListener);
     window.addEventListener("auth-logout", handleAuthLogout);
+    window.addEventListener(
+      "referralBonusAwarded",
+      handleReferralBonus as EventListener,
+    );
 
     return () => {
       window.removeEventListener(
@@ -240,6 +255,10 @@ const LaundryIndex = () => {
         handleAuthLogin as EventListener,
       );
       window.removeEventListener("auth-logout", handleAuthLogout);
+      window.removeEventListener(
+        "referralBonusAwarded",
+        handleReferralBonus as EventListener,
+      );
     };
   }, []);
 
