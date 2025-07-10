@@ -70,6 +70,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
     discount: number;
+    maxDiscount?: number;
+    isReferral?: boolean;
   } | null>(null);
 
   const authService = OTPAuthService.getInstance();
