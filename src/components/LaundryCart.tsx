@@ -899,12 +899,43 @@ Confirm this booking?`;
                   No address selected
                 </p>
                 <Button
-                  onClick={() => setShowZomatoAddressSelector(true)}
+                  onClick={() => {
+                    if (!currentUser) {
+                      // Save current cart state with specific flag for address flow
+                      const addressFlowState = {
+                        addressData,
+                        phoneNumber,
+                        selectedDate: selectedDate?.toISOString(),
+                        selectedTime,
+                        specialInstructions,
+                        appliedCoupon,
+                        timestamp: Date.now(),
+                        redirectToAddress: true, // Flag to indicate address flow
+                      };
+                      localStorage.setItem(
+                        "address_flow_state",
+                        JSON.stringify(addressFlowState),
+                      );
+
+                      if (onLoginRequired) {
+                        onLoginRequired();
+                      } else {
+                        addNotification(
+                          createWarningNotification(
+                            "Login Required",
+                            "Please sign in to add an address",
+                          ),
+                        );
+                      }
+                    } else {
+                      setShowZomatoAddressSelector(true);
+                    }
+                  }}
                   variant="outline"
                   className="w-full border-green-600 text-green-600 hover:bg-green-50"
                 >
                   <MapPin className="h-4 w-4 mr-2" />
-                  Select Address
+                  {!currentUser ? "Login to Add Address" : "Select Address"}
                 </Button>
               </div>
             )}
