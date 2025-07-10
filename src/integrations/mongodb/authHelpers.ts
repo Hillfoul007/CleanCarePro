@@ -10,6 +10,7 @@ export const authHelpers = {
     name: string,
     phone: string,
     userType: "customer" | "provider" | "rider" = "customer",
+    referralCode?: string,
   ) {
     try {
       if (!isBackendAvailable()) {
