@@ -111,7 +111,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       setAddresses(newAddresses);
     };
 
-    const handleNewAddressSave = async (newAddress: any) => {
+        const handleNewAddressSave = async (newAddress: any) => {
       if (!currentUser) return;
 
       try {
@@ -155,16 +155,36 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       }
     };
 
-    const handleEditAddress = (updatedAddress: AddressData) => {
+        const handleEditAddress = async (updatedAddress: AddressData) => {
       if (!editingAddress?.id) {
         console.error("No editing address ID found");
         return;
       }
 
-      console.log("💾 Saving edited address:", editingAddress.id);
+      try {
+        console.log("💾 Saving edited address to backend:", editingAddress.id);
 
-      const updatedAddresses = addresses.map((addr) =>
-        addr.id === editingAddress.id
+        // Include the ID for updating
+        const addressToUpdate = {
+          ...updatedAddress,
+          id: editingAddress.id,
+          _id: editingAddress._id || editingAddress.id,
+        };
+
+        // Use AddressService to save to backend and localStorage
+        const result = await addressService.saveAddress(addressToUpdate);
+
+        if (result.success) {
+          // Refresh addresses from server
+          loadAddresses();
+          setShowAddAddressPage(false);
+          setEditingAddress(null);
+          console.log("✅ Address updated successfully");
+        } else {
+          console.error("Failed to update address:", result.error);
+          // Fallback to local update
+          const updatedAddresses = addresses.map((addr) =>
+            addr.id === editingAddress.id
           ? {
               ...updatedAddress,
               id: editingAddress.id,
