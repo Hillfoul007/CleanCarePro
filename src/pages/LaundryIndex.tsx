@@ -337,6 +337,10 @@ const LaundryIndex = () => {
         console.log("ℹ️ No valid authentication data found");
         console.log("🔒 Preserving current login state to prevent auto-logout");
         // Don't call setIsLoggedIn(false) or setCurrentUser(null) here
+        // Only log out if user was never logged in
+        if (!currentUser && !isLoggedIn) {
+          console.log("👤 User was never logged in - staying logged out");
+        }
       }
     } catch (error) {
       console.error("Error checking auth state:", error);
@@ -411,7 +415,7 @@ const LaundryIndex = () => {
     const targetView = previousView || "home";
     setCurrentView(targetView);
 
-    console.log("✅ User logged in successfully:", user.name || user.phone);
+    console.log("��� User logged in successfully:", user.name || user.phone);
     console.log("📍 Redirecting to:", targetView);
 
     // Add success notification
