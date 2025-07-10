@@ -33,8 +33,10 @@ const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   }
 };
 
-// Auth helpers for production
+// Auth helpers for production - merge with MongoDB authHelpers
 export const authHelpers = {
+  // Include all MongoDB authHelpers methods
+  ...mongoAuthHelpers,
   getCurrentUser: async () => {
     const userData = localStorage.getItem("cleancare_user");
     if (!userData) return null;
