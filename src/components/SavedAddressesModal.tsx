@@ -111,10 +111,37 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
       setAddresses(newAddresses);
     };
 
-    const handleNewAddressSave = (newAddress: any) => {
+    const handleNewAddressSave = async (newAddress: any) => {
       if (!currentUser) return;
 
       try {
+        console.log("💾 Saving new address to backend:", newAddress);
+
+        // Use AddressService to save to backend and localStorage
+        const result = await addressService.saveAddress(newAddress);
+
+        if (result.success) {
+          // Refresh addresses from server
+          loadAddresses();
+          setShowAddAddressPage(false);
+          console.log("✅ New address saved successfully");
+        } else {
+          console.error("Failed to save address:", result.error);
+          // Still try to save locally as fallback
+          const addressWithId = {
+            ...newAddress,
+            id: `addr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const updatedAddresses = [...addresses, addressWithId];
+          saveAddresses(updatedAddresses);
+          setShowAddAddressPage(false);
+        }
+      } catch (error) {
+        console.error("Failed to save new address:", error);
+        // Fallback to local storage
         const addressWithId = {
           ...newAddress,
           id: `addr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -124,11 +151,7 @@ const SavedAddressesModal: React.FC<SavedAddressesModalProps> = React.memo(
 
         const updatedAddresses = [...addresses, addressWithId];
         saveAddresses(updatedAddresses);
-
         setShowAddAddressPage(false);
-        console.log("✅ New address saved successfully");
-      } catch (error) {
-        console.error("Failed to save new address:", error);
       }
     };
 
