@@ -15,7 +15,7 @@ import {
   Home,
   Eye,
 } from "lucide-react";
-import { getBookingById } from "../services/BookingService";
+import { bookingHelpers } from "../integrations/mongodb/bookingHelpers";
 
 interface BookingConfirmedProps {
   bookingData: {
@@ -108,10 +108,10 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
               {bookingData.custom_order_id
                 ? bookingData.custom_order_id
                 : customOrderId
-                ? customOrderId
-                : bookingData.bookingId
-                ? bookingData.bookingId
-                : "N/A"}
+                  ? customOrderId
+                  : bookingData.bookingId
+                    ? bookingData.bookingId
+                    : "N/A"}
             </p>
           </CardContent>
         </Card>
