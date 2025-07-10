@@ -157,6 +157,41 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
           console.error("Failed to restore checkout state:", error);
         }
       }
+
+      // Handle address flow after login
+      const addressFlowState = localStorage.getItem("address_flow_state");
+      if (addressFlowState) {
+        try {
+          const state = JSON.parse(addressFlowState);
+          // Only restore if saved within last 30 minutes
+          if (Date.now() - state.timestamp < 30 * 60 * 1000) {
+            if (state.addressData) setAddressData(state.addressData);
+            if (state.phoneNumber && !phoneNumber)
+              setPhoneNumber(state.phoneNumber);
+            if (state.selectedDate)
+              setSelectedDate(new Date(state.selectedDate));
+            if (state.selectedTime) setSelectedTime(state.selectedTime);
+            if (state.specialInstructions)
+              setSpecialInstructions(state.specialInstructions);
+            if (state.appliedCoupon) setAppliedCoupon(state.appliedCoupon);
+
+            // If redirectToAddress flag is set, open address page
+            if (state.redirectToAddress) {
+              console.log("🏠 Redirecting to address page after login");
+              setTimeout(() => {
+                setEditingAddress(null);
+                setShowZomatoAddressSelector(false);
+                setShowZomatoAddAddressPage(true);
+              }, 500); // Small delay to ensure UI is ready
+            }
+
+            console.log("🔄 Restored address flow state after login");
+          }
+          localStorage.removeItem("address_flow_state");
+        } catch (error) {
+          console.error("Failed to restore address flow state:", error);
+        }
+      }
     }
   }, [currentUser]);
 
