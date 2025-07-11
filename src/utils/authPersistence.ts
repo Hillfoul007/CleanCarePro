@@ -85,17 +85,33 @@ export const initializeAuthPersistence = () => {
 
   window.addEventListener("pagehide", handlePageHide);
 
-  // Periodic auth refresh every 5 minutes to prevent any timeouts
+  // More frequent auth refresh every 2 minutes to prevent any timeouts
   const refreshInterval = setInterval(
     () => {
       const user = authService.getCurrentUser();
       if (user) {
         console.log("🔄 Periodic auth refresh - maintaining session");
         authService.setCurrentUser(user);
+
+        // Ensure both storage keys are synchronized
+        const token =
+          localStorage.getItem("auth_token") ||
+          localStorage.getItem("cleancare_auth_token");
+        if (token) {
+          localStorage.setItem("auth_token", token);
+          localStorage.setItem("cleancare_auth_token", token);
+        }
+
+        // Dispatch auth event to keep UI updated
+        window.dispatchEvent(
+          new CustomEvent("auth-refresh", {
+            detail: { user: user },
+          }),
+        );
       }
     },
-    5 * 60 * 1000,
-  ); // 5 minutes
+    2 * 60 * 1000,
+  ); // 2 minutes
 
   // Clear interval on page unload
   window.addEventListener("beforeunload", () => {
@@ -120,33 +136,53 @@ export const restoreAuthState = async (): Promise<boolean> => {
       localStorage.getItem("current_user") ||
       localStorage.getItem("cleancare_user");
 
-    if (!token || !userStr) {
-      console.log("ℹ️ No authentication data found");
+    // More lenient checking - prioritize user data over token
+    if (!userStr || !userStr.trim()) {
+      console.log("ℹ️ No user data found for restoration");
       return false;
     }
 
     let user;
     try {
       user = JSON.parse(userStr);
-    } catch {
+    } catch (parseError) {
       console.warn("⚠️ Corrupted user data found - attempting recovery");
-      // Don't auto-logout, try to preserve what we can
-      return false;
+      // Try to create a minimal user object to preserve session
+      try {
+        user = {
+          rawData: userStr,
+          name: "User",
+          phone: "unknown",
+          isRecovered: true,
+        };
+        console.log("✅ Created recovery user object");
+      } catch {
+        return false;
+      }
     }
 
-    if (!user || (!user.phone && !user.id && !user._id)) {
+    if (!user || typeof user !== "object") {
       console.warn("⚠️ Invalid user data found - attempting recovery");
-      // Don't auto-logout, try to preserve what we can
       return false;
     }
 
-    // Restore user session
-    authService.setCurrentUser(user, token);
+    // Restore user session (token is optional for user experience)
+    const finalToken = token || `persistent_${Date.now()}`;
+    authService.setCurrentUser(user, finalToken);
+
     console.log("✅ Authentication state restored:", {
-      phone: user.phone,
-      name: user.name,
+      phone: user.phone || "unknown",
+      name: user.name || "User",
       hasToken: !!token,
+      isRecovered: user.isRecovered || false,
     });
+
+    // Dispatch auth restoration event
+    window.dispatchEvent(
+      new CustomEvent("auth-restored", {
+        detail: { user: user },
+      }),
+    );
 
     // Try to sync with backend (but never fail if it doesn't work)
     try {
@@ -165,6 +201,15 @@ export const restoreAuthState = async (): Promise<boolean> => {
     console.error("❌ Error restoring auth state:", error);
     // Never fail completely - preserve user sessions
     console.warn("🔒 Continuing with existing auth state");
+
+    // Try to preserve any existing data
+    const userStr =
+      localStorage.getItem("current_user") ||
+      localStorage.getItem("cleancare_user");
+    if (userStr && userStr.trim()) {
+      console.log("✅ Found user data during error recovery");
+      return true;
+    }
     return false;
   }
 };
