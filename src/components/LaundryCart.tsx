@@ -86,6 +86,7 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
 
     // Don't autofill date - let user select fresh
     if (savedFormData.selectedTime) setSelectedTime(savedFormData.selectedTime);
+    if (savedFormData.deliveryTime) setDeliveryTime(savedFormData.deliveryTime);
     if (savedFormData.additionalDetails)
       setSpecialInstructions(savedFormData.additionalDetails);
     if (savedFormData.couponCode) setCouponCode(savedFormData.couponCode);
