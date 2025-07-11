@@ -634,7 +634,10 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   "HomeServices Pro",
                 ),
                 status: sanitizeValue(booking.status, "pending"),
-                services: sanitizeServices(booking.services),
+                services: sanitizeServices(
+                  booking.services,
+                  booking.item_prices,
+                ),
                 additional_details: sanitizeValue(
                   booking.additional_details,
                   "",
