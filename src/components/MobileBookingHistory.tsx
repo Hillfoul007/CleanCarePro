@@ -244,7 +244,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       });
 
       console.log(
-        "��� Updated bookings:",
+        "����� Updated bookings:",
         updatedBookings.map((b) => ({ id: b.id || b._id, status: b.status })),
       );
       setBookings(updatedBookings);
@@ -586,31 +586,18 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
 
                   // If no price found yet, try to find from laundry services
                   if (price === 50) {
-                    try {
-                      // Import laundry services to get actual prices
-                      const {
-                        laundryServices,
-                      } = require("@/data/laundryServices");
-                      const matchingService = laundryServices.find(
-                        (ls: any) => {
-                          const lsName = ls.name.toLowerCase();
-                          const currentName = serviceName.toLowerCase();
-                          return (
-                            lsName === currentName ||
-                            lsName.includes(currentName) ||
-                            currentName.includes(lsName)
-                          );
-                        },
+                    const matchingService = laundryServices.find((ls: any) => {
+                      const lsName = ls.name.toLowerCase();
+                      const currentName = serviceName.toLowerCase();
+                      return (
+                        lsName === currentName ||
+                        lsName.includes(currentName) ||
+                        currentName.includes(lsName)
                       );
+                    });
 
-                      if (matchingService) {
-                        price = matchingService.price;
-                      }
-                    } catch (error) {
-                      console.warn(
-                        "Could not load laundry services for pricing:",
-                        error,
-                      );
+                    if (matchingService) {
+                      price = matchingService.price;
                     }
                   }
 
