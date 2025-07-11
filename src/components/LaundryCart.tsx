@@ -99,6 +99,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     saveBookingFormData({
       selectedDate,
       selectedTime,
+      deliveryDate,
+      deliveryTime,
       additionalDetails: specialInstructions,
       couponCode,
       appliedCoupon,
@@ -106,6 +108,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   }, [
     selectedDate,
     selectedTime,
+    deliveryDate,
+    deliveryTime,
     specialInstructions,
     couponCode,
     appliedCoupon,
