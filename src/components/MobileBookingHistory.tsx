@@ -403,12 +403,13 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden prevent-green-bottom"
+      className="flex flex-col overflow-x-hidden"
       style={{
         background:
           "linear-gradient(to bottom right, #4ade80, #22c55e, #16a34a)",
         minHeight: "100vh",
-        paddingBottom: "env(safe-area-inset-bottom, 0)",
+        maxHeight: "100vh",
+        height: "100vh",
       }}
     >
       {/* Header */}
@@ -467,7 +468,13 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       </div>
 
       {/* Bookings List */}
-      <div className="px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2 pb-safe-bottom">
+      <div
+        className="flex-1 px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden overflow-y-auto bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2"
+        style={{
+          marginBottom: "env(safe-area-inset-bottom, 0)",
+          paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0))",
+        }}
+      >
         {loading ? (
           <Card className="max-w-md mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-lg">
             <CardContent className="text-center py-8 sm:py-12">
