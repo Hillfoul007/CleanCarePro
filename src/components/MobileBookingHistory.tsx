@@ -402,7 +402,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600 overflow-x-hidden safe-area-bottom-white">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-500 to-green-600 p-2 sm:p-4 shadow-sm">
         <div className="flex items-center justify-between">
@@ -459,7 +459,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       </div>
 
       {/* Bookings List */}
-      <div className="px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2">
+      <div className="px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2 pb-safe-bottom">
         {loading ? (
           <Card className="max-w-md mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-lg">
             <CardContent className="text-center py-8 sm:py-12">
