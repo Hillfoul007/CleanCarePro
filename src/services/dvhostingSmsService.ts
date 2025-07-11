@@ -651,8 +651,15 @@ export class DVHostingSmsService {
         localStorage.getItem("auth_token");
       const user = this.getCurrentUser();
 
-      // Simple validation - if we have token and user data, user is authenticated
-      if (!token || !user) {
+      // More lenient validation - if we have user data, user is authenticated
+      // Token is optional as we prioritize user experience over strict security
+      if (!user) {
+        return false;
+      }
+
+      // Check if user has essential properties (phone is minimum requirement)
+      const hasEssentialData = user.phone || user.id || user._id;
+      if (!hasEssentialData) {
         return false;
       }
 
@@ -664,7 +671,16 @@ export class DVHostingSmsService {
       console.error("Error checking authentication:", error);
       // Never automatically logout on errors - preserve user session
       console.warn("🔒 Preserving authentication state despite error");
-      return true; // Return true to preserve session
+
+      // Try to check if localStorage has any user data at all
+      const userStr =
+        localStorage.getItem("current_user") ||
+        localStorage.getItem("cleancare_user");
+      if (userStr && userStr.trim()) {
+        console.log("✅ Found user data in localStorage, maintaining session");
+        return true;
+      }
+      return false;
     }
   }
 
@@ -673,10 +689,16 @@ export class DVHostingSmsService {
       const userStr =
         localStorage.getItem("cleancare_user") ||
         localStorage.getItem("current_user");
-      if (userStr) {
+      if (userStr && userStr.trim()) {
         const user = JSON.parse(userStr);
         // Very lenient validation - any user object is considered valid
-        if (user && typeof user === "object") {
+        if (user && typeof user === "object" && user !== null) {
+          // Ensure the user object has at least basic structure
+          if (!user.phone && !user.id && !user._id) {
+            console.warn(
+              "⚠️ User object missing essential identifiers, but preserving",
+            );
+          }
           return user;
         }
       }
@@ -684,15 +706,32 @@ export class DVHostingSmsService {
     } catch (error) {
       console.error("Error getting current user:", error);
       // Never clear data on errors - try to preserve whatever we can
-      console.warn("🔒 Error parsing user data, but preserving session");
+      console.warn("🔒 Error parsing user data, attempting recovery");
 
       // Try to return a basic user object if localStorage has data
       const userStr =
         localStorage.getItem("cleancare_user") ||
         localStorage.getItem("current_user");
-      if (userStr) {
-        console.warn("📋 Attempting to preserve raw user data");
-        return { rawData: userStr }; // Return raw data to prevent total loss
+      if (userStr && userStr.trim()) {
+        try {
+          // Attempt one more parse with error recovery
+          const recovered = JSON.parse(userStr);
+          if (recovered && typeof recovered === "object") {
+            console.log("✅ Recovered user data successfully");
+            return recovered;
+          }
+        } catch (recoveryError) {
+          console.warn(
+            "📋 Failed to recover user data, returning minimal object",
+          );
+          // Return minimal user object to maintain session
+          return {
+            rawData: userStr,
+            phone: "unknown",
+            name: "User",
+            isRecovered: true,
+          };
+        }
       }
       return null;
     }
@@ -852,7 +891,7 @@ export class DVHostingSmsService {
 
         return true;
       } else {
-        this.log("⚠️ Backend user save failed:", response.status);
+        this.log("���️ Backend user save failed:", response.status);
         return false;
       }
     } catch (error) {
