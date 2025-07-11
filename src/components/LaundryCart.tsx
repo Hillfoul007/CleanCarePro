@@ -463,6 +463,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
           phoneNumber,
           selectedDate: selectedDate?.toISOString(),
           selectedTime,
+          deliveryDate: deliveryDate?.toISOString(),
+          deliveryTime,
           specialInstructions,
           appliedCoupon,
           timestamp: Date.now(),
