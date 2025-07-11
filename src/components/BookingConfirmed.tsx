@@ -55,7 +55,7 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
             bookingData.bookingId,
           );
 
-          if (result.success && result.data && result.data.custom_order_id) {
+          if (result && result.data && result.data.custom_order_id) {
             console.log(
               "✅ Found custom order ID:",
               result.data.custom_order_id,
