@@ -402,7 +402,15 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600 overflow-x-hidden safe-area-bottom-white">
+    <div
+      className="min-h-screen overflow-x-hidden prevent-green-bottom"
+      style={{
+        background:
+          "linear-gradient(to bottom right, #4ade80, #22c55e, #16a34a)",
+        minHeight: "100vh",
+        paddingBottom: "env(safe-area-inset-bottom, 0)",
+      }}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-green-500 to-green-600 p-2 sm:p-4 shadow-sm">
         <div className="flex items-center justify-between">
