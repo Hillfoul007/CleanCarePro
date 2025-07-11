@@ -496,6 +496,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
           phoneNumber,
           selectedDate,
           selectedTime,
+          deliveryDate,
+          deliveryTime,
         );
         console.log("📋 Validation results:", errors);
       } catch (validationError) {
