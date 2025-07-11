@@ -207,6 +207,28 @@ select {
   padding-top: env(safe-area-inset-top);
 }
 
+/* Utility for bottom safe area with white background */
+.pb-safe-bottom {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+}
+
+/* Fix for green bar at bottom of screen */
+.prevent-green-bottom {
+  position: relative;
+}
+
+.prevent-green-bottom::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom, 0);
+  background-color: #ffffff;
+  z-index: 999;
+  pointer-events: none;
+}
+
 /* Better safe area handling for headers with background */
 .safe-area-header {
   position: relative;
