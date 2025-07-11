@@ -42,6 +42,7 @@ import EditBookingModal from "./EditBookingModal";
 import { clearAllUserData } from "@/utils/clearStorage";
 import { filterProductionBookings } from "@/utils/bookingFilters";
 import { debugBookingsStorage } from "@/utils/debugBookings";
+import { laundryServices } from "@/data/laundryServices";
 
 interface MobileBookingHistoryProps {
   currentUser?: any;
