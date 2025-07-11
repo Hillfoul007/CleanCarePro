@@ -536,91 +536,88 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                 return fallback;
               };
 
-              const sanitizeServices = (services: any) => {
+              const sanitizeServices = (services: any, itemPrices?: any[]) => {
                 if (!Array.isArray(services)) return [];
-
-                const servicePriceMap: { [key: string]: number } = {
-                  kurta: 140,
-                  jacket: 300,
-                  "jacket (full/half sleeves)": 300,
-                  shirt: 90,
-                  trouser: 120,
-                  jeans: 120,
-                  coat: 220,
-                  sweater: 200,
-                  sweatshirt: 200,
-                  saree: 210,
-                  lehenga: 330,
-                  dress: 330,
-                  "laundry and fold": 70,
-                  "laundry and iron": 120,
-                  "steam iron": 30,
-                  "home service": 100,
-                };
 
                 return services.map((service, index) => {
                   let serviceName = "";
                   let price = 50; // fallback price
+                  let quantity = 1;
 
                   if (typeof service === "string") {
                     serviceName = service;
                   } else if (typeof service === "object" && service) {
                     serviceName = service.name || service.service || "";
+                    // Use actual price from service object if available
+                    if (typeof service.price === "number") {
+                      price = service.price;
+                    } else if (typeof service.amount === "number") {
+                      price = service.amount;
+                    }
+                    // Use actual quantity from service object if available
+                    if (typeof service.quantity === "number") {
+                      quantity = service.quantity;
+                    }
                   } else {
                     serviceName = String(service) || "Unknown Service";
                   }
 
-                  // Get price from service price map
-                  const lowerServiceName = serviceName.toLowerCase();
-                  if (servicePriceMap[lowerServiceName]) {
-                    price = servicePriceMap[lowerServiceName];
-                  } else {
-                    // Find partial match
-                    for (const [key, value] of Object.entries(
-                      servicePriceMap,
-                    )) {
-                      if (
-                        lowerServiceName.includes(key) ||
-                        key.includes(lowerServiceName)
-                      ) {
-                        price = value;
-                        break;
-                      }
+                  // Try to find matching price from item_prices array (more accurate)
+                  if (itemPrices && Array.isArray(itemPrices)) {
+                    const matchingItem = itemPrices.find((item) => {
+                      const itemName = (item.service_name || "").toLowerCase();
+                      const currentName = serviceName.toLowerCase();
+                      return (
+                        itemName === currentName ||
+                        itemName.includes(currentName) ||
+                        currentName.includes(itemName)
+                      );
+                    });
+
+                    if (matchingItem) {
+                      price =
+                        matchingItem.unit_price ||
+                        matchingItem.total_price ||
+                        price;
+                      quantity = matchingItem.quantity || quantity;
                     }
                   }
 
-                  if (typeof service === "string") {
-                    return {
-                      name: service,
-                      quantity: 1,
-                      price: price,
-                      id: `service_${index}`,
-                    };
+                  // If no price found yet, try to find from laundry services
+                  if (price === 50) {
+                    try {
+                      // Import laundry services to get actual prices
+                      const {
+                        laundryServices,
+                      } = require("@/data/laundryServices");
+                      const matchingService = laundryServices.find(
+                        (ls: any) => {
+                          const lsName = ls.name.toLowerCase();
+                          const currentName = serviceName.toLowerCase();
+                          return (
+                            lsName === currentName ||
+                            lsName.includes(currentName) ||
+                            currentName.includes(lsName)
+                          );
+                        },
+                      );
+
+                      if (matchingService) {
+                        price = matchingService.price;
+                      }
+                    } catch (error) {
+                      console.warn(
+                        "Could not load laundry services for pricing:",
+                        error,
+                      );
+                    }
                   }
-                  if (typeof service === "object" && service) {
-                    return {
-                      name: sanitizeValue(
-                        service.name || service.service,
-                        "Unknown Service",
-                      ),
-                      quantity:
-                        typeof service.quantity === "number"
-                          ? service.quantity
-                          : 1,
-                      price:
-                        typeof service.price === "number"
-                          ? service.price
-                          : typeof service.amount === "number"
-                            ? service.amount
-                            : price,
-                      id: service.id || `service_${index}`,
-                    };
-                  }
+
                   return {
-                    name: String(service) || "Unknown Service",
-                    quantity: 1,
+                    name: serviceName || "Unknown Service",
+                    quantity: quantity,
                     price: price,
-                    id: `service_${index}`,
+                    id: service.id || `service_${index}`,
                   };
                 });
               };
