@@ -730,6 +730,7 @@ Confirm this booking?`;
           setSpecialInstructions("");
           setCouponCode("");
           setAppliedCoupon(null);
+          setReferralDiscount(null);
 
           addNotification(
             createSuccessNotification(
@@ -810,7 +811,7 @@ Confirm this booking?`;
           ),
         );
 
-        console.log("⚠️ Address saved locally only");
+        console.log("���️ Address saved locally only");
       }
 
       setShowZomatoAddAddressPage(false);
@@ -1300,7 +1301,7 @@ Confirm this booking?`;
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                Proceed to Book �� ₹{getTotal()}
+                Proceed to Book • ₹{getTotal()}
               </>
             )}
           </Button>
