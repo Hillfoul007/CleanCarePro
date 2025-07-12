@@ -40,10 +40,18 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (currentUser?.id || currentUser?._id) {
-      fetchReferralStats();
-      fetchShareLink();
-    }
+    const initializeData = async () => {
+      if (currentUser?.id || currentUser?._id) {
+        try {
+          await fetchReferralStats();
+          await fetchShareLink();
+        } catch (error) {
+          console.error("Error initializing referral data:", error);
+        }
+      }
+    };
+
+    initializeData();
   }, [currentUser]);
 
   const fetchReferralStats = async () => {
