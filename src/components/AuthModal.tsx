@@ -210,6 +210,11 @@ const AuthModal: React.FC<AuthModalProps> = ({
         localStorage.setItem("auth_token", data.session.access_token);
         localStorage.setItem("current_user", JSON.stringify(data.user));
 
+        // Clear stored referral code since it's been used
+        if (formData.referralCode) {
+          localStorage.removeItem("pending_referral_code");
+        }
+
         // Auto proceed after successful signup
         setTimeout(() => {
           onSuccess(data.user);
