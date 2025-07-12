@@ -193,8 +193,8 @@ export class PushNotificationService {
   showLocalNotification(title: string, options?: NotificationOptions): void {
     if (Notification.permission === "granted") {
       new Notification(title, {
-        icon: "/icons/icon-192x192.png",
-        badge: "/icons/icon-72x72.png",
+        icon: "/icons/icon-192x192-20250112.png",
+        badge: "/icons/icon-72x72-20250112.png",
         ...options,
       });
     }
