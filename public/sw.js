@@ -1,4 +1,4 @@
-const CACHE_NAME = "cleancare-v4";
+const CACHE_NAME = "cleancare-v5";
 const STATIC_CACHE = "cleancare-static-v5";
 const urlsToCache = [
   "/",
