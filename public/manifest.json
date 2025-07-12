@@ -60,7 +60,7 @@
   "categories": ["lifestyle", "business", "utilities"],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot1.png",
+      "src": "/screenshots/screenshot1.png?v=20250112",
       "sizes": "1170x2532",
       "type": "image/png",
       "form_factor": "narrow"
