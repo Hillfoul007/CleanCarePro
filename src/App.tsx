@@ -18,6 +18,9 @@ function App() {
   // Initialize authentication persistence and restore user session
   useEffect(() => {
     const initializeAuth = async () => {
+      // Check for version mismatch and force reload if needed
+      checkVersionAndReload();
+
       // Auto-clear cart on deploy (only once)
       const versionKey = "catalogue-version-v2";
       if (!localStorage.getItem(versionKey)) {
