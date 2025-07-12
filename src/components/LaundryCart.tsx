@@ -1211,8 +1211,24 @@ Confirm this booking?`;
 
             {appliedCoupon && (
               <div className="flex justify-between text-green-600 text-sm">
-                <span>Discount</span>
+                <span>Coupon Discount</span>
                 <span>-₹{getCouponDiscount()}</span>
+              </div>
+            )}
+
+            {referralDiscount && (
+              <div className="flex justify-between text-purple-600 text-sm">
+                <div className="flex items-center gap-1">
+                  <span>
+                    {referralDiscount.type === "referral_reward"
+                      ? "Referral Reward"
+                      : "First Order Discount"}
+                  </span>
+                  <span className="text-xs bg-purple-100 text-purple-700 px-1 rounded">
+                    {referralDiscount.percentage}% OFF
+                  </span>
+                </div>
+                <span>-₹{getReferralDiscount()}</span>
               </div>
             )}
 
