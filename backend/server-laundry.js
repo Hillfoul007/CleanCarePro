@@ -381,6 +381,12 @@ app.use("*", (req, res) => {
 // Catch-all handler: send back React's index.html file for frontend routing
 if (productionConfig.isProduction()) {
   app.get("*", (req, res) => {
+    // Disable caching for the main HTML file
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("X-Timestamp", Date.now().toString());
+
     res.sendFile(path.join(__dirname, "../dist/index.html"));
   });
   console.log(
