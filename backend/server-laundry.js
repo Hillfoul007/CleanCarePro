@@ -152,7 +152,33 @@ try {
 // Serve static frontend files in production
 if (productionConfig.isProduction()) {
   const frontendPath = path.join(__dirname, "../dist");
-  app.use(express.static(frontendPath));
+
+  // Import no-cache middleware
+  const noCache = require("./middleware/no-cache");
+
+  // Apply no-cache middleware before static file serving
+  app.use(
+    noCache({
+      patterns: [/\/index\.html$/, /\.html$/, /manifest\.json/, /sw\.js$/],
+    }),
+  );
+
+  // Serve static files with custom ETag disabled for HTML files
+  app.use(
+    express.static(frontendPath, {
+      etag: false, // Disable ETag for all static files
+      lastModified: false, // Disable Last-Modified header
+      setHeaders: (res, path) => {
+        // Force no-cache for HTML files
+        if (path.endsWith(".html")) {
+          res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+          res.setHeader("Pragma", "no-cache");
+          res.setHeader("Expires", "0");
+        }
+      },
+    }),
+  );
+
   console.log("📁 Serving frontend static files from:", frontendPath);
 }
 
@@ -355,6 +381,12 @@ app.use("*", (req, res) => {
 // Catch-all handler: send back React's index.html file for frontend routing
 if (productionConfig.isProduction()) {
   app.get("*", (req, res) => {
+    // Disable caching for the main HTML file
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("X-Timestamp", Date.now().toString());
+
     res.sendFile(path.join(__dirname, "../dist/index.html"));
   });
   console.log(

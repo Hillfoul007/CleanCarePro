@@ -6,10 +6,12 @@ import LaundryIndex from "@/pages/LaundryIndex";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import InstallPrompt from "@/components/InstallPrompt";
 import AddressSearchDemo from "@/components/AddressSearchDemo";
+import CacheDebugPanel from "@/components/CacheDebugPanel";
 import {
   initializeAuthPersistence,
   restoreAuthState,
 } from "@/utils/authPersistence";
+import { checkVersionAndReload } from "@/utils/cacheBusting";
 import "./App.css";
 import "./styles/mobile-fixes.css";
 
@@ -17,6 +19,9 @@ function App() {
   // Initialize authentication persistence and restore user session
   useEffect(() => {
     const initializeAuth = async () => {
+      // Check for version mismatch and force reload if needed
+      checkVersionAndReload();
+
       // Auto-clear cart on deploy (only once)
       const versionKey = "catalogue-version-v2";
       if (!localStorage.getItem(versionKey)) {
@@ -46,6 +51,7 @@ function App() {
             </Routes>
             <Toaster />
             <InstallPrompt />
+            {process.env.NODE_ENV === "development" && <CacheDebugPanel />}
           </div>
         </Router>
       </NotificationProvider>

@@ -3,14 +3,14 @@ const STATIC_CACHE = "cleancare-static-v5";
 const urlsToCache = [
   "/",
   "/manifest.json?v=20250112",
-  "/icons/icon-72x72.png?v=20250112",
-  "/icons/icon-96x96.png?v=20250112",
-  "/icons/icon-128x128.png?v=20250112",
-  "/icons/icon-144x144.png?v=20250112",
-  "/icons/icon-152x152.png?v=20250112",
-  "/icons/icon-192x192.png?v=20250112",
-  "/icons/icon-384x384.png?v=20250112",
-  "/icons/icon-512x512.png?v=20250112",
+  "/icons/icon-72x72-20250112.png",
+  "/icons/icon-96x96-20250112.png",
+  "/icons/icon-128x128-20250112.png",
+  "/icons/icon-144x144-20250112.png",
+  "/icons/icon-152x152-20250112.png",
+  "/icons/icon-192x192-20250112.png",
+  "/icons/icon-384x384-20250112.png",
+  "/icons/icon-512x512-20250112.png",
 ];
 
 // Install service worker
@@ -62,7 +62,38 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Handle static assets with caching
+  // BYPASS CACHE for HTML files, manifest, and service worker
+  if (
+    event.request.url.match(/\.(html)$/) ||
+    event.request.url.includes("manifest.json") ||
+    event.request.url.includes("sw.js") ||
+    event.request.url.endsWith("/") // Root requests
+  ) {
+    // Force network fetch with cache-busting headers
+    event.respondWith(
+      fetch(event.request, {
+        cache: "no-cache",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+        },
+      }).catch(() => {
+        // Fallback to cached index.html only if network fails
+        return caches.match("/").then((indexResponse) => {
+          return (
+            indexResponse ||
+            new Response("Page not available offline", {
+              status: 503,
+              statusText: "Service Unavailable",
+            })
+          );
+        });
+      }),
+    );
+    return;
+  }
+
+  // Handle static assets with caching (but not HTML)
   if (
     event.request.url.includes("/assets/") ||
     event.request.url.includes("/static/") ||
@@ -96,25 +127,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Handle regular navigation requests
+  // Handle other navigation requests - always fetch from network first
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
-      return (
-        response ||
-        fetch(event.request).catch(() => {
-          // Return cached index.html for SPA routing
-          return caches.match("/").then((indexResponse) => {
-            return (
-              indexResponse ||
-              new Response("Page not available offline", {
-                status: 503,
-                statusText: "Service Unavailable",
-              })
-            );
-          });
-        })
-      );
+    fetch(event.request, {
+      cache: "no-cache",
+    }).catch(() => {
+      // Only use cache as fallback if network fails
+      return caches.match("/").then((indexResponse) => {
+        return (
+          indexResponse ||
+          new Response("Page not available offline", {
+            status: 503,
+            statusText: "Service Unavailable",
+          })
+        );
+      });
     }),
   );
 });
@@ -127,8 +154,8 @@ self.addEventListener("push", (event) => {
     body: event.data
       ? event.data.text()
       : "New notification from CleanCare Pro",
-    icon: "/icons/icon-192x192.png",
-    badge: "/icons/icon-72x72.png",
+    icon: "/icons/icon-192x192-20250112.png",
+    badge: "/icons/icon-72x72-20250112.png",
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -138,12 +165,12 @@ self.addEventListener("push", (event) => {
       {
         action: "view",
         title: "View Details",
-        icon: "/icons/icon-72x72.png",
+        icon: "/icons/icon-72x72-20250112.png",
       },
       {
         action: "close",
         title: "Close",
-        icon: "/icons/icon-72x72.png",
+        icon: "/icons/icon-72x72-20250112.png",
       },
     ],
   };
