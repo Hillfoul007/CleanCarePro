@@ -1,16 +1,16 @@
 const CACHE_NAME = "cleancare-v4";
-const STATIC_CACHE = "cleancare-static-v4";
+const STATIC_CACHE = "cleancare-static-v5";
 const urlsToCache = [
   "/",
-  "/manifest.json",
-  "/icons/icon-72x72.png",
-  "/icons/icon-96x96.png",
-  "/icons/icon-128x128.png",
-  "/icons/icon-144x144.png",
-  "/icons/icon-152x152.png",
-  "/icons/icon-192x192.png",
-  "/icons/icon-384x384.png",
-  "/icons/icon-512x512.png",
+  "/manifest.json?v=20250112",
+  "/icons/icon-72x72.png?v=20250112",
+  "/icons/icon-96x96.png?v=20250112",
+  "/icons/icon-128x128.png?v=20250112",
+  "/icons/icon-144x144.png?v=20250112",
+  "/icons/icon-152x152.png?v=20250112",
+  "/icons/icon-192x192.png?v=20250112",
+  "/icons/icon-384x384.png?v=20250112",
+  "/icons/icon-512x512.png?v=20250112",
 ];
 
 // Install service worker
