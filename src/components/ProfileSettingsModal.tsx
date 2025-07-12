@@ -12,7 +12,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Edit, Save, X, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UserService from "@/services/userService";
-import ReferAndEarn from "@/components/ReferAndEarn";
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
