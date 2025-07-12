@@ -19,7 +19,6 @@ import {
   ChevronDown,
   MessageCircle,
   Gift,
-  Gift,
 } from "lucide-react";
 import ProfileSettingsModal from "./ProfileSettingsModal";
 import SavedAddressesModal from "./SavedAddressesModal";
