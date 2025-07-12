@@ -303,6 +303,15 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     return Math.round(subtotal * (appliedCoupon.discount / 100));
   };
 
+  const getReferralDiscount = () => {
+    if (!referralDiscount) return 0;
+    const subtotal = getSubtotal();
+    const discountAmount = Math.round(
+      subtotal * (referralDiscount.percentage / 100),
+    );
+    return Math.min(discountAmount, 200); // Max ₹200 as specified
+  };
+
   const getTotal = () => {
     return (
       getSubtotal() +
