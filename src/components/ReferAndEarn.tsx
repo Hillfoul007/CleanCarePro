@@ -79,18 +79,21 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
   const fetchShareLink = async () => {
     try {
       const userId = currentUser?.id || currentUser?._id;
+      if (!userId) {
+        console.warn("No user ID available for fetching share link");
+        return;
+      }
+
       const response = await apiClient.getReferralShareLink(userId);
       if (response && response.data && !response.error) {
         setShareLink(response.data.share_url);
         if (!referralStats?.active_referral_code) {
           // If no active code, refresh stats to get the newly created one
-          setTimeout(fetchReferralStats, 1000);
+          setTimeout(() => fetchReferralStats(), 1000);
         }
       }
     } catch (error) {
       console.error("Error fetching share link:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
