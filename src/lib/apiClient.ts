@@ -142,17 +142,31 @@ class EnhancedApiClient {
         // Handle different response types
         const contentType = response.headers.get("content-type");
         let data: any;
+        let bodyConsumed = false;
 
-        if (contentType?.includes("application/json")) {
-          try {
+        try {
+          if (contentType?.includes("application/json")) {
             data = await response.json();
-          } catch (jsonError) {
-            console.warn("Failed to parse JSON response:", jsonError);
-            data = null;
+            bodyConsumed = true;
+          } else {
+            const text = await response.text();
+            bodyConsumed = true;
+            data = text ? { message: text } : null;
           }
-        } else {
-          const text = await response.text();
-          data = text ? { message: text } : null;
+        } catch (parseError) {
+          console.warn("Failed to parse response body:", parseError);
+          // If body parsing fails and it hasn't been consumed yet, try to get text
+          if (!bodyConsumed) {
+            try {
+              const text = await response.text();
+              data = { message: text || "Unknown error" };
+            } catch (textError) {
+              console.warn("Failed to read response as text:", textError);
+              data = { message: "Failed to read response" };
+            }
+          } else {
+            data = { message: "Failed to parse response" };
+          }
         }
 
         if (!response.ok) {
