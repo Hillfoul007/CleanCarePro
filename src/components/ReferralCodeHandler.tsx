@@ -89,10 +89,10 @@ export function ReferralCodeHandler({
 
     try {
       const response = await apiClient.validateReferralCode(code);
-      if (response.success) {
+      if (response && response.data) {
         setValidatedReferral(response.data.referral);
       } else {
-        throw new Error(response.error?.message || "Invalid referral code");
+        throw new Error("Invalid referral code");
       }
     } catch (error: any) {
       setError(error.message);
