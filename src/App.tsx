@@ -10,6 +10,7 @@ import {
   initializeAuthPersistence,
   restoreAuthState,
 } from "@/utils/authPersistence";
+import { checkVersionAndReload } from "@/utils/cacheBusting";
 import "./App.css";
 import "./styles/mobile-fixes.css";
 
