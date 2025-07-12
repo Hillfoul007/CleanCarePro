@@ -54,6 +54,23 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: [true, "Scheduled time is required"],
     },
+    // NEW: Separate pickup and delivery scheduling
+    pickup_date: {
+      type: String,
+      required: false, // Keep optional for backward compatibility
+    },
+    pickup_time: {
+      type: String,
+      required: false, // Keep optional for backward compatibility
+    },
+    delivery_date: {
+      type: String,
+      required: false, // Keep optional for backward compatibility
+    },
+    delivery_time: {
+      type: String,
+      required: false, // Keep optional for backward compatibility
+    },
     provider_name: {
       type: String,
       required: [true, "Provider name is required"],

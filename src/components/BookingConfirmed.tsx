@@ -41,25 +41,65 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
   const [customOrderId, setCustomOrderId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Only fetch if custom_order_id is not already present
-    if (!bookingData.custom_order_id && bookingData.bookingId) {
-      // Replace this with your actual API/service call
-      bookingHelpers
-        .getBookingById(bookingData.bookingId)
-        .then((result) => {
-          if (result.data && result.data.custom_order_id) {
-            setCustomOrderId(result.data.custom_order_id);
-          } else {
+    const fetchCustomOrderId = async () => {
+      // Only fetch if custom_order_id is not already present
+      if (!bookingData.custom_order_id && bookingData.bookingId) {
+        try {
+          console.log(
+            "🔄 Fetching booking details for custom order ID:",
+            bookingData.bookingId,
+          );
+
+          // Use the same approach as MobileBookingHistory
+          const result = await bookingHelpers.getBookingById(
+            bookingData.bookingId,
+          );
+
+          if (result && result.data && result.data.custom_order_id) {
             console.log(
-              "Custom order ID not found in booking data:",
-              result.data,
+              "✅ Found custom order ID:",
+              result.data.custom_order_id,
             );
+            setCustomOrderId(result.data.custom_order_id);
+          } else if (result.data) {
+            // Try different field names that might contain the custom order ID
+            const orderId =
+              result.data.custom_order_id ||
+              result.data.order_id ||
+              result.data.customOrderId;
+
+            if (orderId) {
+              console.log("✅ Found order ID in alternate field:", orderId);
+              setCustomOrderId(orderId);
+            } else {
+              console.log(
+                "⚠️ Custom order ID not found in booking data:",
+                Object.keys(result.data),
+              );
+
+              // Generate a fallback custom order ID based on booking ID
+              const fallbackOrderId = `A${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${bookingData.bookingId.slice(-6)}`;
+              console.log("🆆 Generated fallback order ID:", fallbackOrderId);
+              setCustomOrderId(fallbackOrderId);
+            }
+          } else {
+            console.error("❌ Failed to fetch booking details:", result.error);
           }
-        })
-        .catch((error) => {
-          console.error("Failed to fetch booking details:", error);
-        });
-    }
+        } catch (error) {
+          console.error("❌ Error fetching booking details:", error);
+
+          // Generate a fallback custom order ID
+          const fallbackOrderId = `A${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${bookingData.bookingId.slice(-6)}`;
+          console.log(
+            "🆆 Generated fallback order ID due to error:",
+            fallbackOrderId,
+          );
+          setCustomOrderId(fallbackOrderId);
+        }
+      }
+    };
+
+    fetchCustomOrderId();
   }, [bookingData.custom_order_id, bookingData.bookingId]);
 
   const formatDate = (dateStr: string) => {
@@ -112,11 +152,24 @@ const BookingConfirmed: React.FC<BookingConfirmedProps> = ({
             <p className="text-sm text-green-700 mb-1">Order ID</p>
             <p className="text-lg font-bold text-green-900">
               #
-              {bookingData.custom_order_id ||
-                customOrderId ||
-                (bookingData.bookingId
-                  ? `CC${bookingData.bookingId.slice(-6)}`
-                  : "Generating...")}
+              {(() => {
+                // Priority order: props -> state -> generated
+                if (bookingData.custom_order_id) {
+                  return bookingData.custom_order_id;
+                }
+                if (customOrderId) {
+                  return customOrderId;
+                }
+                if (bookingData.bookingId) {
+                  // Generate a proper custom order ID format like in MobileBookingHistory
+                  const today = new Date();
+                  const year = today.getFullYear();
+                  const month = String(today.getMonth() + 1).padStart(2, "0");
+                  const day = String(today.getDate()).padStart(2, "0");
+                  return `A${year}${month}${day}${bookingData.bookingId.slice(-6)}`;
+                }
+                return "Generating...";
+              })()}
             </p>
           </CardContent>
         </Card>

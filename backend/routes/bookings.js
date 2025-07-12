@@ -50,6 +50,10 @@ router.post("/", async (req, res) => {
       services,
       scheduled_date,
       scheduled_time,
+      pickup_date,
+      pickup_time,
+      delivery_date,
+      delivery_time,
       provider_name,
       address,
       coordinates,
@@ -501,6 +505,10 @@ router.post("/", async (req, res) => {
       services,
       scheduled_date,
       scheduled_time,
+      pickup_date: pickup_date || scheduled_date,
+      pickup_time: pickup_time || scheduled_time,
+      delivery_date,
+      delivery_time,
       provider_name,
       address: sanitizedAddress, // Use sanitized string address
       address_details: addressObject

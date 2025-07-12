@@ -42,6 +42,7 @@ import EditBookingModal from "./EditBookingModal";
 import { clearAllUserData } from "@/utils/clearStorage";
 import { filterProductionBookings } from "@/utils/bookingFilters";
 import { debugBookingsStorage } from "@/utils/debugBookings";
+import { laundryServices } from "@/data/laundryServices";
 
 interface MobileBookingHistoryProps {
   currentUser?: any;
@@ -243,7 +244,7 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       });
 
       console.log(
-        "��� Updated bookings:",
+        "����� Updated bookings:",
         updatedBookings.map((b) => ({ id: b.id || b._id, status: b.status })),
       );
       setBookings(updatedBookings);
@@ -402,7 +403,16 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 via-green-500 to-green-600 overflow-x-hidden">
+    <div
+      className="flex flex-col overflow-x-hidden"
+      style={{
+        background:
+          "linear-gradient(to bottom right, #4ade80, #22c55e, #16a34a)",
+        minHeight: "100vh",
+        maxHeight: "100vh",
+        height: "100vh",
+      }}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-green-500 to-green-600 p-2 sm:p-4 shadow-sm">
         <div className="flex items-center justify-between">
@@ -459,7 +469,13 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
       </div>
 
       {/* Bookings List */}
-      <div className="px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2">
+      <div
+        className="flex-1 px-3 sm:px-4 py-4 space-y-3 sm:space-y-4 overflow-x-hidden overflow-y-auto bg-white/10 backdrop-blur-sm rounded-t-3xl mt-2"
+        style={{
+          marginBottom: "env(safe-area-inset-bottom, 0)",
+          paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0))",
+        }}
+      >
         {loading ? (
           <Card className="max-w-md mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-lg">
             <CardContent className="text-center py-8 sm:py-12">
@@ -521,91 +537,75 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                 return fallback;
               };
 
-              const sanitizeServices = (services: any) => {
+              const sanitizeServices = (services: any, itemPrices?: any[]) => {
                 if (!Array.isArray(services)) return [];
-
-                const servicePriceMap: { [key: string]: number } = {
-                  kurta: 140,
-                  jacket: 300,
-                  "jacket (full/half sleeves)": 300,
-                  shirt: 90,
-                  trouser: 120,
-                  jeans: 120,
-                  coat: 220,
-                  sweater: 200,
-                  sweatshirt: 200,
-                  saree: 210,
-                  lehenga: 330,
-                  dress: 330,
-                  "laundry and fold": 70,
-                  "laundry and iron": 120,
-                  "steam iron": 30,
-                  "home service": 100,
-                };
 
                 return services.map((service, index) => {
                   let serviceName = "";
                   let price = 50; // fallback price
+                  let quantity = 1;
 
                   if (typeof service === "string") {
                     serviceName = service;
                   } else if (typeof service === "object" && service) {
                     serviceName = service.name || service.service || "";
+                    // Use actual price from service object if available
+                    if (typeof service.price === "number") {
+                      price = service.price;
+                    } else if (typeof service.amount === "number") {
+                      price = service.amount;
+                    }
+                    // Use actual quantity from service object if available
+                    if (typeof service.quantity === "number") {
+                      quantity = service.quantity;
+                    }
                   } else {
                     serviceName = String(service) || "Unknown Service";
                   }
 
-                  // Get price from service price map
-                  const lowerServiceName = serviceName.toLowerCase();
-                  if (servicePriceMap[lowerServiceName]) {
-                    price = servicePriceMap[lowerServiceName];
-                  } else {
-                    // Find partial match
-                    for (const [key, value] of Object.entries(
-                      servicePriceMap,
-                    )) {
-                      if (
-                        lowerServiceName.includes(key) ||
-                        key.includes(lowerServiceName)
-                      ) {
-                        price = value;
-                        break;
-                      }
+                  // Try to find matching price from item_prices array (more accurate)
+                  if (itemPrices && Array.isArray(itemPrices)) {
+                    const matchingItem = itemPrices.find((item) => {
+                      const itemName = (item.service_name || "").toLowerCase();
+                      const currentName = serviceName.toLowerCase();
+                      return (
+                        itemName === currentName ||
+                        itemName.includes(currentName) ||
+                        currentName.includes(itemName)
+                      );
+                    });
+
+                    if (matchingItem) {
+                      price =
+                        matchingItem.unit_price ||
+                        matchingItem.total_price ||
+                        price;
+                      quantity = matchingItem.quantity || quantity;
                     }
                   }
 
-                  if (typeof service === "string") {
-                    return {
-                      name: service,
-                      quantity: 1,
-                      price: price,
-                      id: `service_${index}`,
-                    };
+                  // If no price found yet, try to find from laundry services
+                  if (price === 50) {
+                    const matchingService = laundryServices.find((ls: any) => {
+                      const lsName = ls.name.toLowerCase();
+                      const currentName = serviceName.toLowerCase();
+                      return (
+                        lsName === currentName ||
+                        lsName.includes(currentName) ||
+                        currentName.includes(lsName)
+                      );
+                    });
+
+                    if (matchingService) {
+                      price = matchingService.price;
+                    }
                   }
-                  if (typeof service === "object" && service) {
-                    return {
-                      name: sanitizeValue(
-                        service.name || service.service,
-                        "Unknown Service",
-                      ),
-                      quantity:
-                        typeof service.quantity === "number"
-                          ? service.quantity
-                          : 1,
-                      price:
-                        typeof service.price === "number"
-                          ? service.price
-                          : typeof service.amount === "number"
-                            ? service.amount
-                            : price,
-                      id: service.id || `service_${index}`,
-                    };
-                  }
+
                   return {
-                    name: String(service) || "Unknown Service",
-                    quantity: 1,
+                    name: serviceName || "Unknown Service",
+                    quantity: quantity,
                     price: price,
-                    id: `service_${index}`,
+                    id: service.id || `service_${index}`,
                   };
                 });
               };
@@ -622,7 +622,10 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                   "HomeServices Pro",
                 ),
                 status: sanitizeValue(booking.status, "pending"),
-                services: sanitizeServices(booking.services),
+                services: sanitizeServices(
+                  booking.services,
+                  booking.item_prices,
+                ),
                 additional_details: sanitizeValue(
                   booking.additional_details,
                   "",
@@ -632,12 +635,28 @@ const MobileBookingHistory: React.FC<MobileBookingHistoryProps> = ({
                 phone: sanitizeValue(booking.phone, "Not specified"),
                 // Order ID fields - always include for proper fallback
                 order_id: sanitizeValue(booking.order_id, ""),
-                // Date and time fields
-                pickupDate: sanitizeValue(booking.pickupDate, ""),
-                deliveryDate: sanitizeValue(booking.deliveryDate, ""),
+                // Date and time fields (prioritize new fields over legacy)
+                pickupDate: sanitizeValue(
+                  booking.pickup_date ||
+                    booking.pickupDate ||
+                    booking.scheduled_date,
+                  "",
+                ),
+                deliveryDate: sanitizeValue(
+                  booking.delivery_date || booking.deliveryDate,
+                  "",
+                ),
                 scheduled_date: sanitizeValue(booking.scheduled_date, ""),
-                pickupTime: sanitizeValue(booking.pickupTime, ""),
-                deliveryTime: sanitizeValue(booking.deliveryTime, ""),
+                pickupTime: sanitizeValue(
+                  booking.pickup_time ||
+                    booking.pickupTime ||
+                    booking.scheduled_time,
+                  "",
+                ),
+                deliveryTime: sanitizeValue(
+                  booking.delivery_time || booking.deliveryTime,
+                  "",
+                ),
                 scheduled_time: sanitizeValue(booking.scheduled_time, ""),
                 // Other fields
                 address: sanitizeValue(booking.address, "Address not provided"),

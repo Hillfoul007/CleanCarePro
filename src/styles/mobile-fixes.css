@@ -2,7 +2,7 @@
 
 /* Fix status bar and viewport issues on mobile */
 html {
-  background-color: #10b981; /* Green background for safe area */
+  background-color: #ffffff; /* White background - no green */
 }
 
 body {
@@ -15,13 +15,30 @@ body {
 /* Fix white line on top for mobile devices with notches */
 @supports (padding: max(0px)) {
   html {
-    background-color: #10b981; /* Match header green color */
+    background-color: #ffffff; /* White background instead of green */
   }
 
   body {
     padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: 0; /* Remove bottom padding that might cause green bar */
     background-color: #ffffff;
+  }
+
+  /* Only apply green background to specific header elements that need it */
+  .header-with-green-bg {
+    background-color: #10b981;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .header-with-green-bg::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0);
+    background-color: #10b981;
+    z-index: 999;
   }
 }
 
@@ -190,6 +207,28 @@ select {
   padding-top: env(safe-area-inset-top);
 }
 
+/* Utility for bottom safe area with white background */
+.pb-safe-bottom {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+}
+
+/* Fix for green bar at bottom of screen */
+.prevent-green-bottom {
+  position: relative;
+}
+
+.prevent-green-bottom::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom, 0);
+  background-color: #ffffff;
+  z-index: 999;
+  pointer-events: none;
+}
+
 /* Better safe area handling for headers with background */
 .safe-area-header {
   position: relative;
@@ -204,6 +243,22 @@ select {
   height: env(safe-area-inset-top, 0);
   background: inherit;
   z-index: inherit;
+}
+
+/* Prevent green bars on bottom safe area */
+.safe-area-bottom-white {
+  position: relative;
+}
+
+.safe-area-bottom-white::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom, 0);
+  background-color: #ffffff;
+  z-index: 998;
 }
 
 /* Smooth scroll behavior */
@@ -252,7 +307,19 @@ html {
     background: white;
     border-top: 1px solid #e5e7eb;
     z-index: 1000;
-    padding: env(safe-area-inset-bottom) 0 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Ensure bottom navigation has white background that extends to safe area */
+  .mobile-nav::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-bottom, 0);
+    background-color: #ffffff;
+    z-index: 999;
   }
 
   /* Card spacing for mobile */
