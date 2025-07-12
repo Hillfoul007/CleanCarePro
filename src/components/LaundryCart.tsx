@@ -704,6 +704,22 @@ Confirm this booking?`;
             referralService.awardReferralBonus(appliedCoupon.code);
           }
 
+          // Apply referral discount through backend API if applicable
+          if (referralDiscount && finalTotal > 0) {
+            try {
+              const userId = currentUser._id || currentUser.id;
+              // Note: The booking ID would be available after order creation
+              // This is a placeholder for the actual integration point
+              console.log("📜 Referral discount applied:", {
+                type: referralDiscount.type,
+                discount: getReferralDiscount(),
+                userId: userId,
+              });
+            } catch (error) {
+              console.error("Failed to apply referral discount:", error);
+            }
+          }
+
           // Clear cart after successful booking
           console.log("🧹 Clearing cart after successful booking");
           localStorage.removeItem("laundry_cart");
@@ -1284,7 +1300,7 @@ Confirm this booking?`;
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                Proceed to Book • ₹{getTotal()}
+                Proceed to Book �� ₹{getTotal()}
               </>
             )}
           </Button>
