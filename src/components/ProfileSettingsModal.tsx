@@ -9,10 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Edit, Save, X, LogOut, Gift, Copy, Calendar } from "lucide-react";
-import { ReferralService } from "@/services/referralService";
+import { Edit, Save, X, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UserService from "@/services/userService";
+import ReferAndEarn from "@/components/ReferAndEarn";
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -37,10 +37,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   });
   const { toast } = useToast();
   const userService = UserService.getInstance();
-
-  const referralService = ReferralService.getInstance();
-  const userCoupons = referralService.getUserCoupons(currentUser);
-  const userReferralCode = referralService.generateReferralCode(currentUser);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -219,117 +215,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               </div>
             )}
 
-            {/* Offers & Coupons Section */}
+            {/* Refer and Earn Section */}
             <div className="pt-6 border-t border-gray-200">
-              <div className="flex items-center gap-2 mb-4">
-                <Gift className="h-5 w-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Offers & Coupons
-                </h3>
-              </div>
-
-              {/* Your Referral Code */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-green-200 mb-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">
-                      Your Referral Code
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Share with friends to earn rewards
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-white px-3 py-2 rounded-lg border border-green-300 font-mono text-green-700 font-bold">
-                      {userReferralCode}
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        navigator.clipboard.writeText(userReferralCode);
-                        toast({
-                          title: "Copied!",
-                          description: "Referral code copied to clipboard",
-                        });
-                      }}
-                      className="border-green-300 text-green-600 hover:bg-green-50"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Available Coupons */}
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-900">
-                  Available Coupons
-                </h4>
-                {userCoupons.length > 0 ? (
-                  <div className="space-y-2 max-h-40 overflow-y-auto">
-                    {userCoupons.map((coupon, index) => (
-                      <div
-                        key={index}
-                        className={`p-3 rounded-lg border ${
-                          coupon.type === "referral"
-                            ? "bg-purple-50 border-purple-200"
-                            : "bg-blue-50 border-blue-200"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-sm">
-                                {coupon.code}
-                              </span>
-                              {coupon.type === "referral" && (
-                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                                  Referral Bonus
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-600">
-                              {coupon.description}
-                            </p>
-                            {coupon.expiresAt && (
-                              <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                                <Calendar className="h-3 w-3" />
-                                Expires:{" "}
-                                {new Date(
-                                  coupon.expiresAt,
-                                ).toLocaleDateString()}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              navigator.clipboard.writeText(coupon.code);
-                              toast({
-                                title: "Copied!",
-                                description: "Coupon code copied to clipboard",
-                              });
-                            }}
-                            className="text-xs"
-                          >
-                            Copy
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6 text-gray-500">
-                    <Gift className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                    <p className="text-sm">No coupons available</p>
-                    <p className="text-xs">
-                      Refer friends to earn coupon rewards!
-                    </p>
-                  </div>
-                )}
-              </div>
+              <ReferAndEarn currentUser={currentUser} />
             </div>
 
             {/* Logout Button */}
