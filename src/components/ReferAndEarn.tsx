@@ -55,14 +55,24 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
   }, [currentUser]);
 
   const fetchReferralStats = async () => {
+    if (loading) return; // Prevent multiple simultaneous calls
+
     try {
+      setLoading(true);
       const userId = currentUser?.id || currentUser?._id;
+      if (!userId) {
+        console.warn("No user ID available for fetching referral stats");
+        return;
+      }
+
       const response = await apiClient.getReferralStats(userId);
       if (response && response.data && !response.error) {
         setReferralStats(response.data.stats);
       }
     } catch (error) {
       console.error("Error fetching referral stats:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
