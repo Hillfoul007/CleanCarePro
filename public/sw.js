@@ -154,8 +154,8 @@ self.addEventListener("push", (event) => {
     body: event.data
       ? event.data.text()
       : "New notification from CleanCare Pro",
-    icon: "/icons/icon-192x192.png",
-    badge: "/icons/icon-72x72.png",
+    icon: "/icons/icon-192x192-20250112.png",
+    badge: "/icons/icon-72x72-20250112.png",
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -165,12 +165,12 @@ self.addEventListener("push", (event) => {
       {
         action: "view",
         title: "View Details",
-        icon: "/icons/icon-72x72.png",
+        icon: "/icons/icon-72x72-20250112.png",
       },
       {
         action: "close",
         title: "Close",
-        icon: "/icons/icon-72x72.png",
+        icon: "/icons/icon-72x72-20250112.png",
       },
     ],
   };
