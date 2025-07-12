@@ -624,8 +624,13 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
       const deliveryCharge = getDeliveryCharge() || 0;
       const handlingFee = getHandlingFee() || 0;
       const couponDiscount = getCouponDiscount() || 0;
+      const referralDiscountAmount = getReferralDiscount() || 0;
       const finalTotal =
-        serviceTotal + deliveryCharge + handlingFee - couponDiscount;
+        serviceTotal +
+        deliveryCharge +
+        handlingFee -
+        couponDiscount -
+        referralDiscountAmount;
 
       console.log("Price breakdown:", {
         serviceTotal,
