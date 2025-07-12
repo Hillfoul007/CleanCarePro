@@ -231,6 +231,14 @@ class EnhancedApiClient {
           break; // Don't retry CORS errors
         }
 
+        // Don't retry on body stream errors
+        if (lastError.message.includes("body stream already read")) {
+          console.error(
+            "🚫 Body stream already read - this indicates a programming error",
+          );
+          break;
+        }
+
         if (attempt < retries) {
           await this.sleep(retryDelay * Math.pow(2, attempt));
         }
