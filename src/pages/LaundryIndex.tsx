@@ -752,11 +752,7 @@ const LaundryIndex = () => {
       {currentView === "home" && (
         <>
           {/* Referral Discount Banner */}
-          {currentUser && (
-            <div className="px-4 pt-4">
-              <ReferralDiscountBanner user={currentUser} />
-            </div>
-          )}
+          {currentUser && <ReferralDiscountBanner user={currentUser} />}
 
           <ResponsiveLaundryHome
             currentUser={currentUser}

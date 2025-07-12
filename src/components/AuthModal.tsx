@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,7 +37,31 @@ const AuthModal: React.FC<AuthModalProps> = ({
     referralCode: "",
   });
 
+  // Auto-fill referral code from URL or stored value
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlReferralCode = urlParams.get("ref") || urlParams.get("referral");
+    const storedReferralCode = localStorage.getItem("pending_referral_code");
+
+    if (urlReferralCode) {
+      setFormData((prev) => ({
+        ...prev,
+        referralCode: urlReferralCode.toUpperCase(),
+      }));
+      localStorage.setItem("pending_referral_code", urlReferralCode);
+    } else if (storedReferralCode && !formData.referralCode) {
+      setFormData((prev) => ({
+        ...prev,
+        referralCode: storedReferralCode.toUpperCase(),
+      }));
+    }
+  }, [isOpen, currentView]);
+
   const resetForm = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlReferralCode = urlParams.get("ref") || urlParams.get("referral");
+    const storedReferralCode = localStorage.getItem("pending_referral_code");
+
     setFormData({
       email: "",
       password: "",
@@ -45,7 +69,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
       name: "",
       phone: "",
       userType: "customer",
-      referralCode: "",
+      referralCode: urlReferralCode || storedReferralCode || "",
     });
     setError("");
     setSuccess("");
@@ -185,6 +209,11 @@ const AuthModal: React.FC<AuthModalProps> = ({
         // Store the JWT token in localStorage
         localStorage.setItem("auth_token", data.session.access_token);
         localStorage.setItem("current_user", JSON.stringify(data.user));
+
+        // Clear stored referral code since it's been used
+        if (formData.referralCode) {
+          localStorage.removeItem("pending_referral_code");
+        }
 
         // Auto proceed after successful signup
         setTimeout(() => {

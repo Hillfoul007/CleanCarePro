@@ -81,7 +81,8 @@ class EnhancedApiClient {
 
     // Return existing request if in progress
     if (this.requestQueue.has(requestKey)) {
-      return this.requestQueue.get(requestKey);
+      console.log("🔄 Returning existing request for:", requestKey);
+      return this.requestQueue.get(requestKey)!;
     }
 
     const headers: Record<string, string> = {
@@ -142,17 +143,31 @@ class EnhancedApiClient {
         // Handle different response types
         const contentType = response.headers.get("content-type");
         let data: any;
+        let bodyConsumed = false;
 
-        if (contentType?.includes("application/json")) {
-          try {
+        try {
+          if (contentType?.includes("application/json")) {
             data = await response.json();
-          } catch (jsonError) {
-            console.warn("Failed to parse JSON response:", jsonError);
-            data = null;
+            bodyConsumed = true;
+          } else {
+            const text = await response.text();
+            bodyConsumed = true;
+            data = text ? { message: text } : null;
           }
-        } else {
-          const text = await response.text();
-          data = text ? { message: text } : null;
+        } catch (parseError) {
+          console.warn("Failed to parse response body:", parseError);
+          // If body parsing fails and it hasn't been consumed yet, try to get text
+          if (!bodyConsumed) {
+            try {
+              const text = await response.text();
+              data = { message: text || "Unknown error" };
+            } catch (textError) {
+              console.warn("Failed to read response as text:", textError);
+              data = { message: "Failed to read response" };
+            }
+          } else {
+            data = { message: "Failed to parse response" };
+          }
         }
 
         if (!response.ok) {
@@ -181,8 +196,11 @@ class EnhancedApiClient {
           }
 
           if (response.status >= 500 && attempt < retries) {
-            console.warn(`Server error ${response.status}, retrying...`);
-            await this.sleep(retryDelay * Math.pow(2, attempt)); // Exponential backoff
+            const delay = retryDelay * Math.pow(2, attempt);
+            console.warn(
+              `Server error ${response.status}, retrying in ${delay}ms...`,
+            );
+            await this.sleep(delay); // Exponential backoff
             continue;
           }
 
@@ -211,6 +229,14 @@ class EnhancedApiClient {
           lastError.message.includes("CORS")
         ) {
           break; // Don't retry CORS errors
+        }
+
+        // Don't retry on body stream errors
+        if (lastError.message.includes("body stream already read")) {
+          console.error(
+            "🚫 Body stream already read - this indicates a programming error",
+          );
+          break;
         }
 
         if (attempt < retries) {

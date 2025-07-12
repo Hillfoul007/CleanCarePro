@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Gift, UserCheck, X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { ReferralService } from "@/services/referralService";
+import { apiClient } from "@/lib/apiClient";
 
 interface ReferralCodeHandlerProps {
   currentUser: any;
@@ -23,7 +23,6 @@ export function ReferralCodeHandler({
   currentUser,
   onReferralApplied,
 }: ReferralCodeHandlerProps) {
-  const referralService = ReferralService.getInstance();
   const [showReferralDialog, setShowReferralDialog] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [isValidating, setIsValidating] = useState(false);
@@ -31,13 +30,30 @@ export function ReferralCodeHandler({
   const [validatedReferral, setValidatedReferral] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const extractReferralFromUrl = (): string | null => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("ref") || urlParams.get("referral");
+  };
+
+  const storeReferralCode = (code: string): void => {
+    localStorage.setItem("pending_referral_code", code);
+  };
+
+  const getStoredReferralCode = (): string | null => {
+    return localStorage.getItem("pending_referral_code");
+  };
+
+  const clearStoredReferralCode = (): void => {
+    localStorage.removeItem("pending_referral_code");
+  };
+
   useEffect(() => {
     // Check for referral code in URL when component mounts
-    const urlReferralCode = referralService.extractReferralFromUrl();
+    const urlReferralCode = extractReferralFromUrl();
 
     if (urlReferralCode) {
       // Store for later use if user isn't logged in yet
-      referralService.storeReferralCode(urlReferralCode);
+      storeReferralCode(urlReferralCode);
 
       if (currentUser) {
         // If user is already logged in, show the referral dialog
@@ -56,7 +72,7 @@ export function ReferralCodeHandler({
   useEffect(() => {
     // Handle stored referral code when user logs in
     if (currentUser && !currentUser.referred_by) {
-      const storedCode = referralService.getStoredReferralCode();
+      const storedCode = getStoredReferralCode();
       if (storedCode) {
         setReferralCode(storedCode);
         setShowReferralDialog(true);
@@ -72,11 +88,12 @@ export function ReferralCodeHandler({
     setError(null);
 
     try {
-      const validation = referralService.validateReferralCode(
-        code,
-        currentUser,
-      );
-      setValidatedReferral(validation);
+      const response = await apiClient.validateReferralCode(code);
+      if (response && response.data && !response.error) {
+        setValidatedReferral(response.data.referral);
+      } else {
+        throw new Error(response?.error || "Invalid referral code");
+      }
     } catch (error: any) {
       setError(error.message);
       setValidatedReferral(null);
@@ -91,23 +108,25 @@ export function ReferralCodeHandler({
     setIsApplying(true);
 
     try {
-      const result = await referralService.applyReferralCode(
-        referralCode,
-        currentUser.id,
-      );
+      const userId = currentUser.id || currentUser._id;
+      const response = await apiClient.applyReferralCode(referralCode, userId);
 
-      // Clear stored referral code
-      referralService.clearStoredReferralCode();
+      if (response && response.data && !response.error) {
+        // Clear stored referral code
+        clearStoredReferralCode();
 
-      // Close dialog
-      setShowReferralDialog(false);
+        // Close dialog
+        setShowReferralDialog(false);
 
-      // Show success message
-      toast.success(result.message);
+        // Show success message
+        toast.success("Referral code applied successfully!");
 
-      // Notify parent component
-      if (onReferralApplied) {
-        onReferralApplied(result.discount_percentage);
+        // Notify parent component
+        if (onReferralApplied) {
+          onReferralApplied(50); // Default 50% discount
+        }
+      } else {
+        throw new Error(response?.error || "Failed to apply referral code");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -135,7 +154,7 @@ export function ReferralCodeHandler({
   return (
     <>
       {/* URL-based referral welcome banner */}
-      {referralService.extractReferralFromUrl() && !currentUser && (
+      {extractReferralFromUrl() && !currentUser && (
         <Alert className="mb-4 border-green-200 bg-green-50">
           <Gift className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-800">

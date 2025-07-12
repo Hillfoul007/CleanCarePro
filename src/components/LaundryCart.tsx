@@ -76,9 +76,48 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     maxDiscount?: number;
     isReferral?: boolean;
   } | null>(null);
+  const [referralDiscount, setReferralDiscount] = useState<any>(null);
+  const [checkingReferralDiscount, setCheckingReferralDiscount] =
+    useState(false);
 
   const authService = OTPAuthService.getInstance();
   const referralService = ReferralService.getInstance();
+
+  // Check for available referral discounts when component loads
+  useEffect(() => {
+    const checkUserDiscounts = async () => {
+      if (currentUser) {
+        setCheckingReferralDiscount(true);
+        try {
+          // Check if user has any available referral discounts
+          const userDiscounts = currentUser.available_discounts || [];
+          const referralDiscounts = userDiscounts.filter(
+            (d: any) =>
+              (d.type === "referee_discount" || d.type === "referral_reward") &&
+              !d.used &&
+              new Date() < new Date(d.expires_at),
+          );
+
+          if (referralDiscounts.length > 0) {
+            // Auto-apply the first available referral discount
+            const discount = referralDiscounts[0];
+            setReferralDiscount({
+              type: discount.type,
+              percentage: discount.percentage,
+              maxAmount: 200,
+              expires_at: discount.expires_at,
+            });
+          }
+        } catch (error) {
+          console.error("Error checking user discounts:", error);
+        } finally {
+          setCheckingReferralDiscount(false);
+        }
+      }
+    };
+
+    checkUserDiscounts();
+  }, [currentUser]);
 
   // Load saved form data on component mount (excluding date autofill)
   useEffect(() => {
@@ -300,12 +339,22 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     return Math.round(subtotal * (appliedCoupon.discount / 100));
   };
 
+  const getReferralDiscount = () => {
+    if (!referralDiscount) return 0;
+    const subtotal = getSubtotal();
+    const discountAmount = Math.round(
+      subtotal * (referralDiscount.percentage / 100),
+    );
+    return Math.min(discountAmount, 200); // Max ₹200 as specified
+  };
+
   const getTotal = () => {
     return (
       getSubtotal() +
       getDeliveryCharge() +
       getHandlingFee() -
-      getCouponDiscount()
+      getCouponDiscount() -
+      getReferralDiscount()
     );
   };
 
@@ -575,16 +624,23 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
       const deliveryCharge = getDeliveryCharge() || 0;
       const handlingFee = getHandlingFee() || 0;
       const couponDiscount = getCouponDiscount() || 0;
+      const referralDiscountAmount = getReferralDiscount() || 0;
       const finalTotal =
-        serviceTotal + deliveryCharge + handlingFee - couponDiscount;
+        serviceTotal +
+        deliveryCharge +
+        handlingFee -
+        couponDiscount -
+        referralDiscountAmount;
 
       console.log("Price breakdown:", {
         serviceTotal,
         deliveryCharge,
         handlingFee,
         couponDiscount,
-        appliedCoupon: appliedCoupon?.code,
+        referralDiscountAmount,
         finalTotal,
+        appliedCoupon: appliedCoupon?.code,
+        referralDiscount: referralDiscount?.type,
       });
 
       const orderData = {
@@ -648,6 +704,22 @@ Confirm this booking?`;
             referralService.awardReferralBonus(appliedCoupon.code);
           }
 
+          // Apply referral discount through backend API if applicable
+          if (referralDiscount && finalTotal > 0) {
+            try {
+              const userId = currentUser._id || currentUser.id;
+              // Note: The booking ID would be available after order creation
+              // This is a placeholder for the actual integration point
+              console.log("📜 Referral discount applied:", {
+                type: referralDiscount.type,
+                discount: getReferralDiscount(),
+                userId: userId,
+              });
+            } catch (error) {
+              console.error("Failed to apply referral discount:", error);
+            }
+          }
+
           // Clear cart after successful booking
           console.log("🧹 Clearing cart after successful booking");
           localStorage.removeItem("laundry_cart");
@@ -658,6 +730,7 @@ Confirm this booking?`;
           setSpecialInstructions("");
           setCouponCode("");
           setAppliedCoupon(null);
+          setReferralDiscount(null);
 
           addNotification(
             createSuccessNotification(
@@ -738,7 +811,7 @@ Confirm this booking?`;
           ),
         );
 
-        console.log("⚠️ Address saved locally only");
+        console.log("���️ Address saved locally only");
       }
 
       setShowZomatoAddAddressPage(false);
@@ -1157,8 +1230,24 @@ Confirm this booking?`;
 
             {appliedCoupon && (
               <div className="flex justify-between text-green-600 text-sm">
-                <span>Discount</span>
+                <span>Coupon Discount</span>
                 <span>-₹{getCouponDiscount()}</span>
+              </div>
+            )}
+
+            {referralDiscount && (
+              <div className="flex justify-between text-purple-600 text-sm">
+                <div className="flex items-center gap-1">
+                  <span>
+                    {referralDiscount.type === "referral_reward"
+                      ? "Referral Reward"
+                      : "First Order Discount"}
+                  </span>
+                  <span className="text-xs bg-purple-100 text-purple-700 px-1 rounded">
+                    {referralDiscount.percentage}% OFF
+                  </span>
+                </div>
+                <span>-₹{getReferralDiscount()}</span>
               </div>
             )}
 
