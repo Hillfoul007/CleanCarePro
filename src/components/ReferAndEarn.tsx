@@ -98,22 +98,36 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
   };
 
   const generateNewReferralCode = async () => {
+    if (generating) return; // Prevent multiple simultaneous calls
+
     try {
       setGenerating(true);
       const userId = currentUser?.id || currentUser?._id;
+      if (!userId) {
+        throw new Error("No user ID available");
+      }
+
       const response = await apiClient.generateReferralCode(userId);
       if (response && response.data && !response.error) {
+        // Wait a bit before refreshing to ensure backend is updated
+        await new Promise((resolve) => setTimeout(resolve, 500));
         await fetchReferralStats();
         await fetchShareLink();
         toast({
           title: "Success! 🎉",
           description: "New referral code generated successfully",
         });
+      } else {
+        throw new Error(response?.error || "Failed to generate referral code");
       }
     } catch (error) {
+      console.error("Error generating referral code:", error);
       toast({
         title: "Error",
-        description: "Failed to generate referral code",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to generate referral code",
         variant: "destructive",
       });
     } finally {
