@@ -83,6 +83,42 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
   const authService = OTPAuthService.getInstance();
   const referralService = ReferralService.getInstance();
 
+  // Check for available referral discounts when component loads
+  useEffect(() => {
+    const checkUserDiscounts = async () => {
+      if (currentUser) {
+        setCheckingReferralDiscount(true);
+        try {
+          // Check if user has any available referral discounts
+          const userDiscounts = currentUser.available_discounts || [];
+          const referralDiscounts = userDiscounts.filter(
+            (d: any) =>
+              (d.type === "referee_discount" || d.type === "referral_reward") &&
+              !d.used &&
+              new Date() < new Date(d.expires_at),
+          );
+
+          if (referralDiscounts.length > 0) {
+            // Auto-apply the first available referral discount
+            const discount = referralDiscounts[0];
+            setReferralDiscount({
+              type: discount.type,
+              percentage: discount.percentage,
+              maxAmount: 200,
+              expires_at: discount.expires_at,
+            });
+          }
+        } catch (error) {
+          console.error("Error checking user discounts:", error);
+        } finally {
+          setCheckingReferralDiscount(false);
+        }
+      }
+    };
+
+    checkUserDiscounts();
+  }, [currentUser]);
+
   // Load saved form data on component mount (excluding date autofill)
   useEffect(() => {
     const savedFormData = getBookingFormData();
