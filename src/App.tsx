@@ -6,6 +6,7 @@ import LaundryIndex from "@/pages/LaundryIndex";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import InstallPrompt from "@/components/InstallPrompt";
 import AddressSearchDemo from "@/components/AddressSearchDemo";
+import CacheDebugPanel from "@/components/CacheDebugPanel";
 import {
   initializeAuthPersistence,
   restoreAuthState,
