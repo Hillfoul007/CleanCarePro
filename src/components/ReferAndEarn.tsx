@@ -50,7 +50,7 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
     try {
       const userId = currentUser?.id || currentUser?._id;
       const response = await apiClient.getReferralStats(userId);
-      if (response && response.data) {
+      if (response && response.data && !response.error) {
         setReferralStats(response.data.stats);
       }
     } catch (error) {
