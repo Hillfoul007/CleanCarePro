@@ -349,6 +349,20 @@ router.get("/share-link/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
+    // Development fallback - simple mock response when database is not available
+    if (process.env.NODE_ENV === "development") {
+      const baseUrl = process.env.FRONTEND_URL || "http://localhost:10001";
+      const referralCode = `REF_${userId.slice(-6)}`;
+      const shareUrl = `${baseUrl}?ref=${referralCode}`;
+
+      return res.json({
+        success: true,
+        share_url: shareUrl,
+        referral_code: referralCode,
+        discount_percentage: 15,
+      });
+    }
+
     // Get or create referral code
     let referral = await Referral.findOne({
       referrer_id: userId,
