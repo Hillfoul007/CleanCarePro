@@ -108,7 +108,7 @@
 
             // Register new service worker
             const registration =
-              await navigator.serviceWorker.register("/sw.js");
+              await navigator.serviceWorker.register("/sw.js?v=20250112");
             console.log("SW registered: ", registration);
 
             // Wait for it to activate
