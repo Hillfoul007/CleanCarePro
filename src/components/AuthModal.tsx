@@ -37,7 +37,31 @@ const AuthModal: React.FC<AuthModalProps> = ({
     referralCode: "",
   });
 
+  // Auto-fill referral code from URL or stored value
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlReferralCode = urlParams.get("ref") || urlParams.get("referral");
+    const storedReferralCode = localStorage.getItem("pending_referral_code");
+
+    if (urlReferralCode) {
+      setFormData((prev) => ({
+        ...prev,
+        referralCode: urlReferralCode.toUpperCase(),
+      }));
+      localStorage.setItem("pending_referral_code", urlReferralCode);
+    } else if (storedReferralCode && !formData.referralCode) {
+      setFormData((prev) => ({
+        ...prev,
+        referralCode: storedReferralCode.toUpperCase(),
+      }));
+    }
+  }, [isOpen, currentView]);
+
   const resetForm = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlReferralCode = urlParams.get("ref") || urlParams.get("referral");
+    const storedReferralCode = localStorage.getItem("pending_referral_code");
+
     setFormData({
       email: "",
       password: "",
@@ -45,7 +69,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
       name: "",
       phone: "",
       userType: "customer",
-      referralCode: "",
+      referralCode: urlReferralCode || storedReferralCode || "",
     });
     setError("");
     setSuccess("");
