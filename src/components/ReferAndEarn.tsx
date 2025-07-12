@@ -243,6 +243,10 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
+                <div className="mt-2 text-xs text-green-600 flex items-center gap-1">
+                  <span className="w-1 h-1 bg-green-400 rounded-full"></span>
+                  This is your permanent referral code - it never changes
+                </div>
               </div>
 
               {/* Share Buttons */}
