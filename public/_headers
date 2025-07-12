@@ -22,9 +22,11 @@
 /sw.js
   Cache-Control: no-cache
 
-# Cache HTML for 1 hour
+# Never cache HTML files to avoid 304 issues
 /*.html
-  Cache-Control: public, max-age=3600
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
 
 # Cache CSS and JS from assets folder for 1 year
 /*.css
