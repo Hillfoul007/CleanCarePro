@@ -202,7 +202,7 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
           <CardTitle className="text-lg text-green-800 flex items-center justify-between">
             <span className="flex items-center gap-2">
               <Sparkles className="h-5 w-5" />
-              Your Referral Code
+              Your Unique Referral Code
             </span>
             {!referralStats?.active_referral_code && (
               <Button
