@@ -31,6 +31,18 @@
       }
     </style>
 
+    <!--
+      Cache Busting: All static assets use ?v=YYYYMMDD parameter to prevent 304 caching issues
+      Update version to current date (YYYYMMDD format) when deploying changes to:
+      - manifest.json
+      - icons
+      - service worker (sw.js)
+      - CSS/JS bundles (handled by Vite automatically)
+
+      Current version: v=20250112
+      DO NOT add cache busting to login-related endpoints
+    -->
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#22c55e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
