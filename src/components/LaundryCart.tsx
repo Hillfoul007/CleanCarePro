@@ -317,7 +317,8 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
       getSubtotal() +
       getDeliveryCharge() +
       getHandlingFee() -
-      getCouponDiscount()
+      getCouponDiscount() -
+      getReferralDiscount()
     );
   };
 
