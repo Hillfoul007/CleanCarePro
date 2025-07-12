@@ -359,6 +359,12 @@ const UserMenuDropdown: React.FC<UserMenuDropdownProps> = ({
         currentUser={currentUser}
       />
 
+      <ReferAndEarnModal
+        isOpen={showReferEarnModal}
+        onClose={() => setShowReferEarnModal(false)}
+        currentUser={currentUser}
+      />
+
       <PreferencesModal
         isOpen={showPreferencesModal}
         onClose={() => setShowPreferencesModal(false)}
