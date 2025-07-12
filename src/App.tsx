@@ -51,6 +51,7 @@ function App() {
             </Routes>
             <Toaster />
             <InstallPrompt />
+            {process.env.NODE_ENV === "development" && <CacheDebugPanel />}
           </div>
         </Router>
       </NotificationProvider>
