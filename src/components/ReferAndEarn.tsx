@@ -62,7 +62,7 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
     try {
       const userId = currentUser?.id || currentUser?._id;
       const response = await apiClient.getReferralShareLink(userId);
-      if (response && response.data) {
+      if (response && response.data && !response.error) {
         setShareLink(response.data.share_url);
         if (!referralStats?.active_referral_code) {
           // If no active code, refresh stats to get the newly created one
