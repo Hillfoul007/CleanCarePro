@@ -81,7 +81,7 @@ const ReferAndEarn: React.FC<ReferAndEarnProps> = ({ currentUser }) => {
       setGenerating(true);
       const userId = currentUser?.id || currentUser?._id;
       const response = await apiClient.generateReferralCode(userId);
-      if (response.success) {
+      if (response && response.data) {
         await fetchReferralStats();
         await fetchShareLink();
         toast({
