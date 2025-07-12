@@ -214,11 +214,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               </div>
             )}
 
-            {/* Refer and Earn Section */}
-            <div className="pt-6 border-t border-gray-200">
-              <ReferAndEarn currentUser={currentUser} />
-            </div>
-
             {/* Logout Button */}
             {onLogout && (
               <div className="pt-6 border-t border-gradient-to-r from-transparent via-gray-200 to-transparent">
