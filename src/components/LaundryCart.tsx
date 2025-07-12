@@ -76,6 +76,9 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
     maxDiscount?: number;
     isReferral?: boolean;
   } | null>(null);
+  const [referralDiscount, setReferralDiscount] = useState<any>(null);
+  const [checkingReferralDiscount, setCheckingReferralDiscount] =
+    useState(false);
 
   const authService = OTPAuthService.getInstance();
   const referralService = ReferralService.getInstance();
