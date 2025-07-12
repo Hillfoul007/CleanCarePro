@@ -1,23 +1,23 @@
-const CACHE_NAME = "cleancare-v4";
-const STATIC_CACHE = "cleancare-static-v4";
+const CACHE_NAME = "cleancare-v5";
+const STATIC_CACHE = "cleancare-static-v5";
 const urlsToCache = [
   "/",
-  "/manifest.json",
-  "/icons/icon-72x72.png",
-  "/icons/icon-96x96.png",
-  "/icons/icon-128x128.png",
-  "/icons/icon-144x144.png",
-  "/icons/icon-152x152.png",
-  "/icons/icon-192x192.png",
-  "/icons/icon-384x384.png",
-  "/icons/icon-512x512.png",
+  "/manifest.json?v=20250112",
+  "/icons/icon-72x72.png?v=20250112",
+  "/icons/icon-96x96.png?v=20250112",
+  "/icons/icon-128x128.png?v=20250112",
+  "/icons/icon-144x144.png?v=20250112",
+  "/icons/icon-152x152.png?v=20250112",
+  "/icons/icon-192x192.png?v=20250112",
+  "/icons/icon-384x384.png?v=20250112",
+  "/icons/icon-512x512.png?v=20250112",
 ];
 
 // Install service worker
 self.addEventListener("install", (event) => {
-  console.log("Service Worker: Installing v4...");
+  console.log("Service Worker: Installing v5...");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(STATIC_CACHE).then((cache) => {
       console.log("Service Worker: Caching app shell");
       return cache.addAll(urlsToCache);
     }),
@@ -27,7 +27,7 @@ self.addEventListener("install", (event) => {
 
 // Activate service worker
 self.addEventListener("activate", (event) => {
-  console.log("Service Worker: Activating v4...");
+  console.log("Service Worker: Activating v5...");
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(

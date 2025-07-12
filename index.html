@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/placeholder.svg" />
+    <link rel="icon" type="image/svg+xml" href="/placeholder.svg?v=20250112" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
@@ -31,6 +31,18 @@
       }
     </style>
 
+    <!--
+      Cache Busting: All static assets use ?v=YYYYMMDD parameter to prevent 304 caching issues
+      Update version to current date (YYYYMMDD format) when deploying changes to:
+      - manifest.json
+      - icons
+      - service worker (sw.js)
+      - CSS/JS bundles (handled by Vite automatically)
+
+      Current version: v=20250112
+      DO NOT add cache busting to login-related endpoints
+    -->
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#22c55e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,19 +55,19 @@
     <meta name="fast2sms" content="Ra0DFfgNTPzaOwBAFpfvhTObIJ1qmVtN" />
 
     <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/manifest.json?v=20250112" />
 
     <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png?v=20250112" />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href="/icons/icon-152x152.png"
+      href="/icons/icon-152x152.png?v=20250112"
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/icons/icon-192x192.png"
+      href="/icons/icon-192x192.png?v=20250112"
     />
 
     <!-- Meta Tags -->
@@ -79,7 +91,7 @@
       content="Professional laundry and dry cleaning services at your doorstep"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/icons/icon-512x512.png" />
+    <meta property="og:image" content="/icons/icon-512x512.png?v=20250112" />
 
     <title>CleanCare Pro - Laundry & Dry Cleaning</title>
   </head>
@@ -108,7 +120,7 @@
 
             // Register new service worker
             const registration =
-              await navigator.serviceWorker.register("/sw.js");
+              await navigator.serviceWorker.register("/sw.js?v=20250112");
             console.log("SW registered: ", registration);
 
             // Wait for it to activate

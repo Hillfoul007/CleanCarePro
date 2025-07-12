@@ -27,6 +27,10 @@ export const getProductionApiUrl = (): string => {
     return PRODUCTION_API_URL;
   }
 
+  console.log(
+    "🔧 Development environment detected, using local backend:",
+    "http://localhost:3001/api",
+  );
   return "http://localhost:3001/api";
 };
 
