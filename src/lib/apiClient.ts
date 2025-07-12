@@ -81,7 +81,8 @@ class EnhancedApiClient {
 
     // Return existing request if in progress
     if (this.requestQueue.has(requestKey)) {
-      return this.requestQueue.get(requestKey);
+      console.log("🔄 Returning existing request for:", requestKey);
+      return this.requestQueue.get(requestKey)!;
     }
 
     const headers: Record<string, string> = {
