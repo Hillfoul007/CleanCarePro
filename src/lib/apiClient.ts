@@ -195,8 +195,11 @@ class EnhancedApiClient {
           }
 
           if (response.status >= 500 && attempt < retries) {
-            console.warn(`Server error ${response.status}, retrying...`);
-            await this.sleep(retryDelay * Math.pow(2, attempt)); // Exponential backoff
+            const delay = retryDelay * Math.pow(2, attempt);
+            console.warn(
+              `Server error ${response.status}, retrying in ${delay}ms...`,
+            );
+            await this.sleep(delay); // Exponential backoff
             continue;
           }
 
