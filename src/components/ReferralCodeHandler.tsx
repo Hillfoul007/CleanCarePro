@@ -111,7 +111,7 @@ export function ReferralCodeHandler({
       const userId = currentUser.id || currentUser._id;
       const response = await apiClient.applyReferralCode(referralCode, userId);
 
-      if (response && response.data) {
+      if (response && response.data && !response.error) {
         // Clear stored referral code
         clearStoredReferralCode();
 
@@ -126,7 +126,7 @@ export function ReferralCodeHandler({
           onReferralApplied(50); // Default 50% discount
         }
       } else {
-        throw new Error("Failed to apply referral code");
+        throw new Error(response?.error || "Failed to apply referral code");
       }
     } catch (error: any) {
       toast.error(error.message);
