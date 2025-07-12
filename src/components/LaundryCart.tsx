@@ -637,8 +637,10 @@ const LaundryCart: React.FC<LaundryCartProps> = ({
         deliveryCharge,
         handlingFee,
         couponDiscount,
-        appliedCoupon: appliedCoupon?.code,
+        referralDiscountAmount,
         finalTotal,
+        appliedCoupon: appliedCoupon?.code,
+        referralDiscount: referralDiscount?.type,
       });
 
       const orderData = {
