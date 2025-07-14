@@ -905,7 +905,10 @@ Confirm this booking?`;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className="min-h-screen bg-gray-50"
+      style={{ pointerEvents: "auto", touchAction: "pan-y" }}
+    >
       {/* Header */}
       <div className="bg-white shadow-sm px-3 sm:px-4 py-4 flex items-center sticky top-0 z-10 safe-area-top">
         <div className="flex items-center gap-2 sm:gap-4">
@@ -1262,7 +1265,10 @@ Confirm this booking?`;
       </div>
 
       {/* Fixed Bottom Button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 safe-area-bottom">
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 safe-area-bottom"
+        style={{ pointerEvents: "auto", zIndex: 50 }}
+      >
         <div className="space-y-2">
           {/* Validation Errors */}
           {validationErrors.length > 0 && (
@@ -1288,6 +1294,7 @@ Confirm this booking?`;
                 );
               }
             }}
+            style={{ pointerEvents: "auto", touchAction: "manipulation" }}
             disabled={cartItems.length === 0 || isProcessingCheckout}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
