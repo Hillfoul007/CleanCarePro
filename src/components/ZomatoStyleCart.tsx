@@ -395,6 +395,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                           size="sm"
                           onClick={() => updateQuantity(service!.id, -1)}
                           className="h-8 w-8 p-0 rounded-md border-green-600 text-green-600 hover:bg-green-50"
+                          style={{
+                            pointerEvents: "auto",
+                            touchAction: "manipulation",
+                          }}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
@@ -406,6 +410,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                           size="sm"
                           onClick={() => updateQuantity(service!.id, 1)}
                           className="h-8 w-8 p-0 rounded-md border-green-600 text-green-600 hover:bg-green-50"
+                          style={{
+                            pointerEvents: "auto",
+                            touchAction: "manipulation",
+                          }}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -473,6 +481,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                   disabled={!couponCode.trim()}
                   className="border-green-600 text-green-600 hover:bg-green-50"
                   type="button"
+                  style={{ pointerEvents: "auto", touchAction: "manipulation" }}
                 >
                   Apply
                 </Button>
