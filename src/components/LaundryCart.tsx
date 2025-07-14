@@ -967,6 +967,10 @@ Confirm this booking?`;
                     size="sm"
                     onClick={() => updateQuantity(service!.id, -1)}
                     className="h-5 w-5 p-0 text-xs"
+                    style={{
+                      pointerEvents: "auto",
+                      touchAction: "manipulation",
+                    }}
                   >
                     <Minus className="h-2 w-2" />
                   </Button>
@@ -978,6 +982,10 @@ Confirm this booking?`;
                     size="sm"
                     onClick={() => updateQuantity(service!.id, 1)}
                     className="h-5 w-5 p-0 text-xs"
+                    style={{
+                      pointerEvents: "auto",
+                      touchAction: "manipulation",
+                    }}
                   >
                     <Plus className="h-2 w-2" />
                   </Button>
@@ -992,6 +1000,10 @@ Confirm this booking?`;
                     size="sm"
                     onClick={() => removeItem(service!.id)}
                     className="h-5 w-5 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    style={{
+                      pointerEvents: "auto",
+                      touchAction: "manipulation",
+                    }}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
@@ -1316,34 +1328,42 @@ Confirm this booking?`;
       </div>
 
       {/* Zomato Address Selector */}
-      <ZomatoAddressSelector
-        isOpen={showZomatoAddressSelector}
-        onClose={() => setShowZomatoAddressSelector(false)}
-        onSelectAddress={handleAddressSelect}
-        onAddNewAddress={() => {
-          setEditingAddress(null);
-          setShowZomatoAddressSelector(false);
-          setShowZomatoAddAddressPage(true);
-        }}
-        onEditAddress={handleEditAddress}
-        currentUser={currentUser}
-        selectedAddressId={selectedSavedAddress?.id}
-      />
+      <div
+        style={{ pointerEvents: showZomatoAddressSelector ? "auto" : "none" }}
+      >
+        <ZomatoAddressSelector
+          isOpen={showZomatoAddressSelector}
+          onClose={() => setShowZomatoAddressSelector(false)}
+          onSelectAddress={handleAddressSelect}
+          onAddNewAddress={() => {
+            setEditingAddress(null);
+            setShowZomatoAddressSelector(false);
+            setShowZomatoAddAddressPage(true);
+          }}
+          onEditAddress={handleEditAddress}
+          currentUser={currentUser}
+          selectedAddressId={selectedSavedAddress?.id}
+        />
+      </div>
 
       {/* Zomato Add Address Page */}
-      <ZomatoAddAddressPage
-        isOpen={showZomatoAddAddressPage}
-        onClose={() => {
-          setShowZomatoAddAddressPage(false);
-          setEditingAddress(null);
-        }}
-        onSave={(address) => {
-          handleNewAddressSave(address);
-          setEditingAddress(null);
-        }}
-        currentUser={currentUser}
-        editingAddress={editingAddress}
-      />
+      <div
+        style={{ pointerEvents: showZomatoAddAddressPage ? "auto" : "none" }}
+      >
+        <ZomatoAddAddressPage
+          isOpen={showZomatoAddAddressPage}
+          onClose={() => {
+            setShowZomatoAddAddressPage(false);
+            setEditingAddress(null);
+          }}
+          onSave={(address) => {
+            handleNewAddressSave(address);
+            setEditingAddress(null);
+          }}
+          currentUser={currentUser}
+          editingAddress={editingAddress}
+        />
+      </div>
 
       {/* Saved Addresses Modal (fallback) */}
       <SavedAddressesModal
