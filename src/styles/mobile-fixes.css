@@ -191,6 +191,59 @@ select {
   appearance: none;
 }
 
+/* iPhone-specific touch and pointer fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iPhone Safari specific fixes */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Ensure all clickable elements work on iPhone */
+  button,
+  [role="button"],
+  .clickable,
+  input[type="button"],
+  input[type="submit"] {
+    cursor: pointer;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Fix for modal overlays blocking touches */
+  .modal-overlay {
+    pointer-events: auto !important;
+    touch-action: none !important;
+  }
+
+  /* Fix for fixed positioned elements */
+  .fixed {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  /* Ensure cart page elements are touchable */
+  .cart-container {
+    pointer-events: auto !important;
+    touch-action: pan-y !important;
+  }
+
+  .cart-button {
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Fix for overlapping elements */
+  .z-index-overlay {
+    isolation: isolate;
+  }
+}
+
 /* Prevent horizontal scroll */
 .mobile-container {
   overflow-x: hidden;

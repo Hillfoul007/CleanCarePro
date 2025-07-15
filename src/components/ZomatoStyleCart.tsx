@@ -323,7 +323,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className="min-h-screen bg-gray-50"
+      style={{ pointerEvents: "auto", touchAction: "pan-y" }}
+    >
       {/* Header - Zomato Style */}
       <div className="bg-white shadow-sm px-4 py-4 sticky top-0 z-10 safe-area-top">
         <div className="flex items-center gap-4">
@@ -392,6 +395,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                           size="sm"
                           onClick={() => updateQuantity(service!.id, -1)}
                           className="h-8 w-8 p-0 rounded-md border-green-600 text-green-600 hover:bg-green-50"
+                          style={{
+                            pointerEvents: "auto",
+                            touchAction: "manipulation",
+                          }}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
@@ -403,6 +410,10 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                           size="sm"
                           onClick={() => updateQuantity(service!.id, 1)}
                           className="h-8 w-8 p-0 rounded-md border-green-600 text-green-600 hover:bg-green-50"
+                          style={{
+                            pointerEvents: "auto",
+                            touchAction: "manipulation",
+                          }}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -470,6 +481,7 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
                   disabled={!couponCode.trim()}
                   className="border-green-600 text-green-600 hover:bg-green-50"
                   type="button"
+                  style={{ pointerEvents: "auto", touchAction: "manipulation" }}
                 >
                   Apply
                 </Button>
@@ -637,11 +649,15 @@ const ZomatoStyleCart: React.FC<ZomatoStyleCartProps> = ({
       )}
 
       {/* Fixed Bottom Payment Button - Zomato Style */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t px-4 py-4 safe-area-bottom">
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-white border-t px-4 py-4 safe-area-bottom"
+        style={{ pointerEvents: "auto", zIndex: 50 }}
+      >
         <Button
           onClick={handleProceedToCheckout}
           disabled={cartItems.length === 0 || isProcessingCheckout}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          style={{ pointerEvents: "auto", touchAction: "manipulation" }}
         >
           {isProcessingCheckout ? (
             <>
